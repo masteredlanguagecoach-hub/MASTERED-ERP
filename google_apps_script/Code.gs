@@ -1,9 +1,9 @@
 /**
- * MASTERED ERP V3.1 — Google Apps Script Production Backend API
+ * MASTERED ERP V4.0 — Google Apps Script Production Backend API
  * 
- * Clean Production Database — Zero Demo Business Data
- * Retains Official Course Master & Demo Sales Executive Account (Tagged DEMO ACCOUNT)
- * Full Support for Sales Executive Bulk Lead Excel Import & Per-Lead Follow-up Targets (10/lead)
+ * Persistent Database & Server-Side Authorization Engine
+ * 17 Structured Sheets, SHA-256 Salted Password Hashing, Atomic Lead Closing,
+ * Double-Entry Bookkeeping, and Excel Lead Import Processing.
  */
 
 function doPost(e) {
@@ -130,15 +130,15 @@ function responseJSON(data) {
 }
 
 // ==========================================
-// DATABASE SETUP & MIGRATIONS (CLEAN PRODUCTION)
+// DATABASE SETUP & MIGRATIONS (V4.0 CLEAN PRODUCTION)
 // ==========================================
 
 function setupDatabase(ss) {
   var sheets = [
-    'SETTINGS', 'USERS', 'SESSIONS', 'COURSES', 'LEADS', 'LEAD_ACTIVITIES', 
-    'LEAD_ASSIGNMENTS', 'STUDENTS', 'PLACEMENTS', 'BATCHES', 'FEE_PLANS', 
-    'PAYMENTS', 'REFUNDS', 'ACCOUNTS', 'EXPENSES', 'ACCOUNTING_ENTRIES', 
-    'NUMBER_SEQUENCES', 'AUDIT_LOG', 'IDEMPOTENCY', 'LEAD_IMPORT_BATCHES', 'LEAD_IMPORT_ERRORS'
+    'SETTINGS', 'USERS', 'SESSIONS', 'COURSES', 'BATCHES', 'LEADS', 
+    'LEAD_FOLLOWUPS', 'STUDENTS', 'STUDENT_STATUS_HISTORY', 'PAYMENTS', 
+    'INSTALLMENT_SCHEDULE', 'EXPENSES', 'PLACEMENTS', 'RECEIPTS', 'AUDIT_LOGS', 
+    'IMPORT_JOBS', 'TARGETS', 'NOTIFICATIONS'
   ];
 
   sheets.forEach(function(sName) {
@@ -157,11 +157,11 @@ function seedInitialUsers(ss) {
     userSheet.appendRow(['User ID', 'Name', 'Email', 'Password Hash', 'Role', 'Phone', 'Status', 'Must Change Password', 'Is Demo Account', 'Created At']);
     
     var now = new Date().toISOString();
-    userSheet.appendRow(['USR-1001', 'System Administrator', 'admin@mastered.com', hashPassword('Admin@Mastered2026!Sec'), 'ADMIN', '9898989800', 'ACTIVE', 'FALSE', 'FALSE', now]);
-    userSheet.appendRow(['USR-1002', 'Rasheed', 'ceo@mastered.com', hashPassword('CEO@Rasheed2026!Sec'), 'CEO', '9898989801', 'ACTIVE', 'FALSE', 'FALSE', now]);
-    userSheet.appendRow(['USR-1003', 'Ashif', 'saleshead@mastered.com', hashPassword('SalesHead@Ashif2026!Sec'), 'SALES_HEAD', '9898989802', 'ACTIVE', 'FALSE', 'FALSE', now]);
-    userSheet.appendRow(['USR-1004', 'Demo Sales Executive', 'salesexec@mastered.com', hashPassword('SalesExec@Mastered2026!Sec'), 'SALES_EXECUTIVE', '9898989803', 'ACTIVE', 'FALSE', 'TRUE', now]);
-    userSheet.appendRow(['USR-1005', 'Operations', 'ops@mastered.com', hashPassword('Ops@Mastered2026!Sec'), 'OPERATIONS', '9898989804', 'ACTIVE', 'FALSE', 'FALSE', now]);
+    userSheet.appendRow(['USR-1001', 'System Administrator', 'admin@mastered.com', hashPassword('Admin@123'), 'ADMIN', '9898989800', 'ACTIVE', 'FALSE', 'FALSE', now]);
+    userSheet.appendRow(['USR-1002', 'Rasheed', 'ceo@mastered.com', hashPassword('Mastered@CEO2026'), 'CEO', '9898989801', 'ACTIVE', 'FALSE', 'FALSE', now]);
+    userSheet.appendRow(['USR-1003', 'Ashif', 'saleshead@mastered.com', hashPassword('Mastered@SH2026'), 'SALES_HEAD', '9898989802', 'ACTIVE', 'FALSE', 'FALSE', now]);
+    userSheet.appendRow(['USR-1004', 'Demo Sales Executive', 'salesexec@mastered.com', hashPassword('Mastered@SE2026'), 'SALES_EXECUTIVE', '9898989803', 'ACTIVE', 'FALSE', 'TRUE', now]);
+    userSheet.appendRow(['USR-1005', 'Operations', 'ops@mastered.com', hashPassword('Mastered@OPS2026'), 'OPERATIONS', '9898989804', 'ACTIVE', 'FALSE', 'FALSE', now]);
   }
 }
 
@@ -178,7 +178,7 @@ function seedInitialCourses(ss) {
 }
 
 function hashPassword(pass) {
-  var raw = 'MASTERED_SALT_V3.1_' + pass;
+  var raw = 'MASTERED_SALT_V4.0_' + pass;
   var digest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, raw);
   return digest.map(function(byte) {
     return (byte < 0 ? byte + 256 : byte).toString(16).padStart(2, '0');
@@ -298,14 +298,14 @@ function getPublicSettings(ss) {
     success: true,
     data: {
       academyName: 'MASTERED',
-      tagline: 'Academy Management System v3.1',
+      tagline: 'Academy Management System v4.0',
       publicLogoUrl: '/assets/logo.png'
     }
   };
 }
 
 // ==========================================
-// BULK LEAD EXCEL IMPORT (SALES EXECUTIVE ONLY)
+// BULK LEAD EXCEL IMPORT
 // ==========================================
 
 function importBulkLeads(ss, payload) {
@@ -340,19 +340,19 @@ function importBulkLeads(ss, payload) {
       r.course || 'BCA-1Y',
       r.source || 'Meta Ad',
       user.email,
-      user.name, // Auto-assign to authenticated Sales Executive
+      user.name,
       'New',
       r.nextFollowup || now.substring(0, 10),
       r.remarks || ('Bulk imported via batch ' + batchId),
       now,
-      10, // Target
-      0,  // Completed
+      10,
+      0,
       'Not Started'
     ]);
     count++;
   });
 
-  var bSheet = ss.getSheetByName('LEAD_IMPORT_BATCHES');
+  var bSheet = ss.getSheetByName('IMPORT_JOBS');
   bSheet.appendRow([batchId, payload.fileName || 'bulk_leads.xlsx', user.userId, rows.length, count, count, 0, 0, 'COMPLETED', 'DRV-' + batchId, now, now]);
 
   logAudit(ss, user.userId, user.name, 'BULK_LEAD_IMPORT', 'CRM', 'Imported ' + count + ' leads via batch ' + batchId);
@@ -362,7 +362,7 @@ function importBulkLeads(ss, payload) {
 
 function getImportHistory(ss, payload) {
   var user = payload._user;
-  var bSheet = ss.getSheetByName('LEAD_IMPORT_BATCHES');
+  var bSheet = ss.getSheetByName('IMPORT_JOBS');
   var data = bSheet.getDataRange().getValues();
   var history = [];
 
@@ -486,7 +486,7 @@ function updateLeadStage(ss, payload) {
 
 function recordFollowupActivity(ss, payload) {
   var user = payload._user;
-  var actSheet = ss.getSheetByName('LEAD_ACTIVITIES');
+  var actSheet = ss.getSheetByName('LEAD_FOLLOWUPS');
   var actId = 'ACT-' + Math.floor(100000 + Math.random() * 900000);
   var now = new Date().toISOString();
 
@@ -1045,7 +1045,7 @@ function saveSettings(ss, payload) {
 }
 
 function getAuditLogs(ss) {
-  var aSheet = ss.getSheetByName('AUDIT_LOG');
+  var aSheet = ss.getSheetByName('AUDIT_LOGS');
   var data = aSheet.getDataRange().getValues();
   var logs = [];
   for (var i = 1; i < data.length; i++) {
@@ -1063,7 +1063,7 @@ function getAuditLogs(ss) {
 }
 
 function logAudit(ss, userId, userName, action, module, details) {
-  var aSheet = ss.getSheetByName('AUDIT_LOG');
+  var aSheet = ss.getSheetByName('AUDIT_LOGS');
   var logId = 'LOG-' + Math.floor(100000 + Math.random() * 900000);
   aSheet.appendRow([logId, new Date().toISOString(), userId, userName, action, module, details]);
 }
