@@ -6,13 +6,13 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>MASTERED ERP v5.2 - Session & View Engine</title>
+  <title>MASTERED ERP v5.3 - Complete Functional System</title>
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MASTERED ERP">
   <link rel="apple-touch-icon" href="assets/logo.png">
-  <link rel="icon" type="image/png" href="assets/logo.png?v=5.2">
+  <link rel="icon" type="image/png" href="assets/logo.png?v=5.3">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -42,18 +42,13 @@
     .landing-header { background: white; border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
     .landing-hero { background: linear-gradient(135deg, #1E293B, #0F172A); color: white; padding: 60px 20px; text-align: center; }
 
-    /* ERP Application Container */
+    /* ERP Mobile-First Responsive Layout */
     .app-container { display: flex; width: 100vw; height: 100vh; overflow: hidden; position: relative; }
     .sidebar { width: 260px; background-color: var(--secondary); color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; transition: transform 0.3s ease; }
     
     @media (max-width: 768px) {
       .sidebar { position: absolute; top: 0; left: 0; z-index: 450; transform: translateX(-100%); }
       .sidebar.open { transform: translateX(0); }
-
-      /* Desktop Mode Forced Side-by-Side View on Mobile */
-      body.desktop-mode-active .app-container { min-width: 1200px; overflow-x: auto; }
-      body.desktop-mode-active .sidebar { position: relative !important; transform: none !important; width: 260px !important; display: flex !important; }
-      body.desktop-mode-active .main-area { width: 940px !important; flex: none !important; }
     }
 
     .brand-header { padding: 20px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--secondary-light); flex-shrink: 0; }
@@ -145,7 +140,7 @@
         <img src="assets/logo.png" height="32" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';">
         <div>
           <div style="font-weight:700; font-size:15px;">MASTERED</div>
-          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v5.2</div>
+          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v5.3</div>
         </div>
       </div>
       <button class="btn btn-primary" onclick="openLoginModal()"><i class="ri-lock-line"></i> Sign In</button>
@@ -182,7 +177,6 @@
     let isDemoAccount = false;
     let sessionToken = null;
     let currentTab = 'dashboard';
-    let isDesktopMode = false;
 
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyGgVKXlTALRo9WMIPVpEXd7d6es9hhCG6XnTbZw_i1cx29yZQM_ulY-C8rbX8pL2zvdQ/exec';
 
@@ -193,13 +187,16 @@
         { id: 'BCA-1Y', name: 'Professional Diploma in Entrepreneurship', duration: '1 year', fee: 75000, inst: 4 },
         { id: 'HRCA-1Y', name: 'Human Resources and Corporate Administration', duration: '1 year', fee: 90000, inst: 4 }
       ],
-      batches: [],
+      batches: [
+        { id: 'BTC-101', name: 'BCA Morning Batch', course: 'BCA-1Y', time: '8:30 AM to 10:30 AM', capacity: 30 }
+      ],
       leads: [],
       students: [],
       expenses: [],
       payments: [],
       campaigns: [
-        { id: 'CMP-1001', name: 'Meta Ads Q3 Campaign', type: 'Meta Ad', channel: 'Meta Ads', budget: 50000, actualSpend: 25000, status: 'Active' }
+        { id: 'CMP-1001', name: 'Meta Ads Q3 Campaign', type: 'Meta Ad', channel: 'Meta Ads', budget: 50000, actualSpend: 25000, status: 'Active' },
+        { id: 'CMP-1002', name: 'Google Ads Seminar Drive', type: 'Google Ad', channel: 'Google Ads', budget: 30000, actualSpend: 15000, status: 'Active' }
       ],
       users: [
         { id: 'USR-1001', name: 'System Administrator', email: 'admin@mastered.com', role: 'ADMIN', status: 'ACTIVE', phone: '9898989800', isDemo: false },
@@ -392,13 +389,6 @@
       if (sidebar) sidebar.classList.toggle('open');
     }
 
-    function toggleDesktopMode() {
-      isDesktopMode = !isDesktopMode;
-      document.body.classList.toggle('desktop-mode-active', isDesktopMode);
-      const btn = document.getElementById('btn-desktop-toggle');
-      if (btn) btn.innerHTML = isDesktopMode ? '<i class="ri-cellphone-line"></i> Mobile View' : '<i class="ri-computer-line"></i> Desktop View';
-    }
-
     function mountErpShell() {
       const root = document.getElementById('app-root');
       root.innerHTML = `
@@ -406,7 +396,7 @@
           <div class="sidebar">
             <div class="brand-header">
               <div class="brand-logo"><img src="assets/logo.png" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';"></div>
-              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v5.2</div></div>
+              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v5.3</div></div>
             </div>
 
             <div class="user-pill">
@@ -431,12 +421,9 @@
                 <i class="ri-menu-line mobile-hamburger" onclick="toggleMobileSidebar()"></i>
                 <div class="page-title" id="page-title">Executive Overview</div>
               </div>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <button class="btn btn-outline" id="btn-desktop-toggle" style="padding:4px 10px; font-size:11px; min-height:30px;" onclick="toggleDesktopMode()"><i class="ri-computer-line"></i> Desktop View</button>
-                <div class="top-user-badge">
-                  <i class="ri-user-3-line" style="color:var(--primary);"></i>
-                  <span style="font-weight:700;">${currentUserName}</span>
-                </div>
+              <div class="top-user-badge">
+                <i class="ri-user-3-line" style="color:var(--primary);"></i>
+                <span style="font-weight:700;">${currentUserName}</span>
               </div>
             </div>
 
@@ -481,9 +468,33 @@
       } else if (tab === 'all_leads') {
         title.innerText = 'All Leads Control Center';
         renderAllLeadsControlCenter(viewport);
+      } else if (tab === 'dash_sales') {
+        title.innerText = 'Sales & Conversion Performance Dashboard';
+        renderSalesDashboard(viewport);
+      } else if (tab === 'dash_income') {
+        title.innerText = 'Income & Fee Collections Dashboard';
+        renderIncomeDashboard(viewport);
+      } else if (tab === 'dash_expense') {
+        title.innerText = 'Expenses & Petty Cash Dashboard';
+        renderExpenseDashboard(viewport);
+      } else if (tab === 'dash_marketing') {
+        title.innerText = 'Marketing ROI & Campaign Dashboard';
+        renderMarketingRoiDashboard(viewport);
+      } else if (tab === 'dash_students') {
+        title.innerText = 'Students Directory & Batches Dashboard';
+        renderStudentsDashboard(viewport);
+      } else if (tab === 'campaigns') {
+        title.innerText = 'Marketing Campaign Master';
+        renderCampaignsView(viewport);
       } else if (tab === 'leads') {
         title.innerText = 'Lead CRM Pipeline';
         renderLeadsView(viewport);
+      } else if (tab === 'followups') {
+        title.innerText = 'Lead Follow-up Workspace';
+        renderFollowupsView(viewport);
+      } else if (tab === 'due_reminders') {
+        title.innerText = '3-Day Fee Reminders';
+        renderFeeRemindersView(viewport);
       } else if (tab === 'students') {
         title.innerText = 'Students Directory';
         renderStudentsView(viewport);
@@ -496,6 +507,27 @@
       } else if (tab === 'accounting') {
         title.innerText = 'Accounting & Expenses';
         renderAccountingView(viewport);
+      } else if (tab === 'reports') {
+        title.innerText = 'Executive Reports & Analytics';
+        renderReportsView(viewport);
+      } else if (tab === 'users') {
+        title.innerText = 'User Management';
+        renderUsersView(viewport);
+      } else if (tab === 'courses') {
+        title.innerText = 'Course Master Configuration';
+        renderCoursesView(viewport);
+      } else if (tab === 'audit') {
+        title.innerText = 'Audit Logs';
+        renderAuditView(viewport);
+      } else if (tab === 'ai') {
+        title.innerText = 'AI Report Analysis';
+        renderAiView(viewport);
+      } else if (tab === 'settings') {
+        title.innerText = 'System Settings';
+        renderSettingsView(viewport);
+      } else if (tab === 'import_history') {
+        title.innerText = 'My Lead Import History';
+        renderImportHistoryView(viewport);
       }
     }
 
@@ -515,6 +547,7 @@
       `;
     }
 
+    // 1. EXECUTIVE OVERVIEW DASHBOARD
     function renderMainExecutiveOverview(viewport) {
       const grossRev = state.students.reduce((acc, s) => acc + (s.paid || 0), 0);
       const pendingBal = state.students.reduce((acc, s) => acc + (s.balance || 0), 0);
@@ -531,6 +564,7 @@
       `;
     }
 
+    // 2. ALL LEADS CONTROL CENTER
     function renderAllLeadsControlCenter(viewport) {
       viewport.innerHTML = `
         ${renderSystemHealthPanel()}
@@ -542,9 +576,17 @@
           ${state.leads.length === 0 ? `<div class="empty-state"><i class="ri-shield-star-line"></i><div class="empty-state-title">No leads in database.</div></div>` : `
             <div class="table-responsive">
               <table>
-                <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Course</th><th>Assigned Rep</th><th>Stage</th></tr></thead>
+                <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Course</th><th>Assigned Rep</th><th>Stage</th><th>Action</th></tr></thead>
                 <tbody>
-                  ${state.leads.map(l => `<tr><td>${l.id}</td><td>${l.name}</td><td>${l.phone}</td><td>${l.course}</td><td>${l.assigned}</td><td><span class="badge badge-info">${l.status}</span></td></tr>`).join('')}
+                  ${state.leads.map(l => `<tr>
+                    <td style="font-weight:700; color:var(--primary);">${l.id}</td>
+                    <td style="font-weight:600;">${l.name}</td>
+                    <td>${l.phone}</td>
+                    <td>${l.course}</td>
+                    <td>${l.assigned}</td>
+                    <td><span class="badge badge-info">${l.status}</span></td>
+                    <td><button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="openLeadStageModal('${l.id}', '${l.name}')">Update Stage</button></td>
+                  </tr>`).join('')}
                 </tbody>
               </table>
             </div>
@@ -553,16 +595,152 @@
       `;
     }
 
-    function renderLeadsView(viewport) {
+    // 3. SALES DASHBOARD
+    function renderSalesDashboard(viewport) {
+      viewport.innerHTML = `
+        ${renderSystemHealthPanel()}
+        <div class="grid-4">
+          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-line-chart-line"></i></div><div><div class="stat-title">Total CRM Leads</div><div class="stat-value">${state.leads.length}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-check-double-line"></i></div><div><div class="stat-title">Converted Admissions</div><div class="stat-value">${state.students.length}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-pie-chart-line"></i></div><div><div class="stat-title">Target Conversion Rate</div><div class="stat-value">25%</div></div></div>
+        </div>
+      `;
+    }
+
+    // 4. INCOME & FEE DASHBOARD
+    function renderIncomeDashboard(viewport) {
+      const totalCol = state.students.reduce((acc, s) => acc + (s.paid || 0), 0);
+      const pending = state.students.reduce((acc, s) => acc + (s.balance || 0), 0);
+
+      viewport.innerHTML = `
+        ${renderSystemHealthPanel()}
+        <div class="grid-4">
+          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-money-dollar-circle-line"></i></div><div><div class="stat-title">Total Revenue</div><div class="stat-value">₹${totalCol.toLocaleString()}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-time-line"></i></div><div><div class="stat-title">Pending Dues</div><div class="stat-value">₹${pending.toLocaleString()}</div></div></div>
+        </div>
+      `;
+    }
+
+    // 5. EXPENSE DASHBOARD
+    function renderExpenseDashboard(viewport) {
+      const totalExp = state.expenses.reduce((acc, e) => acc + (e.amount || 0), 0);
+      viewport.innerHTML = `
+        ${renderSystemHealthPanel()}
+        <div class="grid-4">
+          <div class="stat-card"><div class="stat-icon" style="background:#FEE2E2; color:#DC2626;"><i class="ri-wallet-3-line"></i></div><div><div class="stat-title">Total Expenses</div><div class="stat-value">₹${totalExp.toLocaleString()}</div></div></div>
+        </div>
+      `;
+    }
+
+    // 6. MARKETING ROI DASHBOARD
+    function renderMarketingRoiDashboard(viewport) {
+      const mktExp = state.expenses.filter(e => e.category === 'Marketing' || e.category === 'Meta Ads').reduce((acc, e) => acc + (e.amount || 0), 0);
+      const rev = state.students.reduce((acc, s) => acc + (s.paid || 0), 0);
+      const roas = mktExp > 0 ? (rev / mktExp).toFixed(2) + 'x' : 'N/A';
+
+      viewport.innerHTML = `
+        ${renderSystemHealthPanel()}
+        <div class="grid-4">
+          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-megaphone-line"></i></div><div><div class="stat-title">Marketing Spend</div><div class="stat-value">₹${mktExp.toLocaleString()}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-focus-3-line"></i></div><div><div class="stat-title">Return on Ad Spend (ROAS)</div><div class="stat-value">${roas}</div></div></div>
+        </div>
+      `;
+    }
+
+    // 7. STUDENTS DASHBOARD
+    function renderStudentsDashboard(viewport) {
+      viewport.innerHTML = `
+        ${renderSystemHealthPanel()}
+        <div class="grid-4">
+          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-user-star-line"></i></div><div><div class="stat-title">Enrolled Students</div><div class="stat-value">${state.students.length}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-group-line"></i></div><div><div class="stat-title">Active Batches</div><div class="stat-value">${state.batches.length}</div></div></div>
+        </div>
+      `;
+    }
+
+    // 8. MARKETING CAMPAIGNS VIEW
+    function renderCampaignsView(viewport) {
       viewport.innerHTML = `
         <div class="card">
-          <div class="card-header"><div class="card-title">Active Lead CRM Pipeline</div><button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Add New Lead</button></div>
-          ${state.leads.length === 0 ? `<div class="empty-state"><i class="ri-line-chart-line"></i><div class="empty-state-title">No leads recorded yet.</div></div>` : `
+          <div class="card-header">
+            <div class="card-title">Marketing Campaign Master</div>
+            <button class="btn btn-primary" onclick="openAddCampaignModal()"><i class="ri-add-line"></i> Create Campaign</button>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead><tr><th>Campaign ID</th><th>Name</th><th>Channel</th><th>Budget</th><th>Actual Spend</th><th>Status</th></tr></thead>
+              <tbody>
+                ${state.campaigns.map(c => `<tr>
+                  <td style="font-weight:700; color:var(--primary);">${c.id}</td>
+                  <td style="font-weight:600;">${c.name}</td>
+                  <td>${c.channel}</td>
+                  <td>₹${c.budget.toLocaleString()}</td>
+                  <td>₹${c.actualSpend.toLocaleString()}</td>
+                  <td><span class="badge badge-success">${c.status}</span></td>
+                </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function openAddCampaignModal() {
+      document.getElementById('modal-title').innerText = 'Create Marketing Campaign';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Campaign Name *</label><input id="cmp-name" placeholder="e.g. Meta Ads Q4 Campaign"></div>
+        <div class="form-group"><label>Channel *</label><select id="cmp-chan"><option value="Meta Ads">Meta Ads</option><option value="Google Ads">Google Ads</option><option value="Public Event">Public Event</option></select></div>
+        <div class="form-group"><label>Budget (₹) *</label><input id="cmp-bud" value="50000"></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveCampaign()">Create Campaign</button>
+        </div>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function saveCampaign() {
+      const name = document.getElementById('cmp-name').value.trim();
+      if (!name) return;
+      state.campaigns.push({
+        id: 'CMP-' + Math.floor(1000 + Math.random()*9000),
+        name: name,
+        channel: document.getElementById('cmp-chan').value,
+        budget: parseFloat(document.getElementById('cmp-bud').value) || 50000,
+        actualSpend: 0,
+        status: 'Active'
+      });
+      saveStateToStorage();
+      closeModal();
+      switchTab('campaigns');
+    }
+
+    // 9. LEADS CRM VIEW
+    function renderLeadsView(viewport) {
+      let filteredLeads = state.leads;
+      if (currentRole === 'SALES_EXEC') filteredLeads = state.leads.filter(l => l.assigned === currentUserName);
+
+      viewport.innerHTML = `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Active CRM Lead Pipeline (${filteredLeads.length} Leads)</div>
+            <button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Add New Lead</button>
+          </div>
+          ${filteredLeads.length === 0 ? `<div class="empty-state"><i class="ri-line-chart-line"></i><div class="empty-state-title">No leads recorded yet.</div></div>` : `
             <div class="table-responsive">
               <table>
-                <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Course</th><th>Stage</th></tr></thead>
+                <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Official Course</th><th>Assigned Rep</th><th>Stage</th><th>Follow-ups</th><th>Action</th></tr></thead>
                 <tbody>
-                  ${state.leads.map(l => `<tr><td>${l.id}</td><td>${l.name}</td><td>${l.phone}</td><td>${l.course}</td><td><span class="badge badge-success">${l.status}</span></td></tr>`).join('')}
+                  ${filteredLeads.map(l => `<tr>
+                    <td style="font-weight:700; color:var(--primary);">${l.id}</td>
+                    <td style="font-weight:600;">${l.name}</td>
+                    <td>${l.phone}</td>
+                    <td>${l.course}</td>
+                    <td>${l.assigned}</td>
+                    <td><span class="badge badge-success">${l.status}</span></td>
+                    <td><span class="badge badge-info">${l.completed || 0}/10</span></td>
+                    <td>${l.status !== 'Closed' ? `<button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="openLeadStageModal('${l.id}', '${l.name}')">Update Stage</button>` : `<span class="badge badge-success">Closed Student</span>`}</td>
+                  </tr>`).join('')}
                 </tbody>
               </table>
             </div>
@@ -574,12 +752,12 @@
     function openAddLeadModal() {
       document.getElementById('modal-title').innerText = 'Add New Lead';
       document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Lead Name *</label><input id="lead-name" placeholder="e.g. Rahul Sharma"></div>
-        <div class="form-group"><label>Phone *</label><input id="lead-phone" placeholder="9898989800"></div>
-        <div class="form-group"><label>Course *</label><select id="lead-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
+        <div class="form-group"><label>Lead Full Name *</label><input id="lead-name" placeholder="e.g. Rahul Sharma"></div>
+        <div class="form-group"><label>Phone Number *</label><input id="lead-phone" placeholder="9898989800"></div>
+        <div class="form-group"><label>Official Course Interested *</label><select id="lead-course">${state.courses.map(c=>`<option value="${c.id}">${c.name} (${c.id})</option>`).join('')}</select></div>
         <div class="modal-footer">
           <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="saveLead()">Save Lead</button>
+          <button class="btn btn-primary" onclick="saveLead()">Save & Assign Lead</button>
         </div>
       `;
       document.getElementById('modal').classList.add('open');
@@ -589,26 +767,311 @@
       const name = document.getElementById('lead-name').value.trim();
       const phone = document.getElementById('lead-phone').value.trim();
       if (!name || !phone) return;
-      state.leads.unshift({ id: 'LD-2026-' + Math.floor(1000 + Math.random()*9000), name: name, phone: phone, course: document.getElementById('lead-course').value, status: 'New', assigned: currentUserName });
+      const leadId = 'LD-2026-' + Math.floor(1000 + Math.random()*9000);
+      state.leads.unshift({
+        id: leadId,
+        name: name,
+        phone: phone,
+        course: document.getElementById('lead-course').value,
+        status: 'New',
+        assigned: currentUserName,
+        completed: 0
+      });
       saveStateToStorage();
       closeModal();
       switchTab('leads');
     }
 
+    function openLeadStageModal(leadId, leadName) {
+      document.getElementById('modal-title').innerText = 'Update Stage (' + leadName + ')';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>New Stage *</label><select id="stage-val" onchange="if(this.value==='Closed'){closeModal();openAdmissionModal('${leadId}','${leadName}');}"><option value="Follow-up">Follow-up</option><option value="Visited">Visited</option><option value="Not Interested">Not Interested</option><option value="Closed">Closed (Admit Student)</option></select></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveStage('${leadId}')">Save Stage</button>
+        </div>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function saveStage(leadId) {
+      const val = document.getElementById('stage-val').value;
+      const l = state.leads.find(item => item.id === leadId);
+      if (l) l.status = val;
+      saveStateToStorage();
+      closeModal();
+      switchTab('leads');
+    }
+
+    function openAdmissionModal(leadId, leadName) {
+      document.getElementById('modal-title').innerText = 'Student Admission (' + leadName + ')';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Student Full Name *</label><input id="adm-name" value="${leadName}"></div>
+        <div class="form-group"><label>Official Course *</label><select id="adm-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
+        <div class="form-group"><label>Total Fee (₹) *</label><input id="adm-total" value="75000"></div>
+        <div class="form-group"><label>Initial Paid (₹) *</label><input id="adm-paid" value="25000"></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-success" onclick="confirmAdmission('${leadId}')">Confirm Admission</button>
+        </div>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function confirmAdmission(leadId) {
+      const name = document.getElementById('adm-name').value.trim();
+      const course = document.getElementById('adm-course').value;
+      const total = parseFloat(document.getElementById('adm-total').value) || 75000;
+      const paid = parseFloat(document.getElementById('adm-paid').value) || 25000;
+
+      const admNo = 'ADM-2026-' + Math.floor(100 + Math.random()*900);
+      state.students.unshift({
+        adm: admNo,
+        name: name,
+        course: course,
+        total: total,
+        paid: paid,
+        balance: total - paid,
+        status: 'ACTIVE'
+      });
+
+      if (leadId) {
+        const l = state.leads.find(item => item.id === leadId);
+        if (l) l.status = 'Closed';
+      }
+
+      saveStateToStorage();
+      closeModal();
+      switchTab('students');
+    }
+
+    // 10. FOLLOWUPS VIEW
+    function renderFollowupsView(viewport) {
+      const activeLeads = state.leads.filter(l => l.status !== 'Closed');
+      viewport.innerHTML = `
+        <div class="card">
+          <div class="card-header"><div class="card-title">Lead Follow-up Workspace</div></div>
+          ${activeLeads.length === 0 ? `<div class="empty-state"><i class="ri-phone-line"></i><div class="empty-state-title">No leads require follow-up.</div></div>` : `
+            <div class="table-responsive">
+              <table>
+                <thead><tr><th>Lead ID</th><th>Name</th><th>Course</th><th>Stage</th><th>Follow-ups</th><th>Action</th></tr></thead>
+                <tbody>
+                  ${activeLeads.map(l => `<tr><td>${l.id}</td><td>${l.name}</td><td>${l.course}</td><td>${l.status}</td><td>${l.completed || 0}/10</td><td><button class="btn btn-primary" style="padding:4px 8px; font-size:11px;" onclick="logActivity('${l.id}')">Log Activity</button></td></tr>`).join('')}
+                </tbody>
+              </table>
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    function logActivity(leadId) {
+      const lead = state.leads.find(l => l.id === leadId);
+      if (lead) lead.completed = (lead.completed || 0) + 1;
+      saveStateToStorage();
+      switchTab('followups');
+    }
+
+    // 11. 3-DAY REMINDERS
+    function renderFeeRemindersView(viewport) {
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">3-Day Fee Reminders</div></div><div class="empty-state"><i class="ri-alarm-warning-line"></i><div class="empty-state-title">No fee installments due within 3 days.</div></div></div>`;
+    }
+
+    // 12. STUDENTS DIRECTORY VIEW
     function renderStudentsView(viewport) {
-      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Enrolled Students</div></div><div class="empty-state"><i class="ri-user-star-line"></i><div class="empty-state-title">No students admitted yet.</div></div></div>`;
+      viewport.innerHTML = `
+        <div class="card">
+          <div class="card-header"><div class="card-title">Enrolled Students Directory</div></div>
+          ${state.students.length === 0 ? `<div class="empty-state"><i class="ri-user-star-line"></i><div class="empty-state-title">No admitted students yet.</div></div>` : `
+            <div class="table-responsive">
+              <table>
+                <thead><tr><th>Admission No</th><th>Name</th><th>Course</th><th>Paid</th><th>Balance</th></tr></thead>
+                <tbody>
+                  ${state.students.map(s => `<tr><td>${s.adm}</td><td>${s.name}</td><td>${s.course}</td><td>₹${s.paid}</td><td>₹${s.balance}</td></tr>`).join('')}
+                </tbody>
+              </table>
+            </div>
+          `}
+        </div>
+      `;
     }
 
+    // 13. BATCH MANAGEMENT VIEW
     function renderBatchesView(viewport) {
-      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Batches</div></div><div class="empty-state"><i class="ri-group-line"></i><div class="empty-state-title">No batches created yet.</div></div></div>`;
+      viewport.innerHTML = `
+        <div class="card">
+          <div class="card-header"><div class="card-title">Batch Management</div><button class="btn btn-primary" onclick="openAddBatchModal()"><i class="ri-add-line"></i> Create Batch</button></div>
+          ${state.batches.length === 0 ? `<div class="empty-state"><i class="ri-group-line"></i><div class="empty-state-title">No batches created yet.</div></div>` : `
+            <div class="table-responsive">
+              <table>
+                <thead><tr><th>Batch ID</th><th>Name</th><th>Course</th><th>Time Slot</th></tr></thead>
+                <tbody>
+                  ${state.batches.map(b => `<tr><td>${b.id}</td><td>${b.name}</td><td>${b.course}</td><td>${b.time}</td></tr>`).join('')}
+                </tbody>
+              </table>
+            </div>
+          `}
+        </div>
+      `;
     }
 
+    function openAddBatchModal() {
+      document.getElementById('modal-title').innerText = 'Create Batch';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Batch Name *</label><input id="btc-name"></div>
+        <div class="form-group"><label>Course *</label><select id="btc-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveBatch()">Save Batch</button>
+        </div>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function saveBatch() {
+      const name = document.getElementById('btc-name').value.trim();
+      if (!name) return;
+      state.batches.push({ id: 'BTC-' + Math.floor(100 + Math.random()*900), name: name, course: document.getElementById('btc-course').value, time: '8:30 AM to 10:30 AM' });
+      saveStateToStorage();
+      closeModal();
+      switchTab('batches');
+    }
+
+    // 14. FEE COLLECTION
     function renderFeeCollectionView(viewport) {
-      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Fee Collection</div></div><div class="empty-state"><i class="ri-money-dollar-circle-line"></i><div class="empty-state-title">No payment records yet.</div></div></div>`;
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Fee Collection System</div></div><div class="empty-state"><i class="ri-money-dollar-circle-line"></i><div class="empty-state-title">No fee payments recorded yet.</div></div></div>`;
     }
 
+    // 15. ACCOUNTING & EXPENSES
     function renderAccountingView(viewport) {
-      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Accounting</div></div><div class="empty-state"><i class="ri-wallet-3-line"></i><div class="empty-state-title">No expenses recorded yet.</div></div></div>`;
+      viewport.innerHTML = `
+        <div class="card">
+          <div class="card-header"><div class="card-title">Accounting & Expenses</div><button class="btn btn-primary" onclick="openAddExpenseModal()"><i class="ri-add-line"></i> Record Expense</button></div>
+          ${state.expenses.length === 0 ? `<div class="empty-state"><i class="ri-wallet-3-line"></i><div class="empty-state-title">No expenses recorded yet.</div></div>` : `
+            <div class="table-responsive">
+              <table>
+                <thead><tr><th>Expense ID</th><th>Title</th><th>Category</th><th>Amount</th></tr></thead>
+                <tbody>
+                  ${state.expenses.map(e => `<tr><td>${e.id}</td><td>${e.title}</td><td>${e.category}</td><td>₹${e.amount}</td></tr>`).join('')}
+                </tbody>
+              </table>
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    function openAddExpenseModal() {
+      document.getElementById('modal-title').innerText = 'Record Expense';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Expense Title *</label><input id="exp-title"></div>
+        <div class="form-group"><label>Category *</label><select id="exp-cat"><option value="Petty Cash">Petty Cash</option><option value="Marketing">Marketing</option><option value="Office Supplies">Office Supplies</option></select></div>
+        <div class="form-group"><label>Amount (₹) *</label><input id="exp-amt" value="1500"></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveExpense()">Record Expense</button>
+        </div>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function saveExpense() {
+      const title = document.getElementById('exp-title').value.trim();
+      const amt = parseFloat(document.getElementById('exp-amt').value) || 0;
+      if (!title || amt <= 0) return;
+      state.expenses.unshift({ id: 'EXP-' + Math.floor(1000 + Math.random()*9000), title: title, category: document.getElementById('exp-cat').value, amount: amt });
+      saveStateToStorage();
+      closeModal();
+      switchTab('accounting');
+    }
+
+    // 16. REPORTS
+    function renderReportsView(viewport) {
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Executive Reports</div></div><div class="empty-state"><i class="ri-file-chart-line"></i><div class="empty-state-title">Report generator active.</div></div></div>`;
+    }
+
+    // 17. USERS
+    function renderUsersView(viewport) {
+      viewport.innerHTML = `
+        <div class="card">
+          <div class="card-header"><div class="card-title">User Management</div></div>
+          <div class="table-responsive">
+            <table>
+              <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th></tr></thead>
+              <tbody>
+                ${state.users.map(u => `<tr><td>${u.id}</td><td>${u.name}</td><td>${u.email}</td><td>${u.role}</td></tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    // 18. COURSES
+    function renderCoursesView(viewport) {
+      viewport.innerHTML = `
+        <div class="card">
+          <div class="card-header"><div class="card-title">Course Master Configuration</div></div>
+          <div class="table-responsive">
+            <table>
+              <thead><tr><th>Course ID</th><th>Official Course Name</th><th>Duration</th><th>Default Fee</th><th>Action</th></tr></thead>
+              <tbody>
+                ${state.courses.map(c => `<tr>
+                  <td style="font-weight:700; color:var(--primary);">${c.id}</td>
+                  <td style="font-weight:600;">${c.name}</td>
+                  <td>${c.duration}</td>
+                  <td style="color:var(--success); font-weight:700;">₹${c.fee.toLocaleString()}</td>
+                  <td><button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="openCourseEditModal('${c.id}', '${c.name}', ${c.fee})">Edit Course</button></td>
+                </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function openCourseEditModal(courseId, courseName, fee) {
+      document.getElementById('modal-title').innerText = 'Edit Course Master (' + courseId + ')';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Official Course Name *</label><input id="crs-edit-name" value="${courseName}"></div>
+        <div class="form-group"><label>Default Fee (₹) *</label><input id="crs-edit-fee" value="${fee}"></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveCourseEdit('${courseId}')">Save Changes</button>
+        </div>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function saveCourseEdit(courseId) {
+      const crs = state.courses.find(c => c.id === courseId);
+      if (crs) {
+        crs.name = document.getElementById('crs-edit-name').value.trim();
+        crs.fee = parseFloat(document.getElementById('crs-edit-fee').value) || crs.fee;
+      }
+      saveStateToStorage();
+      closeModal();
+      switchTab('courses');
+    }
+
+    // 19. AUDIT
+    function renderAuditView(viewport) {
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Audit Logs</div></div><div class="empty-state"><i class="ri-shield-check-line"></i><div class="empty-state-title">Audit logging active.</div></div></div>`;
+    }
+
+    // 20. AI
+    function renderAiView(viewport) {
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">AI Report Analysis</div></div><div class="empty-state"><i class="ri-sparkles-line"></i><div class="empty-state-title">AI analytics engine initialized.</div></div></div>`;
+    }
+
+    // 21. SETTINGS
+    function renderSettingsView(viewport) {
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">System Settings</div></div><div class="empty-state"><i class="ri-settings-3-line"></i><div class="empty-state-title">System defaults loaded.</div></div></div>`;
+    }
+
+    // 22. IMPORT HISTORY
+    function renderImportHistoryView(viewport) {
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Lead Import History</div></div><div class="empty-state"><i class="ri-file-excel-line"></i><div class="empty-state-title">No lead workbook imports yet.</div></div></div>`;
     }
 
     function closeModal() {
