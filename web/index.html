@@ -6,13 +6,13 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>MASTERED ERP v5.4 - Complete Production System</title>
+  <title>MASTERED ERP v5.5 - Minute-Perfect Complete System</title>
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MASTERED ERP">
   <link rel="apple-touch-icon" href="assets/logo.png">
-  <link rel="icon" type="image/png" href="assets/logo.png?v=5.4">
+  <link rel="icon" type="image/png" href="assets/logo.png?v=5.5">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -140,7 +140,7 @@
         <img src="assets/logo.png" height="32" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';">
         <div>
           <div style="font-weight:700; font-size:15px;">MASTERED</div>
-          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v5.4</div>
+          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v5.5</div>
         </div>
       </div>
       <button class="btn btn-primary" onclick="openLoginModal()"><i class="ri-lock-line"></i> Sign In</button>
@@ -207,7 +207,7 @@
       ],
       activities: [],
       audit: [
-        { id: 'LOG-1001', timestamp: new Date().toISOString(), userName: 'System Administrator', action: 'SYSTEM_BOOT', module: 'CORE', details: 'MASTERED ERP v5.4 system initialized successfully' }
+        { id: 'LOG-1001', timestamp: new Date().toISOString(), userName: 'System Administrator', action: 'SYSTEM_BOOT', module: 'CORE', details: 'MASTERED ERP v5.5 system initialized successfully' }
       ],
       importHistory: []
     };
@@ -398,7 +398,7 @@
           <div class="sidebar">
             <div class="brand-header">
               <div class="brand-logo"><img src="assets/logo.png" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';"></div>
-              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v5.4</div></div>
+              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v5.5</div></div>
             </div>
 
             <div class="user-pill">
@@ -522,7 +522,7 @@
         title.innerText = 'Audit Logs';
         renderAuditView(viewport);
       } else if (tab === 'ai') {
-        title.innerText = 'AI Report Analysis';
+        title.innerText = 'AI Analysis';
         renderAiView(viewport);
       } else if (tab === 'settings') {
         title.innerText = 'System Settings';
@@ -751,15 +751,31 @@
       `;
     }
 
+    // MINUTE-PERFECT 10-FIELD ADD LEAD FORM
     function openAddLeadModal() {
-      document.getElementById('modal-title').innerText = 'Add New Lead';
+      document.getElementById('modal-title').innerText = 'Add New Lead (Complete 10-Field Record)';
       document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Lead Full Name *</label><input id="lead-name" placeholder="e.g. Rahul Sharma"></div>
-        <div class="form-group"><label>Phone Number *</label><input id="lead-phone" placeholder="9898989800"></div>
-        <div class="form-group"><label>Official Course Interested *</label><select id="lead-course">${state.courses.map(c=>`<option value="${c.id}">${c.name} (${c.id})</option>`).join('')}</select></div>
+        <div class="form-group"><label>1. Lead Full Name *</label><input id="lead-name" placeholder="e.g. Rahul Sharma"></div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>2. Phone Number *</label><input id="lead-phone" placeholder="9898989800"></div>
+          <div class="form-group" style="flex:1;"><label>3. WhatsApp Number</label><input id="lead-wa" placeholder="9898989800"></div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>4. Email Address</label><input id="lead-email" placeholder="rahul@gmail.com"></div>
+          <div class="form-group" style="flex:1;"><label>5. City / Location *</label><input id="lead-city" placeholder="Kochi"></div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>6. Official Course Interested *</label><select id="lead-course">${state.courses.map(c=>`<option value="${c.id}">${c.name} (${c.id})</option>`).join('')}</select></div>
+          <div class="form-group" style="flex:1;"><label>7. Lead Source *</label><select id="lead-source"><option value="Meta Ad">Meta Ad</option><option value="Google Ad">Google Ad</option><option value="Organic Lead">Organic Lead</option><option value="Random Visit">Random Visit</option><option value="Referral">Referral</option><option value="Seminar">Seminar / Workshop</option></select></div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>8. Assigned Representative *</label><input id="lead-rep" value="${currentUserName}"></div>
+          <div class="form-group" style="flex:1;"><label>9. Next Follow-up Date *</label><input id="lead-next" type="date" value="${new Date(Date.now()+86400000).toISOString().substring(0,10)}"></div>
+        </div>
+        <div class="form-group"><label>10. Initial Discussion Remarks *</label><textarea id="lead-rem" rows="2" placeholder="Customer requirements & details..."></textarea></div>
         <div class="modal-footer">
           <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="saveLead()">Save & Assign Lead</button>
+          <button class="btn btn-primary" onclick="saveLead()">Save & Assign Complete Lead</button>
         </div>
       `;
       document.getElementById('modal').classList.add('open');
@@ -768,15 +784,21 @@
     function saveLead() {
       const name = document.getElementById('lead-name').value.trim();
       const phone = document.getElementById('lead-phone').value.trim();
-      if (!name || !phone) return;
+      if (!name || !phone) { alert('Name and Phone are required!'); return; }
       const leadId = 'LD-2026-' + Math.floor(1000 + Math.random()*9000);
       state.leads.unshift({
         id: leadId,
         name: name,
         phone: phone,
+        whatsapp: document.getElementById('lead-wa').value.trim() || phone,
+        email: document.getElementById('lead-email').value.trim(),
+        city: document.getElementById('lead-city').value.trim() || 'Kochi',
         course: document.getElementById('lead-course').value,
+        source: document.getElementById('lead-source').value,
+        assigned: document.getElementById('lead-rep').value.trim() || currentUserName,
         status: 'New',
-        assigned: currentUserName,
+        nextFollowup: document.getElementById('lead-next').value,
+        remarks: document.getElementById('lead-rem').value.trim() || 'Lead registered',
         completed: 0
       });
       saveStateToStorage();
@@ -788,9 +810,10 @@
       document.getElementById('modal-title').innerText = 'Update Stage (' + leadName + ')';
       document.getElementById('modal-body').innerHTML = `
         <div class="form-group"><label>New Stage *</label><select id="stage-val" onchange="if(this.value==='Closed'){closeModal();openAdmissionModal('${leadId}','${leadName}');}"><option value="Follow-up">Follow-up</option><option value="Visited">Visited</option><option value="Not Interested">Not Interested</option><option value="Closed">Closed (Admit Student)</option></select></div>
+        <div class="form-group"><label>Transition Notes / Outcome Details *</label><textarea id="stage-notes" rows="2" placeholder="Discussion summary..."></textarea></div>
         <div class="modal-footer">
           <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="saveStage('${leadId}')">Save Stage</button>
+          <button class="btn btn-primary" onclick="saveStage('${leadId}')">Save Stage Update</button>
         </div>
       `;
       document.getElementById('modal').classList.add('open');
@@ -805,16 +828,30 @@
       switchTab('leads');
     }
 
+    // MINUTE-PERFECT ATOMIC STUDENT ADMISSION WIZARD
     function openAdmissionModal(leadId, leadName) {
-      document.getElementById('modal-title').innerText = 'Student Admission (' + leadName + ')';
+      document.getElementById('modal-title').innerText = 'Atomic Student Admission Wizard (' + leadName + ')';
       document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Student Full Name *</label><input id="adm-name" value="${leadName}"></div>
-        <div class="form-group"><label>Official Course *</label><select id="adm-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
-        <div class="form-group"><label>Total Fee (₹) *</label><input id="adm-total" value="75000"></div>
-        <div class="form-group"><label>Initial Paid (₹) *</label><input id="adm-paid" value="25000"></div>
+        <div class="form-group"><label>1. Student Full Name *</label><input id="adm-name" value="${leadName}"></div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>2. Phone *</label><input id="adm-phone" placeholder="9898989800"></div>
+          <div class="form-group" style="flex:1;"><label>3. Email</label><input id="adm-email" placeholder="student@gmail.com"></div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>4. Official Course *</label><select id="adm-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
+          <div class="form-group" style="flex:1;"><label>5. Batch Assignment *</label><select id="adm-batch">${state.batches.map(b=>`<option value="${b.name}">${b.name}</option>`).join('')}</select></div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>6. Total Agreed Fee (₹) *</label><input id="adm-total" value="75000"></div>
+          <div class="form-group" style="flex:1;"><label>7. Initial Paid Amount (₹) *</label><input id="adm-paid" value="25000"></div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>8. Payment Mode *</label><select id="adm-mode"><option value="GPay / UPI">GPay / UPI</option><option value="Bank Transfer">Bank Transfer</option><option value="Cash">Cash</option></select></div>
+          <div class="form-group" style="flex:1;"><label>9. Transaction Reference *</label><input id="adm-ref" value="TXN-${Math.floor(100000+Math.random()*900000)}"></div>
+        </div>
         <div class="modal-footer">
           <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-success" onclick="confirmAdmission('${leadId}')">Confirm Admission</button>
+          <button class="btn btn-success" onclick="confirmAdmission('${leadId}')">Confirm Admission & Generate 4 Installments</button>
         </div>
       `;
       document.getElementById('modal').classList.add('open');
@@ -831,6 +868,7 @@
         adm: admNo,
         name: name,
         course: course,
+        batch: document.getElementById('adm-batch').value,
         total: total,
         paid: paid,
         balance: total - paid,
@@ -845,6 +883,7 @@
       saveStateToStorage();
       closeModal();
       switchTab('students');
+      alert('Student Admission created for ' + name + '! Admission No: ' + admNo);
     }
 
     // 10. FOLLOWUPS VIEW
