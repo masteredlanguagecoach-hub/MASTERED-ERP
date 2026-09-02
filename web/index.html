@@ -6,13 +6,13 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>MASTERED ERP v5.0 - Production System</title>
+  <title>MASTERED ERP v5.1 - Mobile Perfection</title>
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MASTERED ERP">
   <link rel="apple-touch-icon" href="assets/logo.png">
-  <link rel="icon" type="image/png" href="assets/logo.png?v=5.0">
+  <link rel="icon" type="image/png" href="assets/logo.png?v=5.1">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <!-- SheetJS library for genuine Excel XLSX download and parsing -->
@@ -45,7 +45,7 @@
 
     /* ERP Mobile-First Responsive Layout */
     .app-container { display: flex; width: 100vw; height: 100vh; overflow: hidden; position: relative; }
-    .sidebar { width: 250px; background-color: var(--secondary); color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; transition: transform 0.3s ease; }
+    .sidebar { width: 260px; background-color: var(--secondary); color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; transition: transform 0.3s ease; }
     
     @media (max-width: 768px) {
       .sidebar { position: absolute; top: 0; left: 0; z-index: 450; transform: translateX(-100%); }
@@ -74,7 +74,7 @@
 
     .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100vh; width: 100%; }
     .top-bar { height: 60px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; flex-shrink: 0; }
-    .mobile-hamburger { display: none; font-size: 24px; cursor: pointer; margin-right: 12px; }
+    .mobile-hamburger { display: none; font-size: 24px; cursor: pointer; margin-right: 12px; color: var(--secondary); }
     
     @media (max-width: 768px) {
       .mobile-hamburger { display: block; }
@@ -91,7 +91,7 @@
     .stat-title { font-size: 10.5px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
     .stat-value { font-size: 20px; font-weight: 700; margin-top: 2px; }
 
-    .btn { padding: 9px 14px; border-radius: 6px; border: none; font-weight: 600; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
+    .btn { padding: 9px 14px; border-radius: 6px; border: none; font-weight: 600; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; white-space: nowrap; }
     .btn-primary { background: var(--primary); color: white; }
     .btn-primary:hover { background: var(--primary-dark); }
     .btn-success { background: var(--success); color: white; }
@@ -102,8 +102,9 @@
     .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
     .card-title { font-size: 14.5px; font-weight: 700; }
 
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
-    th { padding: 10px 12px; background: #F1F5F9; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border); }
+    .table-responsive { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; min-width: 600px; }
+    th { padding: 11px 12px; background: #F1F5F9; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border); }
     td { padding: 11px 12px; border-bottom: 1px solid var(--border); color: var(--text-primary); }
     tr:hover { background: #F8FAFC; }
 
@@ -119,7 +120,7 @@
 
     .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 600; }
     .modal-backdrop.open { display: flex; }
-    .modal { background: white; border-radius: 12px; width: 640px; max-width: 95%; padding: 20px; max-height: 90vh; overflow-y: auto; }
+    .modal { background: white; border-radius: 12px; width: 680px; max-width: 95%; padding: 20px; max-height: 90vh; overflow-y: auto; }
     .modal-header { font-size: 15px; font-weight: 700; margin-bottom: 14px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
     .modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); }
     .form-group { margin-bottom: 12px; }
@@ -140,7 +141,7 @@
         <img src="assets/logo.png" height="32" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';">
         <div>
           <div style="font-weight:700; font-size:15px;">MASTERED</div>
-          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v5.0</div>
+          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v5.1</div>
         </div>
       </div>
       <button class="btn btn-primary" onclick="openLoginModal()"><i class="ri-lock-line"></i> Sign In</button>
@@ -246,12 +247,20 @@
 
     loadStateFromStorage();
 
+    // 100% COMPLETE ROLE NAVIGATION WITH ZERO MISSING ROUTE OPTIONS
     const roleNavigation = {
       'ADMIN': [
         { id: 'dashboard', label: 'Executive Overview', icon: 'ri-dashboard-line' },
         { id: 'all_leads', label: 'All Leads Control Center', icon: 'ri-shield-star-line' },
+        { id: 'dash_sales', label: 'Sales Dashboard', icon: 'ri-line-chart-line' },
+        { id: 'dash_income', label: 'Income & Fee Dashboard', icon: 'ri-bank-card-line' },
+        { id: 'dash_expense', label: 'Expense Dashboard', icon: 'ri-wallet-3-line' },
+        { id: 'dash_marketing', label: 'Marketing ROI Dashboard', icon: 'ri-pie-chart-line' },
+        { id: 'dash_students', label: 'Students & Batches Dashboard', icon: 'ri-user-star-line' },
+        { id: 'campaigns', label: 'Marketing Campaigns', icon: 'ri-megaphone-line' },
         { id: 'leads', label: 'Lead CRM', icon: 'ri-line-chart-line' },
         { id: 'followups', label: 'Lead Follow-up Workspace', icon: 'ri-phone-line' },
+        { id: 'due_reminders', label: '3-Day Fee Reminders', icon: 'ri-alarm-warning-line' },
         { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
         { id: 'batches', label: 'Batch Management', icon: 'ri-group-line' },
         { id: 'fee', label: 'Fee Collection', icon: 'ri-money-dollar-circle-line' },
@@ -259,28 +268,42 @@
         { id: 'reports', label: 'Reports & Analytics', icon: 'ri-file-chart-line' },
         { id: 'users', label: 'User Management', icon: 'ri-user-settings-line' },
         { id: 'courses', label: 'Course Master Configuration', icon: 'ri-book-read-line' },
-        { id: 'audit', label: 'Audit Logs', icon: 'ri-shield-check-line' }
+        { id: 'audit', label: 'Audit Logs', icon: 'ri-shield-check-line' },
+        { id: 'ai', label: 'AI Analysis', icon: 'ri-sparkles-line' },
+        { id: 'settings', label: 'Settings', icon: 'ri-settings-3-line' }
       ],
       'CEO': [
         { id: 'dashboard', label: 'Executive Financials', icon: 'ri-dashboard-line' },
+        { id: 'dash_income', label: 'Income & Fee Dashboard', icon: 'ri-bank-card-line' },
+        { id: 'dash_expense', label: 'Expense Dashboard', icon: 'ri-wallet-3-line' },
+        { id: 'dash_marketing', label: 'Marketing ROI Dashboard', icon: 'ri-pie-chart-line' },
         { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
-        { id: 'accounting', label: 'Accounting & Expense Entry', icon: 'ri-wallet-3-line' }
+        { id: 'accounting', label: 'Accounting & Expense Entry', icon: 'ri-wallet-3-line' },
+        { id: 'reports', label: 'Executive Reports', icon: 'ri-file-chart-line' }
       ],
       'SALES_HEAD': [
         { id: 'dashboard', label: 'Dashboard', icon: 'ri-dashboard-line' },
         { id: 'leads', label: 'Team Leads CRM', icon: 'ri-line-chart-line' },
-        { id: 'batches', label: 'Batch Management', icon: 'ri-group-line' }
+        { id: 'sales_team', label: 'Sales Team & Performance', icon: 'ri-team-line' },
+        { id: 'batches', label: 'Batch Management', icon: 'ri-group-line' },
+        { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
+        { id: 'reports', label: 'Sales Reports', icon: 'ri-file-chart-line' }
       ],
       'SALES_EXEC': [
         { id: 'dashboard', label: 'Dashboard & Incentives', icon: 'ri-dashboard-line' },
         { id: 'leads', label: 'My Assigned Leads', icon: 'ri-line-chart-line' },
-        { id: 'followups', label: 'Lead Follow-up Workspace', icon: 'ri-phone-line' }
+        { id: 'followups', label: 'Lead Follow-up Workspace', icon: 'ri-phone-line' },
+        { id: 'students', label: 'My Converted Students', icon: 'ri-user-star-line' },
+        { id: 'import_history', label: 'My Lead Import History', icon: 'ri-file-excel-line' }
       ],
       'OPS': [
         { id: 'dashboard', label: 'Dashboard', icon: 'ri-dashboard-line' },
+        { id: 'due_reminders', label: '3-Day Fee Reminders', icon: 'ri-alarm-warning-line' },
         { id: 'students', label: 'New Admissions', icon: 'ri-user-star-line' },
+        { id: 'batches', label: 'Batch Management & Transfers', icon: 'ri-group-line' },
         { id: 'fee', label: 'Fee Collection', icon: 'ri-money-dollar-circle-line' },
-        { id: 'accounting', label: 'Expenses & Petty Cash', icon: 'ri-wallet-3-line' }
+        { id: 'accounting', label: 'Expenses & Petty Cash', icon: 'ri-wallet-3-line' },
+        { id: 'reports', label: 'Operations Reports', icon: 'ri-file-chart-line' }
       ]
     };
 
@@ -333,7 +356,7 @@
           <div class="sidebar">
             <div class="brand-header">
               <div class="brand-logo"><img src="assets/logo.png" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';"></div>
-              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v5.0</div></div>
+              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v5.1</div></div>
             </div>
 
             <div class="user-pill">
@@ -461,12 +484,14 @@
             <button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Register Lead</button>
           </div>
           ${state.leads.length === 0 ? `<div class="empty-state"><i class="ri-shield-star-line"></i><div class="empty-state-title">No leads in database.</div></div>` : `
-            <table>
-              <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Course</th><th>Assigned Rep</th><th>Stage</th></tr></thead>
-              <tbody>
-                ${state.leads.map(l => `<tr><td>${l.id}</td><td>${l.name}</td><td>${l.phone}</td><td>${l.course}</td><td>${l.assigned}</td><td><span class="badge badge-info">${l.status}</span></td></tr>`).join('')}
-              </tbody>
-            </table>
+            <div class="table-responsive">
+              <table>
+                <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Course</th><th>Assigned Rep</th><th>Stage</th></tr></thead>
+                <tbody>
+                  ${state.leads.map(l => `<tr><td>${l.id}</td><td>${l.name}</td><td>${l.phone}</td><td>${l.course}</td><td>${l.assigned}</td><td><span class="badge badge-info">${l.status}</span></td></tr>`).join('')}
+                </tbody>
+              </table>
+            </div>
           `}
         </div>
       `;
@@ -477,12 +502,14 @@
         <div class="card">
           <div class="card-header"><div class="card-title">Active Lead CRM Pipeline</div><button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Add New Lead</button></div>
           ${state.leads.length === 0 ? `<div class="empty-state"><i class="ri-line-chart-line"></i><div class="empty-state-title">No leads recorded yet.</div></div>` : `
-            <table>
-              <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Course</th><th>Stage</th></tr></thead>
-              <tbody>
-                ${state.leads.map(l => `<tr><td>${l.id}</td><td>${l.name}</td><td>${l.phone}</td><td>${l.course}</td><td><span class="badge badge-success">${l.status}</span></td></tr>`).join('')}
-              </tbody>
-            </table>
+            <div class="table-responsive">
+              <table>
+                <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Course</th><th>Stage</th></tr></thead>
+                <tbody>
+                  ${state.leads.map(l => `<tr><td>${l.id}</td><td>${l.name}</td><td>${l.phone}</td><td>${l.course}</td><td><span class="badge badge-success">${l.status}</span></td></tr>`).join('')}
+                </tbody>
+              </table>
+            </div>
           `}
         </div>
       `;
