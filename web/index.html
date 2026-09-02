@@ -6,13 +6,13 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>MASTERED ERP v7.1 - Complete Production System</title>
+  <title>MASTERED ERP v7.2 - Complete Responsive System</title>
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MASTERED ERP">
   <link rel="apple-touch-icon" href="assets/logo.png">
-  <link rel="icon" type="image/png" href="assets/logo.png?v=7.1">
+  <link rel="icon" type="image/png" href="assets/logo.png?v=7.2">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -79,8 +79,8 @@
       .mobile-hamburger { display: block; }
     }
 
-    .page-title { font-size: 15px; font-weight: 700; }
-    .top-user-badge { display: flex; align-items: center; gap: 8px; font-size: 11px; background: #F1F5F9; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); }
+    .page-title { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .top-user-badge { display: flex; align-items: center; gap: 8px; font-size: 11px; background: #F1F5F9; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); flex-shrink: 0; }
 
     .content-viewport { flex: 1; padding: 16px; overflow-y: auto; }
 
@@ -100,9 +100,10 @@
     .card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
     .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
     .card-title { font-size: 14.5px; font-weight: 700; }
+    .card-header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
     .table-responsive { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid var(--border); }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; min-width: 600px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; min-width: 650px; }
     th { padding: 11px 12px; background: #F1F5F9; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border); }
     td { padding: 11px 12px; border-bottom: 1px solid var(--border); color: var(--text-primary); }
     tr:hover { background: #F8FAFC; }
@@ -129,6 +130,22 @@
     .health-panel { background: #1E293B; color: white; padding: 14px 16px; border-radius: 10px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 11.5px; flex-wrap: wrap; }
     .health-item { display: flex; align-items: center; gap: 6px; }
     .health-dot { width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block; }
+
+    /* CLEAN MOBILE RESPONSIVE SCOPED MEDIA QUERIES */
+    @media (max-width: 600px) {
+      .grid-4 { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .stat-card { padding: 12px; gap: 8px; }
+      .stat-icon { width: 34px; height: 34px; font-size: 16px; }
+      .stat-title { font-size: 9.5px; }
+      .stat-value { font-size: 16px; }
+      
+      .card-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .card-header-actions { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+      .card-header-actions .btn { width: 100%; justify-content: center; }
+
+      .form-row-flex { flex-direction: column; gap: 0 !important; }
+      .top-user-badge span:last-child { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -140,7 +157,7 @@
         <img src="assets/logo.png" height="32" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';">
         <div>
           <div style="font-weight:700; font-size:15px;">MASTERED</div>
-          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v7.1</div>
+          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v7.2</div>
         </div>
       </div>
       <button class="btn btn-primary" onclick="openLoginModal()"><i class="ri-lock-line"></i> Sign In</button>
@@ -207,7 +224,7 @@
       ],
       activities: [],
       audit: [
-        { id: 'LOG-1001', timestamp: new Date().toISOString(), userName: 'System Administrator', action: 'SYSTEM_BOOT', module: 'CORE', details: 'MASTERED ERP v7.1 system booted successfully' }
+        { id: 'LOG-1001', timestamp: new Date().toISOString(), userName: 'System Administrator', action: 'SYSTEM_BOOT', module: 'CORE', details: 'MASTERED ERP v7.2 responsive system booted successfully' }
       ],
       importHistory: []
     };
@@ -398,7 +415,7 @@
           <div class="sidebar">
             <div class="brand-header">
               <div class="brand-logo"><img src="assets/logo.png" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';"></div>
-              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v7.1</div></div>
+              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v7.2</div></div>
             </div>
 
             <div class="user-pill">
@@ -419,15 +436,14 @@
 
           <div class="main-area">
             <div class="top-bar">
-              <div style="display:flex; align-items:center;">
+              <div style="display:flex; align-items:center; overflow:hidden;">
                 <i class="ri-menu-line mobile-hamburger" onclick="toggleMobileSidebar()"></i>
                 <div class="page-title" id="page-title">Executive Overview</div>
               </div>
               <div class="top-user-badge">
                 <i class="ri-user-3-line" style="color:var(--primary);"></i>
                 <span style="font-weight:700;">${currentUserName}</span>
-                <span style="color:var(--text-muted);">|</span>
-                <span style="color:var(--primary); font-weight:600;">${currentRole}</span>
+                <span style="color:var(--primary); font-weight:600;">(${currentRole})</span>
               </div>
             </div>
 
@@ -468,7 +484,7 @@
 
       if (tab === 'dashboard') {
         if (currentRole === 'SALES_EXEC') {
-          title.innerText = 'Sales Executive Dashboard & Incentives';
+          title.innerText = 'Sales Executive Dashboard';
           renderSalesExecDashboard(viewport);
         } else {
           title.innerText = 'Executive Overview';
@@ -478,22 +494,22 @@
         title.innerText = 'All Leads Control Center';
         renderAllLeadsControlCenter(viewport);
       } else if (tab === 'dash_sales') {
-        title.innerText = 'Sales & Conversion Performance Dashboard';
+        title.innerText = 'Sales Dashboard';
         renderSalesDashboard(viewport);
       } else if (tab === 'dash_income') {
-        title.innerText = 'Income & Fee Collections Dashboard';
+        title.innerText = 'Income & Fee Dashboard';
         renderIncomeDashboard(viewport);
       } else if (tab === 'dash_expense') {
-        title.innerText = 'Expenses & Petty Cash Dashboard';
+        title.innerText = 'Expense Dashboard';
         renderExpenseDashboard(viewport);
       } else if (tab === 'dash_marketing') {
-        title.innerText = 'Marketing ROI & Campaign Dashboard';
+        title.innerText = 'Marketing ROI Dashboard';
         renderMarketingRoiDashboard(viewport);
       } else if (tab === 'dash_students') {
-        title.innerText = 'Students Directory & Batches Dashboard';
+        title.innerText = 'Students & Batches Dashboard';
         renderStudentsDashboard(viewport);
       } else if (tab === 'campaigns') {
-        title.innerText = 'Marketing Campaign Master';
+        title.innerText = 'Marketing Campaigns';
         renderCampaignsView(viewport);
       } else if (tab === 'leads') {
         title.innerText = 'Lead CRM Pipeline';
@@ -517,7 +533,7 @@
         title.innerText = 'Accounting & Expenses';
         renderAccountingView(viewport);
       } else if (tab === 'reports') {
-        title.innerText = 'Executive Reports & Analytics';
+        title.innerText = 'Reports & Analytics';
         renderReportsView(viewport);
       } else if (tab === 'users') {
         title.innerText = 'User Management';
@@ -564,16 +580,16 @@
 
       viewport.innerHTML = `
         <div class="grid-4">
-          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-line-chart-line"></i></div><div><div class="stat-title">My Assigned Leads</div><div class="stat-value">${myLeads.length}</div></div></div>
-          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-user-star-line"></i></div><div><div class="stat-title">My Converted Admissions</div><div class="stat-value">${myStudents.length}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-line-chart-line"></i></div><div><div class="stat-title">Assigned Leads</div><div class="stat-value">${myLeads.length}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-user-star-line"></i></div><div><div class="stat-title">Converted Admissions</div><div class="stat-value">${myStudents.length}</div></div></div>
           <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-phone-line"></i></div><div><div class="stat-title">Active Follow-ups</div><div class="stat-value">${myLeads.filter(l=>l.status!=='Closed').length}</div></div></div>
-          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-gift-line"></i></div><div><div class="stat-title">Earned Sales Incentives</div><div class="stat-value">₹${myIncentives.toLocaleString()}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-gift-line"></i></div><div><div class="stat-title">Sales Incentives</div><div class="stat-value">₹${myIncentives.toLocaleString()}</div></div></div>
         </div>
         <div class="card">
           <div class="card-header">
             <div class="card-title">My Assigned Leads CRM Summary</div>
-            <div style="display:flex; gap:8px;">
-              <button class="btn btn-success" onclick="openImportLeadsModal()"><i class="ri-file-excel-line"></i> Import Leads (Excel / CSV)</button>
+            <div class="card-header-actions">
+              <button class="btn btn-success" onclick="openImportLeadsModal()"><i class="ri-file-excel-line"></i> Import Leads (Excel)</button>
               <button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Add New Lead</button>
             </div>
           </div>
@@ -615,8 +631,8 @@
         <div class="card">
           <div class="card-header">
             <div class="card-title">All Leads Control Center (${state.leads.length} Records)</div>
-            <div style="display:flex; gap:8px;">
-              <button class="btn btn-success" onclick="openImportLeadsModal()"><i class="ri-file-excel-line"></i> Import Leads (Excel / CSV)</button>
+            <div class="card-header-actions">
+              <button class="btn btn-success" onclick="openImportLeadsModal()"><i class="ri-file-excel-line"></i> Import Leads (Excel)</button>
               <button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Register Lead</button>
             </div>
           </div>
@@ -762,7 +778,7 @@
       switchTab('campaigns');
     }
 
-    // 9. LEADS CRM VIEW WITH PROMINENT IMPORT BUTTON
+    // 9. LEADS CRM VIEW WITH STACKABLE ACTION BUTTONS
     function renderLeadsView(viewport) {
       let filteredLeads = state.leads;
       if (currentRole === 'SALES_EXEC') filteredLeads = state.leads.filter(l => l.assigned === currentUserName);
@@ -771,8 +787,8 @@
         <div class="card">
           <div class="card-header">
             <div class="card-title">Active CRM Lead Pipeline (${filteredLeads.length} Leads)</div>
-            <div style="display:flex; gap:8px;">
-              <button class="btn btn-success" onclick="openImportLeadsModal()"><i class="ri-file-excel-line"></i> Import Leads (Excel / CSV)</button>
+            <div class="card-header-actions">
+              <button class="btn btn-success" onclick="openImportLeadsModal()"><i class="ri-file-excel-line"></i> Import Leads (Excel)</button>
               <button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Add New Lead</button>
             </div>
           </div>
@@ -799,7 +815,7 @@
       `;
     }
 
-    // GENUINE EXCEL IMPORT MODAL & PARSER
+    // EXCEL IMPORT MODAL
     function openImportLeadsModal() {
       document.getElementById('modal-title').innerText = 'Import Lead Workbook (Excel / CSV)';
       document.getElementById('modal-body').innerHTML = `
@@ -807,10 +823,10 @@
           <i class="ri-file-excel-2-line" style="font-size:36px; color:var(--success);"></i>
           <div style="font-weight:700; font-size:13px; margin-top:8px;">Select or Drop Excel Workbook (.xlsx, .xls, .csv)</div>
           <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">Columns parsed: Full Name, Phone, Email, City, Course, Lead Source, Remarks</div>
-          <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" style="margin-top:12px; font-size:12px;" onchange="handleExcelImportFile(event)">
+          <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" style="margin-top:12px; font-size:12px; max-width:100%;" onchange="handleExcelImportFile(event)">
         </div>
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <button class="btn btn-outline" onclick="downloadSampleExcel()"><i class="ri-download-line"></i> Download Sample Excel Format (.xlsx)</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <button class="btn btn-outline" onclick="downloadSampleExcel()"><i class="ri-download-line"></i> Download Sample Excel (.xlsx)</button>
           <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
         </div>
       `;
@@ -877,24 +893,24 @@
       reader.readAsArrayBuffer(file);
     }
 
-    // 10-FIELD ADD LEAD FORM
+    // RESPONSIVE 10-FIELD ADD LEAD FORM WITH FORM-ROW-FLEX
     function openAddLeadModal() {
       document.getElementById('modal-title').innerText = 'Add New Lead (Complete 10-Field Record)';
       document.getElementById('modal-body').innerHTML = `
         <div class="form-group"><label>1. Lead Full Name *</label><input id="lead-name" placeholder="e.g. Rahul Sharma"></div>
-        <div style="display:flex; gap:10px;">
+        <div class="form-row-flex" style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>2. Phone Number *</label><input id="lead-phone" placeholder="9898989800"></div>
           <div class="form-group" style="flex:1;"><label>3. WhatsApp Number</label><input id="lead-wa" placeholder="9898989800"></div>
         </div>
-        <div style="display:flex; gap:10px;">
+        <div class="form-row-flex" style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>4. Email Address</label><input id="lead-email" placeholder="rahul@gmail.com"></div>
           <div class="form-group" style="flex:1;"><label>5. City / Location *</label><input id="lead-city" placeholder="Kochi"></div>
         </div>
-        <div style="display:flex; gap:10px;">
+        <div class="form-row-flex" style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>6. Official Course Interested *</label><select id="lead-course">${state.courses.map(c=>`<option value="${c.id}">${c.name} (${c.id})</option>`).join('')}</select></div>
           <div class="form-group" style="flex:1;"><label>7. Lead Source *</label><select id="lead-source"><option value="Meta Ad">Meta Ad</option><option value="Google Ad">Google Ad</option><option value="Organic Lead">Organic Lead</option><option value="Random Visit">Random Visit</option><option value="Referral">Referral</option><option value="Seminar">Seminar / Workshop</option></select></div>
         </div>
-        <div style="display:flex; gap:10px;">
+        <div class="form-row-flex" style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>8. Assigned Representative *</label><input id="lead-rep" value="${currentUserName}"></div>
           <div class="form-group" style="flex:1;"><label>9. Next Follow-up Date *</label><input id="lead-next" type="date" value="${new Date(Date.now()+86400000).toISOString().substring(0,10)}"></div>
         </div>
@@ -954,24 +970,24 @@
       switchTab('leads');
     }
 
-    // ATOMIC STUDENT ADMISSION WIZARD
+    // ATOMIC STUDENT ADMISSION WIZARD WITH FORM-ROW-FLEX
     function openAdmissionModal(leadId, leadName) {
       document.getElementById('modal-title').innerText = 'Atomic Student Admission Wizard (' + leadName + ')';
       document.getElementById('modal-body').innerHTML = `
         <div class="form-group"><label>1. Student Full Name *</label><input id="adm-name" value="${leadName}"></div>
-        <div style="display:flex; gap:10px;">
+        <div class="form-row-flex" style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>2. Phone *</label><input id="adm-phone" placeholder="9898989800"></div>
           <div class="form-group" style="flex:1;"><label>3. Email</label><input id="adm-email" placeholder="student@gmail.com"></div>
         </div>
-        <div style="display:flex; gap:10px;">
+        <div class="form-row-flex" style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>4. Official Course *</label><select id="adm-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
           <div class="form-group" style="flex:1;"><label>5. Batch Assignment *</label><select id="adm-batch">${state.batches.map(b=>`<option value="${b.name}">${b.name}</option>`).join('')}</select></div>
         </div>
-        <div style="display:flex; gap:10px;">
+        <div class="form-row-flex" style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>6. Total Agreed Fee (₹) *</label><input id="adm-total" value="75000"></div>
           <div class="form-group" style="flex:1;"><label>7. Initial Paid Amount (₹) *</label><input id="adm-paid" value="25000"></div>
         </div>
-        <div style="display:flex; gap:10px;">
+        <div class="form-row-flex" style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>8. Payment Mode *</label><select id="adm-mode"><option value="GPay / UPI">GPay / UPI</option><option value="Bank Transfer">Bank Transfer</option><option value="Cash">Cash</option></select></div>
           <div class="form-group" style="flex:1;"><label>9. Transaction Reference *</label><input id="adm-ref" value="TXN-${Math.floor(100000+Math.random()*900000)}"></div>
         </div>
@@ -1242,7 +1258,7 @@
             <div class="card-title">Executive Reports & Analytics Generator</div>
             <button class="btn btn-success" onclick="alert('Exporting Master Executive Report Excel (.xlsx)...');"><i class="ri-file-excel-line"></i> Export Excel Report</button>
           </div>
-          <div style="display:flex; gap:10px; margin-bottom:16px;">
+          <div class="form-row-flex" style="display:flex; gap:10px; margin-bottom:16px;">
             <div class="form-group" style="flex:1;"><label>Report Type</label><select><option>Complete Financial & CRM Report</option><option>Fee Collections Ledger</option><option>Marketing ROI Audit</option></select></div>
             <div class="form-group" style="flex:1;"><label>Format</label><select><option>Excel (.xlsx)</option><option>PDF</option></select></div>
           </div>
@@ -1365,18 +1381,18 @@
       `;
     }
 
-    // 22. IMPORT HISTORY VIEW WITH DIRECT UPLOAD BUTTON
+    // 22. IMPORT HISTORY VIEW WITH STACKABLE BUTTONS
     function renderImportHistoryView(viewport) {
       viewport.innerHTML = `
         <div class="card">
           <div class="card-header">
             <div class="card-title">My Lead Import History & Excel Utilities</div>
-            <div style="display:flex; gap:8px;">
-              <button class="btn btn-success" onclick="openImportLeadsModal()"><i class="ri-file-excel-line"></i> Import New Lead Workbook</button>
-              <button class="btn btn-outline" onclick="downloadSampleExcel()"><i class="ri-download-line"></i> Download Sample Excel Format (.xlsx)</button>
+            <div class="card-header-actions">
+              <button class="btn btn-success" onclick="openImportLeadsModal()"><i class="ri-file-excel-line"></i> Import New Workbook</button>
+              <button class="btn btn-outline" onclick="downloadSampleExcel()"><i class="ri-download-line"></i> Download Sample Excel</button>
             </div>
           </div>
-          ${state.importHistory.length === 0 ? `<div class="empty-state"><i class="ri-file-excel-line"></i><div class="empty-state-title">No lead workbook imports performed yet. Click "Import New Lead Workbook" to start.</div></div>` : `
+          ${state.importHistory.length === 0 ? `<div class="empty-state"><i class="ri-file-excel-line"></i><div class="empty-state-title">No lead workbook imports performed yet. Click "Import New Workbook" to start.</div></div>` : `
             <div class="table-responsive">
               <table>
                 <thead><tr><th>Import Batch ID</th><th>File Name</th><th>Total Leads</th><th>Date & Time</th><th>Imported By</th></tr></thead>
