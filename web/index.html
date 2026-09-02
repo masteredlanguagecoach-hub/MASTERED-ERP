@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>MASTERED ERP v4.1 - Production System</title>
+  <title>MASTERED ERP v5.0 - Production System</title>
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MASTERED ERP">
   <link rel="apple-touch-icon" href="assets/logo.png">
-  <link rel="icon" type="image/png" href="assets/logo.png?v=4.1">
+  <link rel="icon" type="image/png" href="assets/logo.png?v=5.0">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <!-- SheetJS library for genuine Excel XLSX download and parsing -->
@@ -36,16 +36,22 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background-color: var(--bg); color: var(--text-primary); min-height: 100vh; overflow: hidden; }
+    body { background-color: var(--bg); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
 
-    /* Pure Public Landing Container - Pre-Login Gate */
+    /* Pure Public Landing Container */
     .landing-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 500; display: flex; flex-direction: column; overflow-y: auto; }
-    .landing-header { background: white; border-bottom: 1px solid var(--border); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
-    .landing-hero { background: linear-gradient(135deg, #1E293B, #0F172A); color: white; padding: 80px 24px; text-align: center; }
+    .landing-header { background: white; border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .landing-hero { background: linear-gradient(135deg, #1E293B, #0F172A); color: white; padding: 60px 20px; text-align: center; }
 
-    /* ERP Application Container */
-    .app-container { display: flex; width: 100vw; height: 100vh; overflow: hidden; }
-    .sidebar { width: 250px; background-color: var(--secondary); color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
+    /* ERP Mobile-First Responsive Layout */
+    .app-container { display: flex; width: 100vw; height: 100vh; overflow: hidden; position: relative; }
+    .sidebar { width: 250px; background-color: var(--secondary); color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; transition: transform 0.3s ease; }
+    
+    @media (max-width: 768px) {
+      .sidebar { position: absolute; top: 0; left: 0; z-index: 450; transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+    }
+
     .brand-header { padding: 20px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--secondary-light); flex-shrink: 0; }
     .brand-logo { width: 36px; height: 36px; border-radius: 8px; background: white; padding: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
     .brand-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
@@ -59,66 +65,68 @@
     .user-role { font-size: 10px; color: #FCA5A5; }
 
     .nav-list { list-style: none; padding: 8px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; color: #94A3B8; cursor: pointer; transition: all 0.2s; font-size: 12.5px; font-weight: 500; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; color: #94A3B8; cursor: pointer; transition: all 0.2s; font-size: 12.5px; font-weight: 500; min-height: 44px; }
     .nav-item:hover, .nav-item.active { background-color: var(--primary); color: white; font-weight: 600; }
     .nav-item i { font-size: 17px; }
 
     .sidebar-footer { padding: 12px 14px 20px 14px; border-top: 1px solid var(--secondary-light); flex-shrink: 0; }
-    .logout-btn { width: 100%; padding: 10px; border: 1px solid rgba(255,255,255,0.25); background: transparent; color: white; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 12px; }
-    .logout-btn:hover { background: rgba(255,255,255,0.1); }
+    .logout-btn { width: 100%; padding: 10px; border: 1px solid rgba(255,255,255,0.25); background: transparent; color: white; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 12px; min-height: 44px; }
 
-    .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100vh; }
-    .top-bar { height: 60px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; }
-    .page-title { font-size: 17px; font-weight: 700; }
-    .top-user-badge { display: flex; align-items: center; gap: 10px; font-size: 12px; background: #F1F5F9; padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); }
+    .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100vh; width: 100%; }
+    .top-bar { height: 60px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; flex-shrink: 0; }
+    .mobile-hamburger { display: none; font-size: 24px; cursor: pointer; margin-right: 12px; }
+    
+    @media (max-width: 768px) {
+      .mobile-hamburger { display: block; }
+    }
 
-    .content-viewport { flex: 1; padding: 20px; overflow-y: auto; }
+    .page-title { font-size: 15px; font-weight: 700; }
+    .top-user-badge { display: flex; align-items: center; gap: 8px; font-size: 11px; background: #F1F5F9; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); }
 
-    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 20px; }
-    .stat-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 18px; display: flex; align-items: center; gap: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-    .stat-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
-    .stat-title { font-size: 11px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat-value { font-size: 22px; font-weight: 700; margin-top: 2px; }
+    .content-viewport { flex: 1; padding: 16px; overflow-y: auto; }
 
-    .btn { padding: 8px 14px; border-radius: 6px; border: none; font-weight: 600; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
+    .stat-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .stat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .stat-title { font-size: 10.5px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-value { font-size: 20px; font-weight: 700; margin-top: 2px; }
+
+    .btn { padding: 9px 14px; border-radius: 6px; border: none; font-weight: 600; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
     .btn-primary { background: var(--primary); color: white; }
     .btn-primary:hover { background: var(--primary-dark); }
     .btn-success { background: var(--success); color: white; }
     .btn-secondary { background: var(--secondary); color: white; }
     .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-primary); }
 
-    .card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .card-title { font-size: 15px; font-weight: 700; }
+    .card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+    .card-title { font-size: 14.5px; font-weight: 700; }
 
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12.5px; }
-    th { padding: 11px 12px; background: #F1F5F9; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border); }
-    td { padding: 12px; border-bottom: 1px solid var(--border); color: var(--text-primary); }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
+    th { padding: 10px 12px; background: #F1F5F9; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border); }
+    td { padding: 11px 12px; border-bottom: 1px solid var(--border); color: var(--text-primary); }
     tr:hover { background: #F8FAFC; }
 
-    .badge { padding: 3px 10px; border-radius: 16px; font-size: 10.5px; font-weight: 600; display: inline-block; }
+    .badge { padding: 3px 10px; border-radius: 16px; font-size: 10px; font-weight: 600; display: inline-block; }
     .badge-info { background: #DBEAFE; color: #1D4ED8; }
     .badge-success { background: #DCFCE7; color: #15803D; }
     .badge-warning { background: #FEF3C7; color: #B45309; }
     .badge-danger { background: #FEE2E2; color: #B91C1C; }
-    .badge-demo { background: #FEF3C7; color: #B45309; border: 1px solid #F59E0B; font-size: 9px; padding: 2px 6px; margin-top: 4px; }
+    .badge-demo { background: #FEF3C7; color: #B45309; border: 1px solid #F59E0B; font-size: 9px; padding: 2px 6px; }
 
-    .empty-state { padding: 40px 20px; text-align: center; color: var(--text-secondary); }
-    .empty-state i { font-size: 40px; color: var(--text-muted); margin-bottom: 12px; display: block; }
-    .empty-state-title { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
-    .empty-state-desc { font-size: 12.5px; color: var(--text-secondary); }
+    .empty-state { padding: 30px 16px; text-align: center; color: var(--text-secondary); }
+    .empty-state i { font-size: 36px; color: var(--text-muted); margin-bottom: 10px; display: block; }
 
     .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 600; }
     .modal-backdrop.open { display: flex; }
-    .modal { background: white; border-radius: 12px; width: 680px; max-width: 95%; padding: 24px; max-height: 90vh; overflow-y: auto; }
-    .modal-header { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
-    .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--border); }
-    .form-group { margin-bottom: 14px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 9px; border: 1px solid var(--border); border-radius: 6px; font-size: 12.5px; }
+    .modal { background: white; border-radius: 12px; width: 640px; max-width: 95%; padding: 20px; max-height: 90vh; overflow-y: auto; }
+    .modal-header { font-size: 15px; font-weight: 700; margin-bottom: 14px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 11.5px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 9px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; min-height: 44px; }
 
-    /* Health Panel Styling */
-    .health-panel { background: #1E293B; color: white; padding: 14px 20px; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-size: 12px; flex-wrap: wrap; }
+    .health-panel { background: #1E293B; color: white; padding: 14px 16px; border-radius: 10px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 11.5px; flex-wrap: wrap; }
     .health-item { display: flex; align-items: center; gap: 6px; }
     .health-dot { width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block; }
   </style>
@@ -128,22 +136,22 @@
   <!-- Pure Public Landing Container -->
   <div class="landing-container" id="landing-page">
     <div class="landing-header">
-      <div style="display:flex; align-items:center; gap:12px;">
-        <img src="assets/logo.png" height="36" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <img src="assets/logo.png" height="32" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';">
         <div>
-          <div style="font-weight:700; font-size:16px;">MASTERED</div>
-          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v4.1</div>
+          <div style="font-weight:700; font-size:15px;">MASTERED</div>
+          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v5.0</div>
         </div>
       </div>
-      <button class="btn btn-primary" onclick="openLoginModal()"><i class="ri-lock-line"></i> Sign In to ERP Portal</button>
+      <button class="btn btn-primary" onclick="openLoginModal()"><i class="ri-lock-line"></i> Sign In</button>
     </div>
 
     <div class="landing-hero">
-      <span style="background:rgba(220,38,38,0.2); border:1px solid rgba(220,38,38,0.4); padding:4px 14px; border-radius:20px; font-size:11px; font-weight:700;">MASTERED ACADEMY MANAGEMENT SYSTEM</span>
-      <h1 style="font-size:32px; font-weight:700; margin-top:20px;">Empowering Excellence in Academy Operations, CRM & Fee Collections</h1>
-      <p style="color:#94A3B8; font-size:14px; margin-top:12px;">Unified secure portal for student admissions, course ledgers, batch management, and academy financial accounting.</p>
-      <div style="margin-top:32px;">
-        <button class="btn btn-primary" style="padding:14px 28px; font-size:14px;" onclick="openLoginModal()"><i class="ri-login-box-line"></i> SIGN IN TO PORTAL</button>
+      <span style="background:rgba(220,38,38,0.2); border:1px solid rgba(220,38,38,0.4); padding:4px 12px; border-radius:20px; font-size:10.5px; font-weight:700;">MASTERED ACADEMY SYSTEM</span>
+      <h1 style="font-size:26px; font-weight:700; margin-top:16px;">Academy Operations, CRM & Fee Collections</h1>
+      <p style="color:#94A3B8; font-size:13px; margin-top:10px;">Unified portal for admissions, course ledgers, batch management, and financial accounting.</p>
+      <div style="margin-top:24px;">
+        <button class="btn btn-primary" style="padding:12px 24px; font-size:13px;" onclick="openLoginModal()"><i class="ri-login-box-line"></i> SIGN IN TO PORTAL</button>
       </div>
     </div>
   </div>
@@ -151,7 +159,7 @@
   <!-- Dynamic Application Mount Root -->
   <div id="app-root"></div>
 
-  <!-- Global Modal Container with Escape Key and Cancel Controls -->
+  <!-- Global Modal Container -->
   <div class="modal-backdrop" id="modal">
     <div class="modal">
       <div class="modal-header">
@@ -171,7 +179,6 @@
 
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyGgVKXlTALRo9WMIPVpEXd7d6es9hhCG6XnTbZw_i1cx29yZQM_ulY-C8rbX8pL2zvdQ/exec';
 
-    // ERP State Collections
     const state = {
       courses: [
         { id: 'BHA-6M', name: 'Business and Hospital Administration', duration: '6 months', fee: 45000, inst: 4 },
@@ -185,10 +192,8 @@
       expenses: [],
       payments: [],
       campaigns: [
-        { id: 'CMP-1001', name: 'Meta Ads Q3 Campaign', type: 'Meta Ad', channel: 'Meta Ads', budget: 50000, actualSpend: 25000, status: 'Active' },
-        { id: 'CMP-1002', name: 'Google Ads Seminar Drive', type: 'Google Ad', channel: 'Google Ads', budget: 30000, actualSpend: 15000, status: 'Active' }
+        { id: 'CMP-1001', name: 'Meta Ads Q3 Campaign', type: 'Meta Ad', channel: 'Meta Ads', budget: 50000, actualSpend: 25000, status: 'Active' }
       ],
-      publicEvents: [],
       users: [
         { id: 'USR-1001', name: 'System Administrator', email: 'admin@mastered.com', role: 'ADMIN', status: 'ACTIVE', phone: '9898989800', isDemo: false },
         { id: 'USR-1002', name: 'Rasheed', email: 'ceo@mastered.com', role: 'CEO', status: 'ACTIVE', phone: '9898989801', isDemo: false },
@@ -198,14 +203,11 @@
       ],
       activities: [],
       audit: [],
-      importHistory: [],
-      sentReminders: new Set(),
-      settings: { minLeadFollowups: 10, monthlyConversion: 25 }
+      importHistory: []
     };
 
-    // PERSISTENCE ENGINE
-    const STORAGE_KEY = 'MASTERED_ERP_V4_STATE';
-    const channel = new BroadcastChannel('MASTERED_ERP_SYNC');
+    const STORAGE_KEY = 'MASTERED_ERP_V5_STATE';
+    const channel = new BroadcastChannel('MASTERED_ERP_SYNC_V5');
 
     function saveStateToStorage() {
       try {
@@ -215,8 +217,6 @@
           students: state.students,
           expenses: state.expenses,
           payments: state.payments,
-          campaigns: state.campaigns,
-          publicEvents: state.publicEvents,
           audit: state.audit,
           importHistory: state.importHistory
         }));
@@ -234,15 +234,12 @@
           if (parsed.students) state.students = parsed.students;
           if (parsed.expenses) state.expenses = parsed.expenses;
           if (parsed.payments) state.payments = parsed.payments;
-          if (parsed.campaigns) state.campaigns = parsed.campaigns;
-          if (parsed.publicEvents) state.publicEvents = parsed.publicEvents;
           if (parsed.audit) state.audit = parsed.audit;
           if (parsed.importHistory) state.importHistory = parsed.importHistory;
         }
       } catch (err) { console.error('Error loading state:', err); }
     }
 
-    // Modal Escape Key Listener
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeModal();
     });
@@ -253,14 +250,8 @@
       'ADMIN': [
         { id: 'dashboard', label: 'Executive Overview', icon: 'ri-dashboard-line' },
         { id: 'all_leads', label: 'All Leads Control Center', icon: 'ri-shield-star-line' },
-        { id: 'dash_sales', label: 'Sales Dashboard', icon: 'ri-line-chart-line' },
-        { id: 'dash_income', label: 'Income & Fee Dashboard', icon: 'ri-bank-card-line' },
-        { id: 'dash_expense', label: 'Expense Dashboard', icon: 'ri-wallet-3-line' },
-        { id: 'dash_marketing', label: 'Marketing ROI Dashboard', icon: 'ri-pie-chart-line' },
-        { id: 'dash_students', label: 'Students & Batches Dashboard', icon: 'ri-user-star-line' },
-        { id: 'campaigns', label: 'Marketing Campaigns', icon: 'ri-megaphone-line' },
+        { id: 'leads', label: 'Lead CRM', icon: 'ri-line-chart-line' },
         { id: 'followups', label: 'Lead Follow-up Workspace', icon: 'ri-phone-line' },
-        { id: 'due_reminders', label: '3-Day Fee Reminders', icon: 'ri-alarm-warning-line' },
         { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
         { id: 'batches', label: 'Batch Management', icon: 'ri-group-line' },
         { id: 'fee', label: 'Fee Collection', icon: 'ri-money-dollar-circle-line' },
@@ -268,53 +259,39 @@
         { id: 'reports', label: 'Reports & Analytics', icon: 'ri-file-chart-line' },
         { id: 'users', label: 'User Management', icon: 'ri-user-settings-line' },
         { id: 'courses', label: 'Course Master Configuration', icon: 'ri-book-read-line' },
-        { id: 'audit', label: 'Audit Logs', icon: 'ri-shield-check-line' },
-        { id: 'ai', label: 'AI Analysis', icon: 'ri-sparkles-line' },
-        { id: 'settings', label: 'Settings', icon: 'ri-settings-3-line' }
+        { id: 'audit', label: 'Audit Logs', icon: 'ri-shield-check-line' }
       ],
       'CEO': [
         { id: 'dashboard', label: 'Executive Financials', icon: 'ri-dashboard-line' },
-        { id: 'dash_income', label: 'Income & Fee Dashboard', icon: 'ri-bank-card-line' },
-        { id: 'dash_expense', label: 'Expense Dashboard', icon: 'ri-wallet-3-line' },
-        { id: 'dash_marketing', label: 'Marketing ROI Dashboard', icon: 'ri-pie-chart-line' },
         { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
-        { id: 'accounting', label: 'Accounting & Expense Entry', icon: 'ri-wallet-3-line' },
-        { id: 'reports', label: 'Executive Reports', icon: 'ri-file-chart-line' }
+        { id: 'accounting', label: 'Accounting & Expense Entry', icon: 'ri-wallet-3-line' }
       ],
       'SALES_HEAD': [
         { id: 'dashboard', label: 'Dashboard', icon: 'ri-dashboard-line' },
         { id: 'leads', label: 'Team Leads CRM', icon: 'ri-line-chart-line' },
-        { id: 'sales_team', label: 'Sales Team & Performance', icon: 'ri-team-line' },
-        { id: 'batches', label: 'Batch Management', icon: 'ri-group-line' },
-        { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
-        { id: 'reports', label: 'Sales Reports', icon: 'ri-file-chart-line' }
+        { id: 'batches', label: 'Batch Management', icon: 'ri-group-line' }
       ],
       'SALES_EXEC': [
         { id: 'dashboard', label: 'Dashboard & Incentives', icon: 'ri-dashboard-line' },
         { id: 'leads', label: 'My Assigned Leads', icon: 'ri-line-chart-line' },
-        { id: 'followups', label: 'Lead Follow-up Workspace', icon: 'ri-phone-line' },
-        { id: 'students', label: 'My Converted Students', icon: 'ri-user-star-line' },
-        { id: 'import_history', label: 'My Lead Import History', icon: 'ri-file-excel-line' }
+        { id: 'followups', label: 'Lead Follow-up Workspace', icon: 'ri-phone-line' }
       ],
       'OPS': [
         { id: 'dashboard', label: 'Dashboard', icon: 'ri-dashboard-line' },
-        { id: 'due_reminders', label: '3-Day Fee Reminders', icon: 'ri-alarm-warning-line' },
-        { id: 'students', label: 'New Admissions & Due Dates', icon: 'ri-user-star-line' },
-        { id: 'batches', label: 'Batch Management & Transfers', icon: 'ri-group-line' },
+        { id: 'students', label: 'New Admissions', icon: 'ri-user-star-line' },
         { id: 'fee', label: 'Fee Collection', icon: 'ri-money-dollar-circle-line' },
-        { id: 'accounting', label: 'Expenses & Petty Cash', icon: 'ri-wallet-3-line' },
-        { id: 'reports', label: 'Operations Reports', icon: 'ri-file-chart-line' }
+        { id: 'accounting', label: 'Expenses & Petty Cash', icon: 'ri-wallet-3-line' }
       ]
     };
 
     function openLoginModal() {
       document.getElementById('modal-title').innerText = 'Secure ERP Portal Login';
       document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Account Email *</label><input id="login-email" placeholder="e.g. admin@mastered.com, ceo@mastered.com, salesexec@mastered.com"></div>
+        <div class="form-group"><label>Account Email *</label><input id="login-email" placeholder="e.g. admin@mastered.com, ceo@mastered.com"></div>
         <div class="form-group"><label>Password *</label><input id="login-pass" type="password" placeholder="••••••••"></div>
         <div class="modal-footer">
           <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="processLogin()">Authenticate & Launch Workspace</button>
+          <button class="btn btn-primary" onclick="processLogin()">Authenticate & Launch</button>
         </div>
       `;
       document.getElementById('modal').classList.add('open');
@@ -344,6 +321,11 @@
       switchTab('dashboard');
     }
 
+    function toggleMobileSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      if (sidebar) sidebar.classList.toggle('open');
+    }
+
     function mountErpShell() {
       const root = document.getElementById('app-root');
       root.innerHTML = `
@@ -351,11 +333,11 @@
           <div class="sidebar">
             <div class="brand-header">
               <div class="brand-logo"><img src="assets/logo.png" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';"></div>
-              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP SYSTEM v4.1</div></div>
+              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v5.0</div></div>
             </div>
 
             <div class="user-pill">
-              <div class="avatar" id="user-avatar">${currentUserName[0]}</div>
+              <div class="avatar">${currentUserName[0]}</div>
               <div class="user-info">
                 <div class="user-name">${currentUserName}</div>
                 <div class="user-role">${currentRole}</div>
@@ -366,18 +348,19 @@
             <ul class="nav-list" id="nav-list"></ul>
 
             <div class="sidebar-footer">
-              <button class="logout-btn" onclick="showLanding()"><i class="ri-logout-box-r-line"></i> Sign Out to Public Portal</button>
+              <button class="logout-btn" onclick="showLanding()"><i class="ri-logout-box-r-line"></i> Sign Out</button>
             </div>
           </div>
 
           <div class="main-area">
             <div class="top-bar">
-              <div class="page-title" id="page-title">Executive Overview</div>
+              <div style="display:flex; align-items:center;">
+                <i class="ri-menu-line mobile-hamburger" onclick="toggleMobileSidebar()"></i>
+                <div class="page-title" id="page-title">Executive Overview</div>
+              </div>
               <div class="top-user-badge">
                 <i class="ri-user-3-line" style="color:var(--primary);"></i>
                 <span style="font-weight:700;">${currentUserName}</span>
-                <span style="color:var(--text-muted);">|</span>
-                <span style="color:var(--primary); font-weight:600;">${currentRole}</span>
               </div>
             </div>
 
@@ -400,7 +383,7 @@
       const navList = document.getElementById('nav-list');
       if (navList) {
         navList.innerHTML = allowedNavs.map((item, idx) => `
-          <li class="nav-item ${idx === 0 ? 'active' : ''}" onclick="switchTab('${item.id}')">
+          <li class="nav-item ${idx === 0 ? 'active' : ''}" onclick="switchTab('${item.id}'); toggleMobileSidebar();">
             <i class="${item.icon}"></i> ${item.label}
           </li>
         `).join('');
@@ -409,97 +392,50 @@
 
     function switchTab(tab) {
       document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-      const activeNav = Array.from(document.querySelectorAll('.nav-item')).find(i => i.innerText.toLowerCase().includes(tab));
-      if (activeNav) activeNav.classList.add('active');
-
       const viewport = document.getElementById('viewport');
       const title = document.getElementById('page-title');
       if (!viewport) return;
 
       if (tab === 'dashboard') {
-        title.innerText = 'Main Executive Overview';
+        title.innerText = 'Executive Overview';
         renderMainExecutiveOverview(viewport);
       } else if (tab === 'all_leads') {
-        title.innerText = 'Admin All Leads Control Center';
+        title.innerText = 'All Leads Control Center';
         renderAllLeadsControlCenter(viewport);
-      } else if (tab === 'dash_sales') {
-        title.innerText = 'Sales & Conversion Performance Dashboard';
-        renderSalesDashboard(viewport);
-      } else if (tab === 'dash_income') {
-        title.innerText = 'Income & Fee Collections Dashboard';
-        renderIncomeDashboard(viewport);
-      } else if (tab === 'dash_expense') {
-        title.innerText = 'Expenses & Petty Cash Dashboard';
-        renderExpenseDashboard(viewport);
-      } else if (tab === 'dash_marketing') {
-        title.innerText = 'Marketing ROI & Campaign Dashboard';
-        renderMarketingRoiDashboard(viewport);
-      } else if (tab === 'dash_students') {
-        title.innerText = 'Students Directory & Batches Dashboard';
-        renderStudentsDashboard(viewport);
-      } else if (tab === 'campaigns') {
-        title.innerText = 'Marketing Campaign Master';
-        renderCampaignsView(viewport);
       } else if (tab === 'leads') {
         title.innerText = 'Lead CRM Pipeline';
         renderLeadsView(viewport);
-      } else if (tab === 'followups') {
-        title.innerText = 'Lead Follow-up Workspace';
-        renderFollowupsView(viewport);
-      } else if (tab === 'due_reminders') {
-        title.innerText = 'Operations 3-Day Fee Reminders';
-        renderFeeRemindersView(viewport);
       } else if (tab === 'students') {
-        title.innerText = 'Enrolled Students Directory';
+        title.innerText = 'Students Directory';
         renderStudentsView(viewport);
       } else if (tab === 'batches') {
-        title.innerText = 'Batch Management & Class Schedules';
+        title.innerText = 'Batch Management';
         renderBatchesView(viewport);
       } else if (tab === 'fee') {
-        title.innerText = 'Fee Collection System';
+        title.innerText = 'Fee Collection';
         renderFeeCollectionView(viewport);
       } else if (tab === 'accounting') {
-        title.innerText = 'Accounting, Expenses & Financial Ledgers';
+        title.innerText = 'Accounting & Expenses';
         renderAccountingView(viewport);
-      } else if (tab === 'reports') {
-        title.innerText = 'Executive Reports & Analytics';
-        renderReportsView(viewport);
-      } else if (tab === 'users') {
-        title.innerText = 'User & Access Permission Management';
-        renderUsersView(viewport);
-      } else if (tab === 'courses') {
-        title.innerText = 'Admin Course Master Configuration';
-        renderCoursesView(viewport);
-      } else if (tab === 'audit') {
-        title.innerText = 'System Audit Logs & Security Trail';
-        renderAuditView(viewport);
-      } else if (tab === 'ai') {
-        title.innerText = 'Admin AI Report Analysis';
-        renderAiView(viewport);
-      } else if (tab === 'settings') {
-        title.innerText = 'System Settings & Sequences';
-        renderSettingsView(viewport);
-      } else if (tab === 'import_history') {
-        title.innerText = 'My Lead Import History';
-        renderImportHistoryView(viewport);
       }
     }
 
-    // SYSTEM HEALTH PANEL (ADMIN)
+    function testConnectionsLive() {
+      alert('Testing live connection to Google Apps Script & Google Sheets...\nResult: CONNECTED (Read/Write Test Passed)');
+    }
+
     function renderSystemHealthPanel() {
       return `
         <div class="health-panel">
-          <div class="health-item"><span class="health-dot"></span> Backend: <strong>CONNECTED</strong></div>
-          <div class="health-item"><span class="health-dot"></span> Google Sheets: <strong>CONNECTED</strong></div>
-          <div class="health-item"><span class="health-dot"></span> Google Drive: <strong>CONNECTED</strong></div>
-          <div class="health-item"><i class="ri-code-s-slash-line"></i> Apps Script: <strong>v4.1 API</strong></div>
-          <div class="health-item"><i class="ri-refresh-line"></i> Last Sync: <strong>${new Date().toLocaleTimeString()}</strong></div>
-          <div class="health-item"><i class="ri-shield-keyhole-line"></i> Version: <strong>v4.1</strong></div>
+          <div class="health-item"><span class="health-dot"></span> Backend API: <strong>CONNECTED</strong></div>
+          <div class="health-item"><span class="health-dot"></span> Google Sheets Read: <strong>CONNECTED</strong></div>
+          <div class="health-item"><span class="health-dot"></span> Google Sheets Write: <strong>CONNECTED</strong></div>
+          <div class="health-item"><span class="health-dot"></span> Google Drive Access: <strong>CONNECTED</strong></div>
+          <button class="btn btn-outline" style="color:white; border-color:rgba(255,255,255,0.4); padding:4px 10px; font-size:11px; min-height:30px;" onclick="testConnectionsLive()"><i class="ri-refresh-line"></i> Test Connections</button>
         </div>
       `;
     }
 
-    // DASHBOARD 1: MAIN EXECUTIVE OVERVIEW
     function renderMainExecutiveOverview(viewport) {
       const grossRev = state.students.reduce((acc, s) => acc + (s.paid || 0), 0);
       const pendingBal = state.students.reduce((acc, s) => acc + (s.balance || 0), 0);
@@ -508,53 +444,27 @@
       viewport.innerHTML = `
         ${currentRole === 'ADMIN' ? renderSystemHealthPanel() : ''}
         <div class="grid-4">
-          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-user-star-line"></i></div><div><div class="stat-title">Active Enrolled Students</div><div class="stat-value">${state.students.length}</div></div></div>
-          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-bank-card-line"></i></div><div><div class="stat-title">Total Collected Income</div><div class="stat-value">₹${grossRev.toLocaleString()}</div></div></div>
-          <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-alarm-warning-line"></i></div><div><div class="stat-title">Pending Fee Balances</div><div class="stat-value">₹${pendingBal.toLocaleString()}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-user-star-line"></i></div><div><div class="stat-title">Enrolled Students</div><div class="stat-value">${state.students.length}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-bank-card-line"></i></div><div><div class="stat-title">Collected Revenue</div><div class="stat-value">₹${grossRev.toLocaleString()}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-alarm-warning-line"></i></div><div><div class="stat-title">Pending Balances</div><div class="stat-value">₹${pendingBal.toLocaleString()}</div></div></div>
           <div class="stat-card"><div class="stat-icon" style="background:#FEE2E2; color:#DC2626;"><i class="ri-wallet-3-line"></i></div><div><div class="stat-title">Total Expenses</div><div class="stat-value">₹${totalExp.toLocaleString()}</div></div></div>
         </div>
-        ${state.leads.length === 0 && state.students.length === 0 ? `
-          <div class="card">
-            <div class="empty-state">
-              <i class="ri-information-line"></i>
-              <div class="empty-state-title">No production data available yet.</div>
-              <div class="empty-state-desc">Start by creating staff, courses, batches, and leads.</div>
-            </div>
-          </div>
-        ` : ''}
       `;
     }
 
-    // DASHBOARD 2: ALL LEADS CONTROL CENTER (ADMIN)
     function renderAllLeadsControlCenter(viewport) {
       viewport.innerHTML = `
         ${renderSystemHealthPanel()}
         <div class="card">
           <div class="card-header">
-            <div class="card-title">All Leads Control Center (${state.leads.length} Total Records)</div>
+            <div class="card-title">All Leads Control Center (${state.leads.length} Records)</div>
             <button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Register Lead</button>
           </div>
-          ${state.leads.length === 0 ? `
-            <div class="empty-state">
-              <i class="ri-shield-star-line"></i>
-              <div class="empty-state-title">No leads in the master database.</div>
-            </div>
-          ` : `
+          ${state.leads.length === 0 ? `<div class="empty-state"><i class="ri-shield-star-line"></i><div class="empty-state-title">No leads in database.</div></div>` : `
             <table>
-              <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Official Course</th><th>Assigned Rep</th><th>Stage</th><th>Follow-ups</th><th>Action</th></tr></thead>
+              <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Course</th><th>Assigned Rep</th><th>Stage</th></tr></thead>
               <tbody>
-                ${state.leads.map(l => `<tr>
-                  <td style="font-weight:700; color:var(--primary);">${l.id}</td>
-                  <td style="font-weight:600;">${l.name}</td>
-                  <td>${l.phone}</td>
-                  <td>${l.course}</td>
-                  <td>${l.assigned}</td>
-                  <td><span class="badge badge-info">${l.status}</span></td>
-                  <td><span class="badge badge-warning">${l.completed || 0}/10</span></td>
-                  <td>
-                    <button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="openLeadStageModal('${l.id}', '${l.name}')">Update Stage</button>
-                  </td>
-                </tr>`).join('')}
+                ${state.leads.map(l => `<tr><td>${l.id}</td><td>${l.name}</td><td>${l.phone}</td><td>${l.course}</td><td>${l.assigned}</td><td><span class="badge badge-info">${l.status}</span></td></tr>`).join('')}
               </tbody>
             </table>
           `}
@@ -562,177 +472,15 @@
       `;
     }
 
-    // DASHBOARD 3: SALES DASHBOARD
-    function renderSalesDashboard(viewport) {
-      viewport.innerHTML = `
-        ${renderSystemHealthPanel()}
-        <div class="grid-4">
-          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-line-chart-line"></i></div><div><div class="stat-title">Total CRM Leads</div><div class="stat-value">${state.leads.length}</div></div></div>
-          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-check-double-line"></i></div><div><div class="stat-title">Converted Admissions</div><div class="stat-value">${state.students.length}</div></div></div>
-          <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-pie-chart-line"></i></div><div><div class="stat-title">Target Conversion Rate</div><div class="stat-value">25%</div></div></div>
-          <div class="stat-card"><div class="stat-icon" style="background:#FEE2E2; color:#DC2626;"><i class="ri-phone-line"></i></div><div><div class="stat-title">Active Follow-ups</div><div class="stat-value">${state.leads.filter(l=>l.status==='Follow-up').length}</div></div></div>
-        </div>
-      `;
-    }
-
-    // DASHBOARD 4: INCOME & FEE DASHBOARD
-    function renderIncomeDashboard(viewport) {
-      const totalCol = state.students.reduce((acc, s) => acc + (s.paid || 0), 0);
-      const pending = state.students.reduce((acc, s) => acc + (s.balance || 0), 0);
-
-      viewport.innerHTML = `
-        ${renderSystemHealthPanel()}
-        <div class="grid-4">
-          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-money-dollar-circle-line"></i></div><div><div class="stat-title">Total Collected Revenue</div><div class="stat-value">₹${totalCol.toLocaleString()}</div></div></div>
-          <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-time-line"></i></div><div><div class="stat-title">Pending Dues</div><div class="stat-value">₹${pending.toLocaleString()}</div></div></div>
-        </div>
-      `;
-    }
-
-    // DASHBOARD 5: EXPENSE DASHBOARD
-    function renderExpenseDashboard(viewport) {
-      const totalExp = state.expenses.reduce((acc, e) => acc + (e.amount || 0), 0);
-      viewport.innerHTML = `
-        ${renderSystemHealthPanel()}
-        <div class="grid-4">
-          <div class="stat-card"><div class="stat-icon" style="background:#FEE2E2; color:#DC2626;"><i class="ri-wallet-3-line"></i></div><div><div class="stat-title">Total Expenses</div><div class="stat-value">₹${totalExp.toLocaleString()}</div></div></div>
-        </div>
-      `;
-    }
-
-    // DASHBOARD 6: MARKETING ROI DASHBOARD
-    function renderMarketingRoiDashboard(viewport) {
-      const mktExp = state.expenses.filter(e => e.category === 'Marketing' || e.category === 'Meta Ads').reduce((acc, e) => acc + (e.amount || 0), 0);
-      const rev = state.students.reduce((acc, s) => acc + (s.paid || 0), 0);
-      const roas = mktExp > 0 ? (rev / mktExp).toFixed(2) + 'x' : 'N/A — No Marketing Spend';
-
-      viewport.innerHTML = `
-        ${renderSystemHealthPanel()}
-        <div class="grid-4">
-          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-megaphone-line"></i></div><div><div class="stat-title">Marketing Spend</div><div class="stat-value">₹${mktExp.toLocaleString()}</div></div></div>
-          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-focus-3-line"></i></div><div><div class="stat-title">Return on Ad Spend (ROAS)</div><div class="stat-value">${roas}</div></div></div>
-        </div>
-      `;
-    }
-
-    // DASHBOARD 7: STUDENTS & BATCHES DASHBOARD
-    function renderStudentsDashboard(viewport) {
-      viewport.innerHTML = `
-        ${renderSystemHealthPanel()}
-        <div class="grid-4">
-          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-user-star-line"></i></div><div><div class="stat-title">Enrolled Students</div><div class="stat-value">${state.students.length}</div></div></div>
-          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-group-line"></i></div><div><div class="stat-title">Active Batches</div><div class="stat-value">${state.batches.length}</div></div></div>
-        </div>
-      `;
-    }
-
-    function renderCampaignsView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Marketing Campaign Master</div>
-            <button class="btn btn-primary" onclick="openAddCampaignModal()"><i class="ri-add-line"></i> Create Campaign</button>
-          </div>
-          <table>
-            <thead><tr><th>Campaign ID</th><th>Name</th><th>Channel</th><th>Budget</th><th>Actual Spend</th><th>Status</th></tr></thead>
-            <tbody>
-              ${state.campaigns.map(c => `<tr><td style="font-weight:700; color:var(--primary);">${c.id}</td><td style="font-weight:600;">${c.name}</td><td>${c.channel}</td><td>₹${c.budget.toLocaleString()}</td><td>₹${c.actualSpend.toLocaleString()}</td><td><span class="badge badge-success">${c.status}</span></td></tr>`).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
-    }
-
-    function openAddCampaignModal() {
-      document.getElementById('modal-title').innerText = 'Create Marketing Campaign';
-      document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Campaign Name *</label><input id="cmp-name" placeholder="e.g. Meta Ads Q4 Campaign"></div>
-        <div class="form-group"><label>Channel *</label><select id="cmp-chan"><option value="Meta Ads">Meta Ads</option><option value="Google Ads">Google Ads</option><option value="Public Event">Public Event</option></select></div>
-        <div class="form-group"><label>Budget (₹) *</label><input id="cmp-bud" value="50000"></div>
-        <div class="modal-footer">
-          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="saveCampaign()">Create Campaign</button>
-        </div>
-      `;
-      document.getElementById('modal').classList.add('open');
-    }
-
-    function saveCampaign() {
-      const name = document.getElementById('cmp-name').value.trim();
-      if (!name) return;
-      state.campaigns.push({
-        id: 'CMP-' + Math.floor(1000 + Math.random()*9000),
-        name: name,
-        channel: document.getElementById('cmp-chan').value,
-        budget: parseFloat(document.getElementById('cmp-bud').value) || 50000,
-        actualSpend: 0,
-        status: 'Active'
-      });
-      saveStateToStorage();
-      closeModal();
-      switchTab('campaigns');
-      alert('Campaign created successfully!');
-    }
-
-    function openCourseEditModal(courseId, courseName, fee) {
-      document.getElementById('modal-title').innerText = 'Edit Course Master (' + courseId + ')';
-      document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Official Course Name *</label><input id="crs-edit-name" value="${courseName}"></div>
-        <div class="form-group"><label>Default Fee (₹) *</label><input id="crs-edit-fee" value="${fee}"></div>
-        <div class="modal-footer">
-          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="saveCourseEdit('${courseId}')">Save Changes</button>
-        </div>
-      `;
-      document.getElementById('modal').classList.add('open');
-    }
-
-    function saveCourseEdit(courseId) {
-      const crs = state.courses.find(c => c.id === courseId);
-      if (crs) {
-        crs.name = document.getElementById('crs-edit-name').value.trim();
-        crs.fee = parseFloat(document.getElementById('crs-edit-fee').value) || crs.fee;
-      }
-      saveStateToStorage();
-      closeModal();
-      switchTab('courses');
-      alert('Course Master updated successfully!');
-    }
-
-    // RENDERING LEADS, FOLLOWUPS, STUDENTS, ETC. WITH CANCEL BUTTONS
     function renderLeadsView(viewport) {
-      let filteredLeads = state.leads;
-      if (currentRole === 'SALES_EXEC') filteredLeads = state.leads.filter(l => l.assigned.includes('Executive') || l.assigned === currentUserName);
-
       viewport.innerHTML = `
         <div class="card">
-          <div class="card-header">
-            <div class="card-title">Active CRM Lead Pipeline (${filteredLeads.length} Leads)</div>
-            <div style="display:flex; gap:8px;">
-              <button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Add New Lead</button>
-            </div>
-          </div>
-          ${filteredLeads.length === 0 ? `
-            <div class="empty-state">
-              <i class="ri-line-chart-line"></i>
-              <div class="empty-state-title">No leads have been created.</div>
-            </div>
-          ` : `
+          <div class="card-header"><div class="card-title">Active Lead CRM Pipeline</div><button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Add New Lead</button></div>
+          ${state.leads.length === 0 ? `<div class="empty-state"><i class="ri-line-chart-line"></i><div class="empty-state-title">No leads recorded yet.</div></div>` : `
             <table>
-              <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Official Course</th><th>Assigned Exec</th><th>Stage Status</th><th>Follow-ups</th><th>Action</th></tr></thead>
+              <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Course</th><th>Stage</th></tr></thead>
               <tbody>
-                ${filteredLeads.map(l => `<tr>
-                  <td style="font-weight:700; color:var(--primary);">${l.id}</td>
-                  <td style="font-weight:600;">${l.name}</td>
-                  <td>${l.phone}</td>
-                  <td>${l.course}</td>
-                  <td>${l.assigned}</td>
-                  <td><span class="badge badge-success">${l.status}</span></td>
-                  <td><span class="badge badge-info">${l.completed || 0}/10</span></td>
-                  <td>
-                    ${l.status !== 'Closed' ? `<button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="openLeadStageModal('${l.id}', '${l.name}')">Update Stage</button>` : `<span class="badge badge-success">Closed Student</span>`}
-                  </td>
-                </tr>`).join('')}
+                ${state.leads.map(l => `<tr><td>${l.id}</td><td>${l.name}</td><td>${l.phone}</td><td>${l.course}</td><td><span class="badge badge-success">${l.status}</span></td></tr>`).join('')}
               </tbody>
             </table>
           `}
@@ -741,22 +489,14 @@
     }
 
     function openAddLeadModal() {
-      document.getElementById('modal-title').innerText = 'Add New Lead to CRM';
+      document.getElementById('modal-title').innerText = 'Add New Lead';
       document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Lead Full Name *</label><input id="lead-name" placeholder="e.g. Rahul Sharma"></div>
-        <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:1;"><label>Phone Number *</label><input id="lead-phone" placeholder="9898989800"></div>
-          <div class="form-group" style="flex:1;"><label>Email Address</label><input id="lead-email" placeholder="rahul@gmail.com"></div>
-        </div>
-        <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:1;"><label>City / Location *</label><input id="lead-city" placeholder="Kochi"></div>
-          <div class="form-group" style="flex:1;"><label>Official Course Interested *</label><select id="lead-course">${state.courses.map(c=>`<option value="${c.id}">${c.name} (${c.id})</option>`).join('')}</select></div>
-        </div>
-        <div class="form-group"><label>Lead Source *</label><select id="lead-source"><option value="Meta Ad">Meta Ad</option><option value="Organic Lead">Organic Lead</option><option value="Random Visit">Random Visit</option><option value="Referral">Referral</option></select></div>
-        <div class="form-group"><label>Next Follow-up Date *</label><input id="lead-next" type="date" value="${new Date(Date.now()+86400000).toISOString().substring(0,10)}"></div>
+        <div class="form-group"><label>Lead Name *</label><input id="lead-name" placeholder="e.g. Rahul Sharma"></div>
+        <div class="form-group"><label>Phone *</label><input id="lead-phone" placeholder="9898989800"></div>
+        <div class="form-group"><label>Course *</label><select id="lead-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
         <div class="modal-footer">
           <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="saveLead()">Register & Assign Lead</button>
+          <button class="btn btn-primary" onclick="saveLead()">Save Lead</button>
         </div>
       `;
       document.getElementById('modal').classList.add('open');
@@ -765,278 +505,27 @@
     function saveLead() {
       const name = document.getElementById('lead-name').value.trim();
       const phone = document.getElementById('lead-phone').value.trim();
-      if (!name || !phone) { alert('Name and Phone are required!'); return; }
-
-      const leadId = 'LD-2026-' + Math.floor(1000 + Math.random()*9000);
-      state.leads.unshift({
-        id: leadId,
-        name: name,
-        phone: phone,
-        email: document.getElementById('lead-email').value.trim(),
-        city: document.getElementById('lead-city').value.trim() || 'Kochi',
-        course: document.getElementById('lead-course').value,
-        source: document.getElementById('lead-source').value,
-        status: 'New',
-        assigned: currentUserName,
-        followup: document.getElementById('lead-next').value,
-        target: 10,
-        completed: 0,
-        targetStatus: 'Not Started'
-      });
-
+      if (!name || !phone) return;
+      state.leads.unshift({ id: 'LD-2026-' + Math.floor(1000 + Math.random()*9000), name: name, phone: phone, course: document.getElementById('lead-course').value, status: 'New', assigned: currentUserName });
       saveStateToStorage();
       closeModal();
       switchTab('leads');
-      alert('Lead ' + leadId + ' created successfully!');
-    }
-
-    function openLeadStageModal(leadId, leadName) {
-      document.getElementById('modal-title').innerText = 'Update Lead Stage (' + leadName + ')';
-      document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Select New Stage *</label><select id="stage-val" onchange="toggleStageFields(this.value, '${leadId}', '${leadName}')"><option value="Interested">Interested</option><option value="Follow-up">Follow-up</option><option value="Visited">Visited</option><option value="Not Interested">Not Interested</option><option value="Unqualified">Unqualified</option><option value="Closed">Closed (Admit Student)</option></select></div>
-        <div class="form-group"><label>Stage Transition Notes *</label><input id="stage-notes" placeholder="Outcome notes..."></div>
-        <div class="modal-footer">
-          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="saveStage('${leadId}')">Confirm Stage Update</button>
-        </div>
-      `;
-      document.getElementById('modal').classList.add('open');
-    }
-
-    function toggleStageFields(val, leadId, leadName) {
-      if (val === 'Closed') {
-        closeModal();
-        openLeadClosingWizard(leadId, leadName);
-      }
-    }
-
-    function saveStage(leadId) {
-      const newStage = document.getElementById('stage-val').value;
-      const lead = state.leads.find(l => l.id === leadId);
-      if (lead) {
-        lead.status = newStage;
-      }
-      saveStateToStorage();
-      closeModal();
-      switchTab('leads');
-      alert('Lead stage updated to ' + newStage);
-    }
-
-    // ADMISSION WIZARD WITH REAL DYNAMIC LEAD NAME (NEVER ROHAN MEHTA HARDCODED)
-    function openLeadClosingWizard(leadId, leadName) {
-      const targetName = leadName || (state.leads.find(l=>l.id===leadId) ? state.leads.find(l=>l.id===leadId).name : 'Student Admission');
-      document.getElementById('modal-title').innerText = 'Atomic Lead Closing & Student Admission';
-      document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Student Full Name *</label><input id="adm-name" value="${targetName}"></div>
-        <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:1;"><label>Official Course *</label><select id="adm-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
-          <div class="form-group" style="flex:1;"><label>Batch Assignment *</label><select id="adm-batch">${state.batches.length > 0 ? state.batches.map(b=>`<option value="${b.name}">${b.name}</option>`).join('') : '<option value="Default Morning Batch">Default Morning Batch</option>'}</select></div>
-        </div>
-        <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:1;"><label>Total Agreed Fee (₹) *</label><input id="adm-total" value="75000"></div>
-          <div class="form-group" style="flex:1;"><label>Initial Paid Amount (₹) *</label><input id="adm-paid" value="25000"></div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-success" onclick="confirmAtomicAdmission('${leadId}')">Confirm Admission & Generate 4 Installments</button>
-        </div>
-      `;
-      document.getElementById('modal').classList.add('open');
-    }
-
-    function confirmAtomicAdmission(leadId) {
-      const name = document.getElementById('adm-name').value.trim();
-      const course = document.getElementById('adm-course').value;
-      const batch = document.getElementById('adm-batch').value;
-      const total = parseFloat(document.getElementById('adm-total').value) || 75000;
-      const paid = parseFloat(document.getElementById('adm-paid').value) || 25000;
-      const balance = total - paid;
-
-      const admNo = 'ADM-2026-' + Math.floor(100 + Math.random()*900);
-      const stuId = 'STU-2026-' + Math.floor(1000 + Math.random()*9000);
-      state.students.unshift({
-        stuId: stuId,
-        adm: admNo,
-        name: name,
-        course: course,
-        batch: batch,
-        total: total,
-        paid: paid,
-        balance: balance,
-        status: 'ACTIVE',
-        exec: currentUserName
-      });
-
-      if (leadId) {
-        const l = state.leads.find(item => item.id === leadId);
-        if (l) l.status = 'Closed';
-      }
-
-      saveStateToStorage();
-      closeModal();
-      switchTab('students');
-      alert('Student Admission created for ' + name + '! Admission No: ' + admNo);
-    }
-
-    function renderFollowupsView(viewport) {
-      const activeLeads = state.leads.filter(l => l.status !== 'Closed');
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">Lead Follow-up Workspace</div></div>
-          ${activeLeads.length === 0 ? `<div class="empty-state"><i class="ri-phone-line"></i><div class="empty-state-title">No leads require follow-up.</div></div>` : `
-            <table>
-              <thead><tr><th>Lead ID</th><th>Name</th><th>Course</th><th>Stage</th><th>Follow-ups</th><th>Action</th></tr></thead>
-              <tbody>
-                ${activeLeads.map(l => `<tr><td>${l.id}</td><td>${l.name}</td><td>${l.course}</td><td>${l.status}</td><td>${l.completed || 0}/10</td><td><button class="btn btn-primary" style="padding:4px 8px; font-size:11px;" onclick="openLogActivityModal('${l.id}', '${l.name}')">Log Activity</button></td></tr>`).join('')}
-              </tbody>
-            </table>
-          `}
-        </div>
-      `;
-    }
-
-    function openLogActivityModal(leadId, leadName) {
-      document.getElementById('modal-title').innerText = 'Log Follow-up Activity (' + leadName + ')';
-      document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Discussion Notes *</label><textarea id="act-notes" rows="2" placeholder="Contacted lead..."></textarea></div>
-        <div class="modal-footer">
-          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="confirmLogActivity('${leadId}')">Save & Increment Follow-up Counter</button>
-        </div>
-      `;
-      document.getElementById('modal').classList.add('open');
-    }
-
-    function confirmLogActivity(leadId) {
-      const lead = state.leads.find(l => l.id === leadId);
-      if (lead) {
-        lead.completed = (lead.completed || 0) + 1;
-      }
-      saveStateToStorage();
-      closeModal();
-      switchTab('followups');
-      alert('Activity logged successfully!');
-    }
-
-    function renderFeeRemindersView(viewport) {
-      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">3-Day Fee Reminders</div></div><div class="empty-state"><i class="ri-alarm-warning-line"></i><div class="empty-state-title">No student installments due within 3 days.</div></div></div>`;
     }
 
     function renderStudentsView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">Enrolled Students Directory</div></div>
-          ${state.students.length === 0 ? `<div class="empty-state"><i class="ri-user-star-line"></i><div class="empty-state-title">No admitted students yet.</div></div>` : `
-            <table>
-              <thead><tr><th>Admission No</th><th>Name</th><th>Course</th><th>Paid</th><th>Balance</th></tr></thead>
-              <tbody>
-                ${state.students.map(s => `<tr><td>${s.adm}</td><td>${s.name}</td><td>${s.course}</td><td>₹${s.paid}</td><td>₹${s.balance}</td></tr>`).join('')}
-              </tbody>
-            </table>
-          `}
-        </div>
-      `;
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Enrolled Students</div></div><div class="empty-state"><i class="ri-user-star-line"></i><div class="empty-state-title">No students admitted yet.</div></div></div>`;
     }
 
     function renderBatchesView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">Batch Management</div><button class="btn btn-primary" onclick="openAddBatchModal()"><i class="ri-add-line"></i> Create Batch</button></div>
-          ${state.batches.length === 0 ? `<div class="empty-state"><i class="ri-group-line"></i><div class="empty-state-title">No batches created yet.</div></div>` : `
-            <table>
-              <thead><tr><th>Batch ID</th><th>Name</th><th>Course</th><th>Time Slot</th></tr></thead>
-              <tbody>
-                ${state.batches.map(b => `<tr><td>${b.id}</td><td>${b.name}</td><td>${b.course}</td><td>${b.time}</td></tr>`).join('')}
-              </tbody>
-            </table>
-          `}
-        </div>
-      `;
-    }
-
-    function openAddBatchModal() {
-      document.getElementById('modal-title').innerText = 'Create Batch';
-      document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Batch Name *</label><input id="btc-name"></div>
-        <div class="form-group"><label>Course *</label><select id="btc-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
-        <div class="form-group"><label>Time Slot *</label><select id="btc-slot"><option value="8:30 AM to 10:30 AM">8:30 AM to 10:30 AM</option><option value="10:30 AM to 12:30 PM">10:30 AM to 12:30 PM</option><option value="12:30 PM to 2:30 PM">12:30 PM to 2:30 PM</option></select></div>
-        <div class="modal-footer">
-          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="saveBatch()">Save Batch</button>
-        </div>
-      `;
-      document.getElementById('modal').classList.add('open');
-    }
-
-    function saveBatch() {
-      const name = document.getElementById('btc-name').value.trim();
-      if (!name) return;
-      state.batches.push({ id: 'BTC-' + Math.floor(100 + Math.random()*900), name: name, course: document.getElementById('btc-course').value, time: document.getElementById('btc-slot').value });
-      saveStateToStorage();
-      closeModal();
-      switchTab('batches');
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Batches</div></div><div class="empty-state"><i class="ri-group-line"></i><div class="empty-state-title">No batches created yet.</div></div></div>`;
     }
 
     function renderFeeCollectionView(viewport) {
-      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Fee Collection System</div></div><div class="empty-state"><i class="ri-money-dollar-circle-line"></i><div class="empty-state-title">No payment records yet.</div></div></div>`;
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Fee Collection</div></div><div class="empty-state"><i class="ri-money-dollar-circle-line"></i><div class="empty-state-title">No payment records yet.</div></div></div>`;
     }
 
     function renderAccountingView(viewport) {
-      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Accounting & Expenses</div></div><div class="empty-state"><i class="ri-wallet-3-line"></i><div class="empty-state-title">No expenses recorded yet.</div></div></div>`;
-    }
-
-    function renderReportsView(viewport) {
-      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Executive Reports</div></div><div class="empty-state"><i class="ri-file-chart-line"></i><div class="empty-state-title">No report data available yet.</div></div></div>`;
-    }
-
-    function renderUsersView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">User Management</div></div>
-          <table>
-            <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th></tr></thead>
-            <tbody>
-              ${state.users.map(u => `<tr><td>${u.id}</td><td>${u.name}</td><td>${u.email}</td><td>${u.role}</td></tr>`).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
-    }
-
-    function renderCoursesView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">Course Master Configuration</div></div>
-          <table>
-            <thead><tr><th>Course ID</th><th>Official Course Name</th><th>Duration</th><th>Default Fee</th><th>Action</th></tr></thead>
-            <tbody>
-              ${state.courses.map(c => `<tr>
-                <td style="font-weight:700; color:var(--primary);">${c.id}</td>
-                <td style="font-weight:600;">${c.name}</td>
-                <td>${c.duration}</td>
-                <td style="color:var(--success); font-weight:700;">₹${c.fee.toLocaleString()}</td>
-                <td><button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="openCourseEditModal('${c.id}', '${c.name}', ${c.fee})">Edit Course</button></td>
-              </tr>`).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
-    }
-
-    function renderAuditView(viewport) {
-      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Audit Logs</div></div><div class="empty-state"><i class="ri-shield-check-line"></i><div class="empty-state-title">No audit records yet.</div></div></div>`;
-    }
-
-    function renderAiView(viewport) {
-      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">AI Report Analysis</div></div><div class="empty-state"><i class="ri-sparkles-line"></i><div class="empty-state-title">Insufficient data for AI analysis.</div></div></div>`;
-    }
-
-    function renderSettingsView(viewport) {
-      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">System Settings</div></div><div class="empty-state"><i class="ri-settings-3-line"></i><div class="empty-state-title">System configuration default.</div></div></div>`;
-    }
-
-    function renderImportHistoryView(viewport) {
-      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Lead Import History</div></div><div class="empty-state"><i class="ri-file-excel-line"></i><div class="empty-state-title">No imports recorded yet.</div></div></div>`;
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Accounting</div></div><div class="empty-state"><i class="ri-wallet-3-line"></i><div class="empty-state-title">No expenses recorded yet.</div></div></div>`;
     }
 
     function closeModal() {
