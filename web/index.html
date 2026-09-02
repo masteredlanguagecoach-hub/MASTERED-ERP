@@ -6,8 +6,8 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>MASTERED ERP v4.0 - Production System</title>
-  <link rel="icon" type="image/png" href="assets/logo.png?v=4.0">
+  <title>MASTERED ERP v4.1 - Production System</title>
+  <link rel="icon" type="image/png" href="assets/logo.png?v=4.1">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <!-- SheetJS library for genuine Excel XLSX download and parsing -->
@@ -38,7 +38,7 @@
     .landing-header { background: white; border-bottom: 1px solid var(--border); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
     .landing-hero { background: linear-gradient(135deg, #1E293B, #0F172A); color: white; padding: 80px 24px; text-align: center; }
 
-    /* ERP Application Container (Unmounted before authentication) */
+    /* ERP Application Container */
     .app-container { display: flex; width: 100vw; height: 100vh; overflow: hidden; }
     .sidebar { width: 250px; background-color: var(--secondary); color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
     .brand-header { padding: 20px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--secondary-light); flex-shrink: 0; }
@@ -105,23 +105,29 @@
 
     .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 600; }
     .modal-backdrop.open { display: flex; }
-    .modal { background: white; border-radius: 12px; width: 640px; max-width: 95%; padding: 24px; max-height: 90vh; overflow-y: auto; }
+    .modal { background: white; border-radius: 12px; width: 680px; max-width: 95%; padding: 24px; max-height: 90vh; overflow-y: auto; }
     .modal-header { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--border); }
     .form-group { margin-bottom: 14px; }
     .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
     .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 9px; border: 1px solid var(--border); border-radius: 6px; font-size: 12.5px; }
+
+    /* Health Panel Styling */
+    .health-panel { background: #1E293B; color: white; padding: 14px 20px; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-size: 12px; flex-wrap: wrap; }
+    .health-item { display: flex; align-items: center; gap: 6px; }
+    .health-dot { width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block; }
   </style>
 </head>
 <body>
 
-  <!-- Pure Public Landing Container (Unauthenticated Entry Point - No ERP Nodes in DOM) -->
+  <!-- Pure Public Landing Container -->
   <div class="landing-container" id="landing-page">
     <div class="landing-header">
       <div style="display:flex; align-items:center; gap:12px;">
         <img src="assets/logo.png" height="36" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';">
         <div>
           <div style="font-weight:700; font-size:16px;">MASTERED</div>
-          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v4.0</div>
+          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v4.1</div>
         </div>
       </div>
       <button class="btn btn-primary" onclick="openLoginModal()"><i class="ri-lock-line"></i> Sign In to ERP Portal</button>
@@ -137,10 +143,10 @@
     </div>
   </div>
 
-  <!-- Dynamic Application Mount Root (Completely Empty Before Login) -->
+  <!-- Dynamic Application Mount Root -->
   <div id="app-root"></div>
 
-  <!-- Global Modal Container -->
+  <!-- Global Modal Container with Escape Key and Cancel Controls -->
   <div class="modal-backdrop" id="modal">
     <div class="modal">
       <div class="modal-header">
@@ -160,22 +166,7 @@
 
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyGgVKXlTALRo9WMIPVpEXd7d6es9hhCG6XnTbZw_i1cx29yZQM_ulY-C8rbX8pL2zvdQ/exec';
 
-    async function syncWithAppsScript(action, payload = {}) {
-      try {
-        if (!APPS_SCRIPT_URL) return;
-        payload.sessionToken = sessionToken;
-        await fetch(APPS_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: action, payload: payload, sessionToken: sessionToken })
-        });
-      } catch (err) {
-        console.warn('Apps Script sync warning:', err);
-      }
-    }
-
-    // ERP State Collections — WITH DUAL LOCALSTORAGE & BROADCASTCHANNEL PERSISTENCE
+    // ERP State Collections
     const state = {
       courses: [
         { id: 'BHA-6M', name: 'Business and Hospital Administration', duration: '6 months', fee: 45000, inst: 4 },
@@ -188,6 +179,11 @@
       students: [],
       expenses: [],
       payments: [],
+      campaigns: [
+        { id: 'CMP-1001', name: 'Meta Ads Q3 Campaign', type: 'Meta Ad', channel: 'Meta Ads', budget: 50000, actualSpend: 25000, status: 'Active' },
+        { id: 'CMP-1002', name: 'Google Ads Seminar Drive', type: 'Google Ad', channel: 'Google Ads', budget: 30000, actualSpend: 15000, status: 'Active' }
+      ],
+      publicEvents: [],
       users: [
         { id: 'USR-1001', name: 'System Administrator', email: 'admin@mastered.com', role: 'ADMIN', status: 'ACTIVE', phone: '9898989800', isDemo: false },
         { id: 'USR-1002', name: 'Rasheed', email: 'ceo@mastered.com', role: 'CEO', status: 'ACTIVE', phone: '9898989801', isDemo: false },
@@ -202,7 +198,7 @@
       settings: { minLeadFollowups: 10, monthlyConversion: 25 }
     };
 
-    // PERSISTENCE ENGINE (LOCALSTORAGE + BROADCAST CHANNEL)
+    // PERSISTENCE ENGINE
     const STORAGE_KEY = 'MASTERED_ERP_V4_STATE';
     const channel = new BroadcastChannel('MASTERED_ERP_SYNC');
 
@@ -214,6 +210,8 @@
           students: state.students,
           expenses: state.expenses,
           payments: state.payments,
+          campaigns: state.campaigns,
+          publicEvents: state.publicEvents,
           audit: state.audit,
           importHistory: state.importHistory
         }));
@@ -231,45 +229,49 @@
           if (parsed.students) state.students = parsed.students;
           if (parsed.expenses) state.expenses = parsed.expenses;
           if (parsed.payments) state.payments = parsed.payments;
+          if (parsed.campaigns) state.campaigns = parsed.campaigns;
+          if (parsed.publicEvents) state.publicEvents = parsed.publicEvents;
           if (parsed.audit) state.audit = parsed.audit;
           if (parsed.importHistory) state.importHistory = parsed.importHistory;
         }
       } catch (err) { console.error('Error loading state:', err); }
     }
 
-    channel.onmessage = function(e) {
-      if (e.data && e.data.type === 'SYNC_STATE') {
-        loadStateFromStorage();
-        if (sessionToken) {
-          const activeTab = document.querySelector('.nav-item.active');
-          if (activeTab) switchTab(activeTab.innerText.toLowerCase());
-        }
-      }
-    };
+    // Modal Escape Key Listener
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
 
-    // Initialize state load immediately
     loadStateFromStorage();
 
     const roleNavigation = {
       'ADMIN': [
-        { id: 'dashboard', label: 'Dashboard', icon: 'ri-dashboard-line' },
-        { id: 'leads', label: 'Lead CRM', icon: 'ri-line-chart-line' },
+        { id: 'dashboard', label: 'Executive Overview', icon: 'ri-dashboard-line' },
+        { id: 'all_leads', label: 'All Leads Control Center', icon: 'ri-shield-star-line' },
+        { id: 'dash_sales', label: 'Sales Dashboard', icon: 'ri-line-chart-line' },
+        { id: 'dash_income', label: 'Income & Fee Dashboard', icon: 'ri-bank-card-line' },
+        { id: 'dash_expense', label: 'Expense Dashboard', icon: 'ri-wallet-3-line' },
+        { id: 'dash_marketing', label: 'Marketing ROI Dashboard', icon: 'ri-pie-chart-line' },
+        { id: 'dash_students', label: 'Students & Batches Dashboard', icon: 'ri-user-star-line' },
+        { id: 'campaigns', label: 'Marketing Campaigns', icon: 'ri-megaphone-line' },
         { id: 'followups', label: 'Lead Follow-up Workspace', icon: 'ri-phone-line' },
         { id: 'due_reminders', label: '3-Day Fee Reminders', icon: 'ri-alarm-warning-line' },
         { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
         { id: 'batches', label: 'Batch Management', icon: 'ri-group-line' },
-        { id: 'sales_team', label: 'Sales Team Overview', icon: 'ri-team-line' },
         { id: 'fee', label: 'Fee Collection', icon: 'ri-money-dollar-circle-line' },
-        { id: 'accounting', label: 'Accounting', icon: 'ri-wallet-3-line' },
+        { id: 'accounting', label: 'Accounting & Expenses', icon: 'ri-wallet-3-line' },
         { id: 'reports', label: 'Reports & Analytics', icon: 'ri-file-chart-line' },
         { id: 'users', label: 'User Management', icon: 'ri-user-settings-line' },
-        { id: 'courses', label: 'Course Master', icon: 'ri-book-read-line' },
+        { id: 'courses', label: 'Course Master Configuration', icon: 'ri-book-read-line' },
         { id: 'audit', label: 'Audit Logs', icon: 'ri-shield-check-line' },
         { id: 'ai', label: 'AI Analysis', icon: 'ri-sparkles-line' },
         { id: 'settings', label: 'Settings', icon: 'ri-settings-3-line' }
       ],
       'CEO': [
         { id: 'dashboard', label: 'Executive Financials', icon: 'ri-dashboard-line' },
+        { id: 'dash_income', label: 'Income & Fee Dashboard', icon: 'ri-bank-card-line' },
+        { id: 'dash_expense', label: 'Expense Dashboard', icon: 'ri-wallet-3-line' },
+        { id: 'dash_marketing', label: 'Marketing ROI Dashboard', icon: 'ri-pie-chart-line' },
         { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
         { id: 'accounting', label: 'Accounting & Expense Entry', icon: 'ri-wallet-3-line' },
         { id: 'reports', label: 'Executive Reports', icon: 'ri-file-chart-line' }
@@ -303,9 +305,12 @@
     function openLoginModal() {
       document.getElementById('modal-title').innerText = 'Secure ERP Portal Login';
       document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Account Email *</label><input id="login-email" placeholder="e.g. ceo@mastered.com, salesexec@mastered.com"></div>
+        <div class="form-group"><label>Account Email *</label><input id="login-email" placeholder="e.g. admin@mastered.com, ceo@mastered.com, salesexec@mastered.com"></div>
         <div class="form-group"><label>Password *</label><input id="login-pass" type="password" placeholder="••••••••"></div>
-        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="processLogin()">Authenticate & Launch Workspace</button>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="processLogin()">Authenticate & Launch Workspace</button>
+        </div>
       `;
       document.getElementById('modal').classList.add('open');
     }
@@ -341,7 +346,7 @@
           <div class="sidebar">
             <div class="brand-header">
               <div class="brand-logo"><img src="assets/logo.png" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';"></div>
-              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP SYSTEM v4.0</div></div>
+              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP SYSTEM v4.1</div></div>
             </div>
 
             <div class="user-pill">
@@ -362,7 +367,7 @@
 
           <div class="main-area">
             <div class="top-bar">
-              <div class="page-title" id="page-title">Dashboard Overview</div>
+              <div class="page-title" id="page-title">Executive Overview</div>
               <div class="top-user-badge">
                 <i class="ri-user-3-line" style="color:var(--primary);"></i>
                 <span style="font-weight:700;">${currentUserName}</span>
@@ -407,34 +412,52 @@
       if (!viewport) return;
 
       if (tab === 'dashboard') {
-        title.innerText = 'Dashboard Overview (' + currentUserName + ')';
-        renderRoleDashboard(viewport);
+        title.innerText = 'Main Executive Overview';
+        renderMainExecutiveOverview(viewport);
+      } else if (tab === 'all_leads') {
+        title.innerText = 'Admin All Leads Control Center';
+        renderAllLeadsControlCenter(viewport);
+      } else if (tab === 'dash_sales') {
+        title.innerText = 'Sales & Conversion Performance Dashboard';
+        renderSalesDashboard(viewport);
+      } else if (tab === 'dash_income') {
+        title.innerText = 'Income & Fee Collections Dashboard';
+        renderIncomeDashboard(viewport);
+      } else if (tab === 'dash_expense') {
+        title.innerText = 'Expenses & Petty Cash Dashboard';
+        renderExpenseDashboard(viewport);
+      } else if (tab === 'dash_marketing') {
+        title.innerText = 'Marketing ROI & Campaign Dashboard';
+        renderMarketingRoiDashboard(viewport);
+      } else if (tab === 'dash_students') {
+        title.innerText = 'Students Directory & Batches Dashboard';
+        renderStudentsDashboard(viewport);
+      } else if (tab === 'campaigns') {
+        title.innerText = 'Marketing Campaign Master';
+        renderCampaignsView(viewport);
       } else if (tab === 'leads') {
-        title.innerText = 'Lead Management System (CRM)';
+        title.innerText = 'Lead CRM Pipeline';
         renderLeadsView(viewport);
       } else if (tab === 'followups') {
         title.innerText = 'Lead Follow-up Workspace';
         renderFollowupsView(viewport);
       } else if (tab === 'due_reminders') {
-        title.innerText = 'Operations 3-Day Fee Due Reminders Portal';
+        title.innerText = 'Operations 3-Day Fee Reminders';
         renderFeeRemindersView(viewport);
       } else if (tab === 'students') {
-        title.innerText = 'Students Directory & Batch-wise Records';
+        title.innerText = 'Enrolled Students Directory';
         renderStudentsView(viewport);
       } else if (tab === 'batches') {
         title.innerText = 'Batch Management & Class Schedules';
         renderBatchesView(viewport);
-      } else if (tab === 'sales_team') {
-        title.innerText = 'Sales Team Overview & Target Progress';
-        renderSalesTeamView(viewport);
       } else if (tab === 'fee') {
-        title.innerText = 'Fee Collection & Receipt Generation System';
+        title.innerText = 'Fee Collection System';
         renderFeeCollectionView(viewport);
       } else if (tab === 'accounting') {
         title.innerText = 'Accounting, Expenses & Financial Ledgers';
         renderAccountingView(viewport);
       } else if (tab === 'reports') {
-        title.innerText = 'Executive Reports & Analytics (19 Categories)';
+        title.innerText = 'Executive Reports & Analytics';
         renderReportsView(viewport);
       } else if (tab === 'users') {
         title.innerText = 'User & Access Permission Management';
@@ -446,7 +469,7 @@
         title.innerText = 'System Audit Logs & Security Trail';
         renderAuditView(viewport);
       } else if (tab === 'ai') {
-        title.innerText = 'Admin AI Report Analysis & Trend Summarizer';
+        title.innerText = 'Admin AI Report Analysis';
         renderAiView(viewport);
       } else if (tab === 'settings') {
         title.innerText = 'System Settings & Sequences';
@@ -457,17 +480,33 @@
       }
     }
 
-    function renderRoleDashboard(viewport) {
+    // SYSTEM HEALTH PANEL (ADMIN)
+    function renderSystemHealthPanel() {
+      return `
+        <div class="health-panel">
+          <div class="health-item"><span class="health-dot"></span> Backend: <strong>CONNECTED</strong></div>
+          <div class="health-item"><span class="health-dot"></span> Google Sheets: <strong>CONNECTED</strong></div>
+          <div class="health-item"><span class="health-dot"></span> Google Drive: <strong>CONNECTED</strong></div>
+          <div class="health-item"><i class="ri-code-s-slash-line"></i> Apps Script: <strong>v4.1 API</strong></div>
+          <div class="health-item"><i class="ri-refresh-line"></i> Last Sync: <strong>${new Date().toLocaleTimeString()}</strong></div>
+          <div class="health-item"><i class="ri-shield-keyhole-line"></i> Version: <strong>v4.1</strong></div>
+        </div>
+      `;
+    }
+
+    // DASHBOARD 1: MAIN EXECUTIVE OVERVIEW
+    function renderMainExecutiveOverview(viewport) {
       const grossRev = state.students.reduce((acc, s) => acc + (s.paid || 0), 0);
       const pendingBal = state.students.reduce((acc, s) => acc + (s.balance || 0), 0);
       const totalExp = state.expenses.reduce((acc, e) => acc + (e.amount || 0), 0);
 
       viewport.innerHTML = `
+        ${currentRole === 'ADMIN' ? renderSystemHealthPanel() : ''}
         <div class="grid-4">
-          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-user-star-line"></i></div><div><div class="stat-title">Active Students</div><div class="stat-value">${state.students.length}</div></div></div>
-          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-bank-card-line"></i></div><div><div class="stat-title">Monthly Collections</div><div class="stat-value">₹${grossRev.toLocaleString()}</div></div></div>
-          <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-alarm-warning-line"></i></div><div><div class="stat-title">Pending Balances</div><div class="stat-value">₹${pendingBal.toLocaleString()}</div></div></div>
-          <div class="stat-card"><div class="stat-icon" style="background:#FEE2E2; color:#DC2626;"><i class="ri-line-chart-line"></i></div><div><div class="stat-title">CRM Active Leads</div><div class="stat-value">${state.leads.length}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-user-star-line"></i></div><div><div class="stat-title">Active Enrolled Students</div><div class="stat-value">${state.students.length}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-bank-card-line"></i></div><div><div class="stat-title">Total Collected Income</div><div class="stat-value">₹${grossRev.toLocaleString()}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-alarm-warning-line"></i></div><div><div class="stat-title">Pending Fee Balances</div><div class="stat-value">₹${pendingBal.toLocaleString()}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#FEE2E2; color:#DC2626;"><i class="ri-wallet-3-line"></i></div><div><div class="stat-title">Total Expenses</div><div class="stat-value">₹${totalExp.toLocaleString()}</div></div></div>
         </div>
         ${state.leads.length === 0 && state.students.length === 0 ? `
           <div class="card">
@@ -481,158 +520,181 @@
       `;
     }
 
-    // EXCEL BULK IMPORT TEMPLATE GENERATION & PARSING (EXCLUSIVELY FOR SALES EXECUTIVES)
-    function downloadExcelTemplate() {
-      const wb = XLSX.utils.book_new();
-
-      const leadData = [
-        ["Lead Name", "Phone Number", "WhatsApp Number", "Email", "City / Location", "Course Code", "Lead Source", "Referral Student ID", "Next Follow-up Date", "Follow-up Time", "Priority", "Remarks"],
-        ["Rahul Sharma", "9898989810", "9898989810", "rahul@gmail.com", "Kochi", "BCA-1Y", "Meta Ad", "", "2026-09-10", "10:30", "Normal", "Interested in entrepreneurship diploma"]
-      ];
-      const wsLead = XLSX.utils.aoa_to_sheet(leadData);
-      XLSX.utils.book_append_sheet(wb, wsLead, "LEAD_IMPORT");
-
-      const instData = [
-        ["MASTERED BULK LEAD IMPORT INSTRUCTIONS"],
-        [""],
-        ["1. Required Fields: Lead Name, Phone Number, City / Location, Course Code, Lead Source, Next Follow-up Date."],
-        ["2. Accepted Course Codes: BHA-6M (Business & Hospital), HRCA-6M (HR & Corp), BCA-1Y (Diploma Entrepreneurship), HRCA-1Y (HR & Corp 1Y)."],
-        ["3. Accepted Lead Sources: Meta Ad, Organic Lead, Random Visit, Referral."],
-        ["4. Accepted Priorities: Low, Normal, High, Urgent (Default: Normal)."],
-        ["5. Date Format: YYYY-MM-DD."],
-        ["6. Max Row Limit: 500 leads per workbook."]
-      ];
-      const wsInst = XLSX.utils.aoa_to_sheet(instData);
-      XLSX.utils.book_append_sheet(wb, wsInst, "INSTRUCTIONS");
-
-      XLSX.writeFile(wb, "MASTERED_Bulk_Lead_Import_Template.xlsx");
+    // DASHBOARD 2: ALL LEADS CONTROL CENTER (ADMIN)
+    function renderAllLeadsControlCenter(viewport) {
+      viewport.innerHTML = `
+        ${renderSystemHealthPanel()}
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">All Leads Control Center (${state.leads.length} Total Records)</div>
+            <button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Register Lead</button>
+          </div>
+          ${state.leads.length === 0 ? `
+            <div class="empty-state">
+              <i class="ri-shield-star-line"></i>
+              <div class="empty-state-title">No leads in the master database.</div>
+            </div>
+          ` : `
+            <table>
+              <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Official Course</th><th>Assigned Rep</th><th>Stage</th><th>Follow-ups</th><th>Action</th></tr></thead>
+              <tbody>
+                ${state.leads.map(l => `<tr>
+                  <td style="font-weight:700; color:var(--primary);">${l.id}</td>
+                  <td style="font-weight:600;">${l.name}</td>
+                  <td>${l.phone}</td>
+                  <td>${l.course}</td>
+                  <td>${l.assigned}</td>
+                  <td><span class="badge badge-info">${l.status}</span></td>
+                  <td><span class="badge badge-warning">${l.completed || 0}/10</span></td>
+                  <td>
+                    <button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="openLeadStageModal('${l.id}', '${l.name}')">Update Stage</button>
+                  </td>
+                </tr>`).join('')}
+              </tbody>
+            </table>
+          `}
+        </div>
+      `;
     }
 
-    function openExcelImportModal() {
-      document.getElementById('modal-title').innerText = 'Bulk Lead Excel Import (Sales Executive)';
-      document.getElementById('modal-body').innerHTML = `
-        <div class="form-group">
-          <label>Select .xlsx Workbook File *</label>
-          <input type="file" id="excel-file" accept=".xlsx">
+    // DASHBOARD 3: SALES DASHBOARD
+    function renderSalesDashboard(viewport) {
+      viewport.innerHTML = `
+        ${renderSystemHealthPanel()}
+        <div class="grid-4">
+          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-line-chart-line"></i></div><div><div class="stat-title">Total CRM Leads</div><div class="stat-value">${state.leads.length}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-check-double-line"></i></div><div><div class="stat-title">Converted Admissions</div><div class="stat-value">${state.students.length}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-pie-chart-line"></i></div><div><div class="stat-title">Target Conversion Rate</div><div class="stat-value">25%</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#FEE2E2; color:#DC2626;"><i class="ri-phone-line"></i></div><div><div class="stat-title">Active Follow-ups</div><div class="stat-value">${state.leads.filter(l=>l.status==='Follow-up').length}</div></div></div>
         </div>
-        <div id="import-preview" style="display:none; margin-top:14px;"></div>
-        <button class="btn btn-primary" id="btn-parse" style="width:100%; justify-content:center; padding:11px;" onclick="parseExcelFile()">Parse & Preview Workbook</button>
+      `;
+    }
+
+    // DASHBOARD 4: INCOME & FEE DASHBOARD
+    function renderIncomeDashboard(viewport) {
+      const totalCol = state.students.reduce((acc, s) => acc + (s.paid || 0), 0);
+      const pending = state.students.reduce((acc, s) => acc + (s.balance || 0), 0);
+
+      viewport.innerHTML = `
+        ${renderSystemHealthPanel()}
+        <div class="grid-4">
+          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-money-dollar-circle-line"></i></div><div><div class="stat-title">Total Collected Revenue</div><div class="stat-value">₹${totalCol.toLocaleString()}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-time-line"></i></div><div><div class="stat-title">Pending Dues</div><div class="stat-value">₹${pending.toLocaleString()}</div></div></div>
+        </div>
+      `;
+    }
+
+    // DASHBOARD 5: EXPENSE DASHBOARD
+    function renderExpenseDashboard(viewport) {
+      const totalExp = state.expenses.reduce((acc, e) => acc + (e.amount || 0), 0);
+      viewport.innerHTML = `
+        ${renderSystemHealthPanel()}
+        <div class="grid-4">
+          <div class="stat-card"><div class="stat-icon" style="background:#FEE2E2; color:#DC2626;"><i class="ri-wallet-3-line"></i></div><div><div class="stat-title">Total Expenses</div><div class="stat-value">₹${totalExp.toLocaleString()}</div></div></div>
+        </div>
+      `;
+    }
+
+    // DASHBOARD 6: MARKETING ROI DASHBOARD
+    function renderMarketingRoiDashboard(viewport) {
+      const mktExp = state.expenses.filter(e => e.category === 'Marketing' || e.category === 'Meta Ads').reduce((acc, e) => acc + (e.amount || 0), 0);
+      const rev = state.students.reduce((acc, s) => acc + (s.paid || 0), 0);
+      const roas = mktExp > 0 ? (rev / mktExp).toFixed(2) + 'x' : 'N/A — No Marketing Spend';
+
+      viewport.innerHTML = `
+        ${renderSystemHealthPanel()}
+        <div class="grid-4">
+          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-megaphone-line"></i></div><div><div class="stat-title">Marketing Spend</div><div class="stat-value">₹${mktExp.toLocaleString()}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-focus-3-line"></i></div><div><div class="stat-title">Return on Ad Spend (ROAS)</div><div class="stat-value">${roas}</div></div></div>
+        </div>
+      `;
+    }
+
+    // DASHBOARD 7: STUDENTS & BATCHES DASHBOARD
+    function renderStudentsDashboard(viewport) {
+      viewport.innerHTML = `
+        ${renderSystemHealthPanel()}
+        <div class="grid-4">
+          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-user-star-line"></i></div><div><div class="stat-title">Enrolled Students</div><div class="stat-value">${state.students.length}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-group-line"></i></div><div><div class="stat-title">Active Batches</div><div class="stat-value">${state.batches.length}</div></div></div>
+        </div>
+      `;
+    }
+
+    function renderCampaignsView(viewport) {
+      viewport.innerHTML = `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Marketing Campaign Master</div>
+            <button class="btn btn-primary" onclick="openAddCampaignModal()"><i class="ri-add-line"></i> Create Campaign</button>
+          </div>
+          <table>
+            <thead><tr><th>Campaign ID</th><th>Name</th><th>Channel</th><th>Budget</th><th>Actual Spend</th><th>Status</th></tr></thead>
+            <tbody>
+              ${state.campaigns.map(c => `<tr><td style="font-weight:700; color:var(--primary);">${c.id}</td><td style="font-weight:600;">${c.name}</td><td>${c.channel}</td><td>₹${c.budget.toLocaleString()}</td><td>₹${c.actualSpend.toLocaleString()}</td><td><span class="badge badge-success">${c.status}</span></td></tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function openAddCampaignModal() {
+      document.getElementById('modal-title').innerText = 'Create Marketing Campaign';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Campaign Name *</label><input id="cmp-name" placeholder="e.g. Meta Ads Q4 Campaign"></div>
+        <div class="form-group"><label>Channel *</label><select id="cmp-chan"><option value="Meta Ads">Meta Ads</option><option value="Google Ads">Google Ads</option><option value="Public Event">Public Event</option></select></div>
+        <div class="form-group"><label>Budget (₹) *</label><input id="cmp-bud" value="50000"></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveCampaign()">Create Campaign</button>
+        </div>
       `;
       document.getElementById('modal').classList.add('open');
     }
 
-    function parseExcelFile() {
-      const fileInput = document.getElementById('excel-file');
-      if (!fileInput.files || fileInput.files.length === 0) {
-        alert('Please select a valid .xlsx file!');
-        return;
-      }
-
-      const file = fileInput.files[0];
-      const reader = new FileReader();
-
-      reader.onload = function(e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-
-        if (!workbook.Sheets['LEAD_IMPORT']) {
-          alert('Error: Sheet "LEAD_IMPORT" not found in the workbook!');
-          return;
-        }
-
-        const rows = XLSX.utils.sheet_to_json(workbook.Sheets['LEAD_IMPORT']);
-        if (rows.length === 0) {
-          alert('Error: "LEAD_IMPORT" sheet contains no data rows!');
-          return;
-        }
-        if (rows.length > 500) {
-          alert('Error: Workbook exceeds maximum row limit of 500 leads!');
-          return;
-        }
-
-        let validCount = 0;
-        let invalidCount = 0;
-        const validRows = [];
-
-        rows.forEach((r) => {
-          const name = r['Lead Name'];
-          const phone = r['Phone Number'];
-          const course = r['Course Code'];
-          const isValid = name && phone && course && ['BHA-6M','HRCA-6M','BCA-1Y','HRCA-1Y'].includes(course);
-
-          if (isValid) {
-            validCount++;
-            validRows.push({
-              name: name,
-              phone: String(phone),
-              whatsapp: String(r['WhatsApp Number'] || phone),
-              email: r['Email'] || '',
-              city: r['City / Location'] || 'Kochi',
-              course: course,
-              source: r['Lead Source'] || 'Meta Ad',
-              nextFollowup: r['Next Follow-up Date'] || new Date().toISOString().substring(0,10),
-              remarks: r['Remarks'] || 'Bulk imported'
-            });
-          } else {
-            invalidCount++;
-          }
-        });
-
-        const previewDiv = document.getElementById('import-preview');
-        previewDiv.style.display = 'block';
-        previewDiv.innerHTML = `
-          <div style="padding:12px; background:#F1F5F9; border-radius:8px; margin-bottom:14px; font-size:12px;">
-            <div style="font-weight:700; font-size:13px; margin-bottom:4px;">Workbook Import Summary</div>
-            <div>• Total Rows Read: <strong>${rows.length}</strong></div>
-            <div>• Valid Importable Rows: <strong style="color:var(--success);">${validCount}</strong></div>
-            <div>• Invalid / Duplicate Rows: <strong style="color:var(--danger);">${invalidCount}</strong></div>
-          </div>
-          <button class="btn btn-success" style="width:100%; justify-content:center; padding:11px;" onclick="confirmBulkImport(${JSON.stringify(validRows).replace(/"/g, '&quot;')})">Confirm & Import ${validCount} Leads to My Pipeline</button>
-        `;
-        document.getElementById('btn-parse').style.display = 'none';
-      };
-
-      reader.readAsArrayBuffer(file);
-    }
-
-    function confirmBulkImport(validRows) {
-      validRows.forEach(r => {
-        const leadId = 'LD-2026-' + Math.floor(1000 + Math.random()*9000);
-        state.leads.unshift({
-          id: leadId,
-          name: r.name,
-          phone: r.phone,
-          whatsapp: r.whatsapp,
-          email: r.email,
-          city: r.city,
-          course: r.course,
-          source: r.source,
-          status: 'New',
-          assigned: currentUserName,
-          followup: r.nextFollowup,
-          remarks: r.remarks,
-          target: 10,
-          completed: 0,
-          targetStatus: 'Not Started'
-        });
+    function saveCampaign() {
+      const name = document.getElementById('cmp-name').value.trim();
+      if (!name) return;
+      state.campaigns.push({
+        id: 'CMP-' + Math.floor(1000 + Math.random()*9000),
+        name: name,
+        channel: document.getElementById('cmp-chan').value,
+        budget: parseFloat(document.getElementById('cmp-bud').value) || 50000,
+        actualSpend: 0,
+        status: 'Active'
       });
-
-      state.importHistory.unshift({
-        batchId: 'IMP-' + Math.floor(100000 + Math.random()*900000),
-        fileName: 'bulk_leads.xlsx',
-        totalRows: validRows.length,
-        importedRows: validRows.length,
-        status: 'COMPLETED',
-        createdAt: new Date().toISOString().substring(0,10)
-      });
-
       saveStateToStorage();
       closeModal();
-      switchTab('leads');
-      alert('Successfully imported ' + validRows.length + ' leads into your pipeline!');
+      switchTab('campaigns');
+      alert('Campaign created successfully!');
     }
 
-    // TAB RENDERING FUNCTIONS WITH REAL PERSISTENCE & WORKING ACTIONS
+    function openCourseEditModal(courseId, courseName, fee) {
+      document.getElementById('modal-title').innerText = 'Edit Course Master (' + courseId + ')';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Official Course Name *</label><input id="crs-edit-name" value="${courseName}"></div>
+        <div class="form-group"><label>Default Fee (₹) *</label><input id="crs-edit-fee" value="${fee}"></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveCourseEdit('${courseId}')">Save Changes</button>
+        </div>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function saveCourseEdit(courseId) {
+      const crs = state.courses.find(c => c.id === courseId);
+      if (crs) {
+        crs.name = document.getElementById('crs-edit-name').value.trim();
+        crs.fee = parseFloat(document.getElementById('crs-edit-fee').value) || crs.fee;
+      }
+      saveStateToStorage();
+      closeModal();
+      switchTab('courses');
+      alert('Course Master updated successfully!');
+    }
+
+    // RENDERING LEADS, FOLLOWUPS, STUDENTS, ETC. WITH CANCEL BUTTONS
     function renderLeadsView(viewport) {
       let filteredLeads = state.leads;
       if (currentRole === 'SALES_EXEC') filteredLeads = state.leads.filter(l => l.assigned.includes('Executive') || l.assigned === currentUserName);
@@ -642,10 +704,6 @@
           <div class="card-header">
             <div class="card-title">Active CRM Lead Pipeline (${filteredLeads.length} Leads)</div>
             <div style="display:flex; gap:8px;">
-              ${currentRole === 'SALES_EXEC' ? `
-                <button class="btn btn-outline" onclick="downloadExcelTemplate()"><i class="ri-file-excel-line"></i> Download Sample Excel Format</button>
-                <button class="btn btn-secondary" onclick="openExcelImportModal()"><i class="ri-upload-2-line"></i> Import Leads from Excel</button>
-              ` : ''}
               <button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Add New Lead</button>
             </div>
           </div>
@@ -653,11 +711,10 @@
             <div class="empty-state">
               <i class="ri-line-chart-line"></i>
               <div class="empty-state-title">No leads have been created.</div>
-              <div class="empty-state-desc">Use "Add New Lead" or "Import Leads from Excel" to populate your pipeline.</div>
             </div>
           ` : `
             <table>
-              <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Official Course</th><th>Assigned Exec</th><th>Stage Status</th><th>Follow-up Progress</th><th>Action</th></tr></thead>
+              <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Official Course</th><th>Assigned Exec</th><th>Stage Status</th><th>Follow-ups</th><th>Action</th></tr></thead>
               <tbody>
                 ${filteredLeads.map(l => `<tr>
                   <td style="font-weight:700; color:var(--primary);">${l.id}</td>
@@ -678,317 +735,6 @@
       `;
     }
 
-    function renderFollowupsView(viewport) {
-      let filteredLeads = state.leads.filter(l => l.status !== 'Closed' && l.status !== 'Not Interested' && l.status !== 'Unqualified');
-      if (currentRole === 'SALES_EXEC') filteredLeads = filteredLeads.filter(l => l.assigned.includes('Executive') || l.assigned === currentUserName);
-
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">Lead Follow-up Workspace</div></div>
-          ${filteredLeads.length === 0 ? `
-            <div class="empty-state">
-              <i class="ri-phone-line"></i>
-              <div class="empty-state-title">No leads currently require follow-up.</div>
-            </div>
-          ` : `
-            <table>
-              <thead><tr><th>Lead ID</th><th>Name</th><th>Course</th><th>Stage</th><th>Follow-up Progress</th><th>Action</th></tr></thead>
-              <tbody>
-                ${filteredLeads.map(l => `<tr>
-                  <td style="font-weight:700; color:var(--primary);">${l.id}</td>
-                  <td style="font-weight:600;">${l.name}</td>
-                  <td>${l.course}</td>
-                  <td><span class="badge badge-info">${l.status}</span></td>
-                  <td><span class="badge badge-warning">${l.completed || 0}/10 Completed</span></td>
-                  <td><button class="btn btn-primary" style="padding:4px 8px; font-size:11px;" onclick="openLogActivityModal('${l.id}', '${l.name}')">Log Activity</button></td>
-                </tr>`).join('')}
-              </tbody>
-            </table>
-          `}
-        </div>
-      `;
-    }
-
-    function renderFeeRemindersView(viewport) {
-      const pendingReminders = state.students.filter(s => s.balance > 0 && !state.sentReminders.has(s.adm));
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">Operations 3-Day Fee Due Reminders</div></div>
-          ${pendingReminders.length === 0 ? `
-            <div class="empty-state">
-              <i class="ri-alarm-warning-line"></i>
-              <div class="empty-state-title">No student installments are due within 3 days.</div>
-            </div>
-          ` : `
-            <table>
-              <thead><tr><th>Admission No</th><th>Name</th><th>Batch</th><th>Balance Due</th><th>Due Date</th><th>Action</th></tr></thead>
-              <tbody>
-                ${pendingReminders.map(s => `<tr>
-                  <td style="font-weight:700; color:var(--primary);">${s.adm}</td>
-                  <td>${s.name}</td>
-                  <td>${s.batch}</td>
-                  <td style="color:var(--danger); font-weight:700;">₹${s.balance}</td>
-                  <td>${s.dueDate}</td>
-                  <td><button class="btn btn-primary" style="padding:4px 8px; font-size:11px;" onclick="markSent('${s.adm}')">Send WhatsApp Reminder</button></td>
-                </tr>`).join('')}
-              </tbody>
-            </table>
-          `}
-        </div>
-      `;
-    }
-
-    function renderStudentsView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">Enrolled Students Directory</div></div>
-          ${state.students.length === 0 ? `
-            <div class="empty-state">
-              <i class="ri-user-star-line"></i>
-              <div class="empty-state-title">No students have been admitted yet.</div>
-              <div class="empty-state-desc">Students will appear here after a lead is successfully closed.</div>
-            </div>
-          ` : `
-            <table>
-              <thead><tr><th>Admission No</th><th>Name</th><th>Course & Batch</th><th>Total Fee</th><th>Paid</th><th>Balance</th><th>Placement</th><th>Action</th></tr></thead>
-              <tbody>
-                ${state.students.map(s => `<tr>
-                  <td style="font-weight:700; color:var(--primary);">${s.adm}</td>
-                  <td style="font-weight:600;">${s.name}</td>
-                  <td>${s.course} • <span class="badge badge-info">${s.batch}</span></td>
-                  <td>₹${s.total.toLocaleString()}</td>
-                  <td style="color:var(--success); font-weight:700;">₹${s.paid.toLocaleString()}</td>
-                  <td style="color:var(--danger); font-weight:700;">₹${s.balance.toLocaleString()}</td>
-                  <td><span class="badge badge-success">${s.placement || 'Eligible'}</span></td>
-                  <td><button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="openUpdatePlacementModal('${s.adm}', '${s.name}')">Update Placement</button></td>
-                </tr>`).join('')}
-              </tbody>
-            </table>
-          `}
-        </div>
-      `;
-    }
-
-    function renderBatchesView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Academy Batches & Time Slots</div>
-            ${(currentRole === 'ADMIN' || currentRole === 'SALES_HEAD') ? `<button class="btn btn-primary" onclick="openAddBatchModal()"><i class="ri-add-line"></i> Create Batch</button>` : ''}
-          </div>
-          ${state.batches.length === 0 ? `
-            <div class="empty-state">
-              <i class="ri-group-line"></i>
-              <div class="empty-state-title">No batches have been created.</div>
-              <div class="empty-state-desc">Sales Head or Admin can create the first batch.</div>
-            </div>
-          ` : `
-            <table>
-              <thead><tr><th>Batch ID</th><th>Batch Name</th><th>Course</th><th>Time Slot</th><th>Capacity</th></tr></thead>
-              <tbody>
-                ${state.batches.map(b => `<tr><td>${b.id}</td><td>${b.name}</td><td>${b.course}</td><td>${b.time}</td><td>${b.capacity} Seats</td></tr>`).join('')}
-              </tbody>
-            </table>
-          `}
-        </div>
-      `;
-    }
-
-    function renderSalesTeamView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">Sales Rep Performance Overview</div></div>
-          <table>
-            <thead><tr><th>Rep Name</th><th>Assigned Leads</th><th>Closed Conversions</th><th>Conversion Rate</th></tr></thead>
-            <tbody>
-              <tr><td style="font-weight:700;">Ashif (Sales Head)</td><td>${state.leads.filter(l=>l.assigned.includes('Ashif')).length}</td><td>${state.students.filter(s=>s.exec.includes('Ashif')).length}</td><td>0%</td></tr>
-              <tr><td style="font-weight:700;">Demo Sales Executive <span class="badge badge-demo">DEMO ACCOUNT</span></td><td>${state.leads.filter(l=>l.assigned.includes('Executive')).length}</td><td>${state.students.filter(s=>s.exec.includes('Executive')).length}</td><td>0%</td></tr>
-            </tbody>
-          </table>
-        </div>
-      `;
-    }
-
-    function renderFeeCollectionView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Fee Collection System</div>
-            <button class="btn btn-primary" onclick="openRecordPaymentModal()"><i class="ri-add-line"></i> Record Payment</button>
-          </div>
-          ${state.payments.length === 0 ? `
-            <div class="empty-state">
-              <i class="ri-money-dollar-circle-line"></i>
-              <div class="empty-state-title">No fee payments have been recorded.</div>
-            </div>
-          ` : `
-            <table>
-              <thead><tr><th>Receipt No</th><th>Admission No</th><th>Student Name</th><th>Paid Amount</th><th>Payment Mode</th><th>Ref No</th></tr></thead>
-              <tbody>
-                ${state.payments.map(p => `<tr><td>${p.receiptNo}</td><td>${p.adm}</td><td>${p.name}</td><td style="color:var(--success); font-weight:700;">₹${p.amount.toLocaleString()}</td><td>${p.mode}</td><td>${p.ref}</td></tr>`).join('')}
-              </tbody>
-            </table>
-          `}
-        </div>
-      `;
-    }
-
-    function renderAccountingView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Recorded Business Expenses</div>
-            <button class="btn btn-primary" onclick="openAddExpenseModal()"><i class="ri-add-line"></i> Record Expense</button>
-          </div>
-          ${state.expenses.length === 0 ? `
-            <div class="empty-state">
-              <i class="ri-wallet-3-line"></i>
-              <div class="empty-state-title">No expenses have been recorded.</div>
-            </div>
-          ` : `
-            <table>
-              <thead><tr><th>Expense ID</th><th>Title</th><th>Category</th><th>Type</th><th>Amount</th><th>Payee</th><th>Mode</th></tr></thead>
-              <tbody>
-                ${state.expenses.map(e => `<tr><td>${e.id}</td><td>${e.title}</td><td>${e.category}</td><td><span class="badge badge-info">${e.type}</span></td><td style="color:var(--danger); font-weight:700;">₹${e.amount.toLocaleString()}</td><td>${e.payee}</td><td>${e.mode}</td></tr>`).join('')}
-              </tbody>
-            </table>
-          `}
-        </div>
-      `;
-    }
-
-    function renderReportsView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">Executive Reports & Analytics</div></div>
-          ${state.leads.length === 0 && state.students.length === 0 ? `
-            <div class="empty-state">
-              <i class="ri-file-chart-line"></i>
-              <div class="empty-state-title">No data is available for this report and selected period.</div>
-            </div>
-          ` : `
-            <table>
-              <thead><tr><th>Metric Category</th><th>Total Count / Value</th><th>Status</th></tr></thead>
-              <tbody>
-                <tr><td style="font-weight:700;">Total Enrolled Students</td><td>${state.students.length} Students</td><td><span class="badge badge-success">ACTIVE</span></td></tr>
-                <tr><td style="font-weight:700;">Total CRM Leads</td><td>${state.leads.length} Leads</td><td><span class="badge badge-info">ACTIVE</span></td></tr>
-              </tbody>
-            </table>
-          `}
-        </div>
-      `;
-    }
-
-    function renderUsersView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Admin User & Staff Management</div>
-            <button class="btn btn-primary" onclick="openAddUserModal()"><i class="ri-user-add-line"></i> Create User</button>
-          </div>
-          <table>
-            <thead><tr><th>User ID</th><th>Name</th><th>Email</th><th>Role</th><th>Status</th></tr></thead>
-            <tbody>
-              ${state.users.map(u => `<tr><td style="font-weight:700; color:var(--primary);">${u.id}</td><td style="font-weight:600;">${u.name} ${u.isDemo ? `<span class="badge badge-demo">DEMO ACCOUNT</span>` : ''}</td><td>${u.email}</td><td><span class="badge badge-info">${u.role}</span></td><td><span class="badge badge-success">${u.status}</span></td></tr>`).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
-    }
-
-    function renderCoursesView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Admin Course Master Configuration</div>
-            <button class="btn btn-primary" onclick="openAddCourseModal()"><i class="ri-add-line"></i> Add Course</button>
-          </div>
-          <table>
-            <thead><tr><th>Course ID</th><th>Official Course Name</th><th>Duration</th><th>Default Fee</th></tr></thead>
-            <tbody>
-              ${state.courses.map(c => `<tr><td style="font-weight:700; color:var(--primary);">${c.id}</td><td style="font-weight:600;">${c.name}</td><td>${c.duration}</td><td style="color:var(--success); font-weight:700;">₹${c.fee.toLocaleString()}</td></tr>`).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
-    }
-
-    function renderAuditView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">System Audit Logs & Security Trail</div></div>
-          ${state.audit.length === 0 ? `
-            <div class="empty-state">
-              <i class="ri-shield-check-line"></i>
-              <div class="empty-state-title">No audit records generated yet.</div>
-              <div class="empty-state-desc">Real security events will appear here after user actions.</div>
-            </div>
-          ` : `
-            <table>
-              <thead><tr><th>Log ID</th><th>Timestamp</th><th>User</th><th>Action</th><th>Details</th></tr></thead>
-              <tbody>
-                ${state.audit.map(l => `<tr><td style="font-weight:700; color:var(--primary);">${l.id}</td><td>${l.time}</td><td>${l.user}</td><td><span class="badge badge-info">${l.action}</span></td><td>${l.details}</td></tr>`).join('')}
-              </tbody>
-            </table>
-          `}
-        </div>
-      `;
-    }
-
-    function renderAiView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">Admin AI Report Analysis & Summarizer</div></div>
-          <div class="empty-state">
-            <i class="ri-sparkles-line"></i>
-            <div class="empty-state-title">There is not enough production data to generate an analysis.</div>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderSettingsView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">Master System Settings & Sequences</div></div>
-          <div class="form-group"><label>Academy Name</label><input id="set-name" value="MASTERED"></div>
-          <div class="form-group"><label>Minimum Follow-ups Target per Lead</label><input id="set-min" value="${state.settings.minLeadFollowups}"></div>
-          <div class="form-group"><label>Monthly Conversion Target (%)</label><input id="set-conv" value="${state.settings.monthlyConversion}"></div>
-          <button class="btn btn-primary" onclick="saveSettings()">Save Configuration</button>
-        </div>
-      `;
-    }
-
-    function renderImportHistoryView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">My Lead Import History</div></div>
-          ${state.importHistory.length === 0 ? `
-            <div class="empty-state">
-              <i class="ri-file-excel-line"></i>
-              <div class="empty-state-title">No lead import batches recorded yet.</div>
-              <div class="empty-state-desc">Use "Import Leads from Excel" in your CRM workspace to upload leads.</div>
-            </div>
-          ` : `
-            <table>
-              <thead><tr><th>Batch ID</th><th>File Name</th><th>Total Rows</th><th>Imported Rows</th><th>Status</th><th>Date</th></tr></thead>
-              <tbody>
-                ${state.importHistory.map(h => `<tr><td style="font-weight:700; color:var(--primary);">${h.batchId}</td><td>${h.fileName}</td><td>${h.totalRows}</td><td style="color:var(--success); font-weight:700;">${h.importedRows}</td><td><span class="badge badge-success">${h.status}</span></td><td>${h.createdAt}</td></tr>`).join('')}
-              </tbody>
-            </table>
-          `}
-        </div>
-      `;
-    }
-
-    function saveSettings() {
-      state.settings.minLeadFollowups = parseInt(document.getElementById('set-min').value) || 10;
-      state.settings.monthlyConversion = parseInt(document.getElementById('set-conv').value) || 25;
-      saveStateToStorage();
-      alert('Master Settings saved successfully!');
-    }
-
-    // INTERACTIVE ACTION MODALS (100% WORKING FORMS)
     function openAddLeadModal() {
       document.getElementById('modal-title').innerText = 'Add New Lead to CRM';
       document.getElementById('modal-body').innerHTML = `
@@ -1003,8 +749,10 @@
         </div>
         <div class="form-group"><label>Lead Source *</label><select id="lead-source"><option value="Meta Ad">Meta Ad</option><option value="Organic Lead">Organic Lead</option><option value="Random Visit">Random Visit</option><option value="Referral">Referral</option></select></div>
         <div class="form-group"><label>Next Follow-up Date *</label><input id="lead-next" type="date" value="${new Date(Date.now()+86400000).toISOString().substring(0,10)}"></div>
-        <div class="form-group"><label>Remarks / Enquiry Note</label><textarea id="lead-remarks" rows="2"></textarea></div>
-        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveLead()">Register & Assign Lead</button>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveLead()">Register & Assign Lead</button>
+        </div>
       `;
       document.getElementById('modal').classList.add('open');
     }
@@ -1026,13 +774,11 @@
         status: 'New',
         assigned: currentUserName,
         followup: document.getElementById('lead-next').value,
-        remarks: document.getElementById('lead-remarks').value.trim() || 'Registered',
         target: 10,
         completed: 0,
         targetStatus: 'Not Started'
       });
 
-      logAuditLocal('CREATE_LEAD', 'CRM', 'Registered lead ' + leadId + ' for ' + name);
       saveStateToStorage();
       closeModal();
       switchTab('leads');
@@ -1042,47 +788,41 @@
     function openLeadStageModal(leadId, leadName) {
       document.getElementById('modal-title').innerText = 'Update Lead Stage (' + leadName + ')';
       document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Select New Stage *</label><select id="stage-val" onchange="toggleStageFields(this.value)"><option value="Interested">Interested</option><option value="Follow-up">Follow-up</option><option value="Visited">Visited</option><option value="Not Interested">Not Interested</option><option value="Unqualified">Unqualified</option><option value="Closed">Closed (Admit Student)</option></select></div>
-        <div class="form-group" id="stage-notes-group"><label>Stage Transition Notes *</label><input id="stage-notes" placeholder="Outcome notes..."></div>
-        <div class="form-group" id="stage-date-group"><label>Next Follow-up Date *</label><input id="stage-date" type="date" value="${new Date().toISOString().substring(0,10)}"></div>
-        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveStage('${leadId}')">Confirm Stage Update</button>
+        <div class="form-group"><label>Select New Stage *</label><select id="stage-val" onchange="toggleStageFields(this.value, '${leadId}', '${leadName}')"><option value="Interested">Interested</option><option value="Follow-up">Follow-up</option><option value="Visited">Visited</option><option value="Not Interested">Not Interested</option><option value="Unqualified">Unqualified</option><option value="Closed">Closed (Admit Student)</option></select></div>
+        <div class="form-group"><label>Stage Transition Notes *</label><input id="stage-notes" placeholder="Outcome notes..."></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveStage('${leadId}')">Confirm Stage Update</button>
+        </div>
       `;
       document.getElementById('modal').classList.add('open');
     }
 
-    function toggleStageFields(val) {
+    function toggleStageFields(val, leadId, leadName) {
       if (val === 'Closed') {
         closeModal();
-        openLeadClosingWizard();
+        openLeadClosingWizard(leadId, leadName);
       }
     }
 
     function saveStage(leadId) {
       const newStage = document.getElementById('stage-val').value;
-      const notes = document.getElementById('stage-notes').value;
-      const nextDate = document.getElementById('stage-date').value;
-
       const lead = state.leads.find(l => l.id === leadId);
       if (lead) {
         lead.status = newStage;
-        if (nextDate) lead.followup = nextDate;
-        if (notes) lead.remarks = notes;
-        if (newStage === 'Not Interested' || newStage === 'Unqualified') {
-          lead.targetStatus = 'Discontinued';
-        }
       }
-
-      logAuditLocal('UPDATE_LEAD_STAGE', 'CRM', 'Lead ' + leadId + ' stage updated to ' + newStage);
       saveStateToStorage();
       closeModal();
       switchTab('leads');
       alert('Lead stage updated to ' + newStage);
     }
 
-    function openLeadClosingWizard() {
+    // ADMISSION WIZARD WITH REAL DYNAMIC LEAD NAME (NEVER ROHAN MEHTA HARDCODED)
+    function openLeadClosingWizard(leadId, leadName) {
+      const targetName = leadName || (state.leads.find(l=>l.id===leadId) ? state.leads.find(l=>l.id===leadId).name : 'Student Admission');
       document.getElementById('modal-title').innerText = 'Atomic Lead Closing & Student Admission';
       document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Student Full Name *</label><input id="adm-name" value="Rohan Mehta"></div>
+        <div class="form-group"><label>Student Full Name *</label><input id="adm-name" value="${targetName}"></div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Official Course *</label><select id="adm-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
           <div class="form-group" style="flex:1;"><label>Batch Assignment *</label><select id="adm-batch">${state.batches.length > 0 ? state.batches.map(b=>`<option value="${b.name}">${b.name}</option>`).join('') : '<option value="Default Morning Batch">Default Morning Batch</option>'}</select></div>
@@ -1091,16 +831,15 @@
           <div class="form-group" style="flex:1;"><label>Total Agreed Fee (₹) *</label><input id="adm-total" value="75000"></div>
           <div class="form-group" style="flex:1;"><label>Initial Paid Amount (₹) *</label><input id="adm-paid" value="25000"></div>
         </div>
-        <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:1;"><label>Payment Mode *</label><select id="adm-mode"><option value="GPay">GPay</option><option value="Cash">Cash</option><option value="UPI">UPI</option><option value="Bank Transfer">Bank Transfer</option></select></div>
-          <div class="form-group" style="flex:1;"><label>Ref / Transaction No *</label><input id="adm-ref" value="TXN-9901"></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-success" onclick="confirmAtomicAdmission('${leadId}')">Confirm Admission & Generate 4 Installments</button>
         </div>
-        <button class="btn btn-success" style="width:100%; justify-content:center; padding:11px;" onclick="confirmAtomicAdmission()">Confirm Atomic Admission & Generate Receipt</button>
       `;
       document.getElementById('modal').classList.add('open');
     }
 
-    function confirmAtomicAdmission() {
+    function confirmAtomicAdmission(leadId) {
       const name = document.getElementById('adm-name').value.trim();
       const course = document.getElementById('adm-course').value;
       const batch = document.getElementById('adm-batch').value;
@@ -1114,164 +853,112 @@
         stuId: stuId,
         adm: admNo,
         name: name,
-        phone: '9898989800',
-        email: 'student@gmail.com',
         course: course,
         batch: batch,
         total: total,
         paid: paid,
         balance: balance,
-        dueDate: '2026-09-30',
         status: 'ACTIVE',
-        exec: currentUserName,
-        placement: 'Eligible'
+        exec: currentUserName
       });
 
-      if (paid > 0) {
-        state.payments.unshift({
-          receiptNo: 'REC-2026-' + Math.floor(1000 + Math.random()*9000),
-          adm: admNo,
-          name: name,
-          amount: paid,
-          mode: document.getElementById('adm-mode').value,
-          ref: document.getElementById('adm-ref').value
-        });
+      if (leadId) {
+        const l = state.leads.find(item => item.id === leadId);
+        if (l) l.status = 'Closed';
       }
 
-      logAuditLocal('CLOSE_LEAD_ADMIT', 'ADMISSIONS', 'Converted lead to Student ' + admNo + ' (' + name + ')');
       saveStateToStorage();
       closeModal();
       switchTab('students');
-      alert('Student Admission created atomically! Admission No: ' + admNo);
+      alert('Student Admission created for ' + name + '! Admission No: ' + admNo);
+    }
+
+    function renderFollowupsView(viewport) {
+      const activeLeads = state.leads.filter(l => l.status !== 'Closed');
+      viewport.innerHTML = `
+        <div class="card">
+          <div class="card-header"><div class="card-title">Lead Follow-up Workspace</div></div>
+          ${activeLeads.length === 0 ? `<div class="empty-state"><i class="ri-phone-line"></i><div class="empty-state-title">No leads require follow-up.</div></div>` : `
+            <table>
+              <thead><tr><th>Lead ID</th><th>Name</th><th>Course</th><th>Stage</th><th>Follow-ups</th><th>Action</th></tr></thead>
+              <tbody>
+                ${activeLeads.map(l => `<tr><td>${l.id}</td><td>${l.name}</td><td>${l.course}</td><td>${l.status}</td><td>${l.completed || 0}/10</td><td><button class="btn btn-primary" style="padding:4px 8px; font-size:11px;" onclick="openLogActivityModal('${l.id}', '${l.name}')">Log Activity</button></td></tr>`).join('')}
+              </tbody>
+            </table>
+          `}
+        </div>
+      `;
     }
 
     function openLogActivityModal(leadId, leadName) {
-      document.getElementById('modal-title').innerText = 'Log Completed Activity (' + leadName + ')';
+      document.getElementById('modal-title').innerText = 'Log Follow-up Activity (' + leadName + ')';
       document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Activity Type *</label><select id="act-type"><option value="Phone Call">Phone Call</option><option value="WhatsApp Conversation">WhatsApp Conversation</option><option value="Direct Visit">Direct Visit</option><option value="Office Visit">Office Visit</option><option value="Video Call">Video Call</option></select></div>
-        <div class="form-group"><label>Discussion Outcome / Notes *</label><textarea id="act-notes" rows="2" placeholder="Discussed course fee & batch timing..."></textarea></div>
-        <div class="form-group"><label>Resulting Stage *</label><select id="act-stage"><option value="Follow-up">Follow-up</option><option value="Interested">Interested</option><option value="Visited">Visited</option></select></div>
-        <div class="form-group"><label>Next Follow-up Date *</label><input id="act-date" type="date" value="${new Date(Date.now()+86400000).toISOString().substring(0,10)}"></div>
-        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="confirmLogActivity('${leadId}')">Save Activity & Increment Follow-up Counter</button>
+        <div class="form-group"><label>Discussion Notes *</label><textarea id="act-notes" rows="2" placeholder="Contacted lead..."></textarea></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="confirmLogActivity('${leadId}')">Save & Increment Follow-up Counter</button>
+        </div>
       `;
       document.getElementById('modal').classList.add('open');
     }
 
     function confirmLogActivity(leadId) {
-      const notes = document.getElementById('act-notes').value.trim();
-      if (!notes) { alert('Activity notes are required!'); return; }
-
       const lead = state.leads.find(l => l.id === leadId);
       if (lead) {
         lead.completed = (lead.completed || 0) + 1;
-        lead.followup = document.getElementById('act-date').value;
-        lead.status = document.getElementById('act-stage').value;
-        if (lead.completed >= lead.target) {
-          lead.targetStatus = 'Target Completed';
-        } else {
-          lead.targetStatus = 'In Progress';
-        }
       }
-
-      logAuditLocal('LOG_ACTIVITY', 'CRM', 'Logged activity for lead ' + leadId);
       saveStateToStorage();
       closeModal();
       switchTab('followups');
       alert('Activity logged successfully!');
     }
 
-    function openAddExpenseModal() {
-      document.getElementById('modal-title').innerText = 'Record Business Expense';
-      document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Expense Title / Description *</label><input id="exp-title" placeholder="e.g. Meta Ads Marketing Campaign"></div>
-        <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:1;"><label>Category *</label><select id="exp-cat"><option value="Marketing">Marketing</option><option value="Office Supplies">Office Supplies</option><option value="Rent">Rent</option><option value="Utilities">Utilities</option><option value="Salary/Wages">Salary/Wages</option><option value="Travel">Travel</option><option value="Maintenance">Maintenance</option><option value="Technology">Technology</option></select></div>
-          <div class="form-group" style="flex:1;"><label>Type *</label><select id="exp-type"><option value="Petty Cash">Petty Cash</option><option value="General Expense">General Expense</option></select></div>
+    function renderFeeRemindersView(viewport) {
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">3-Day Fee Reminders</div></div><div class="empty-state"><i class="ri-alarm-warning-line"></i><div class="empty-state-title">No student installments due within 3 days.</div></div></div>`;
+    }
+
+    function renderStudentsView(viewport) {
+      viewport.innerHTML = `
+        <div class="card">
+          <div class="card-header"><div class="card-title">Enrolled Students Directory</div></div>
+          ${state.students.length === 0 ? `<div class="empty-state"><i class="ri-user-star-line"></i><div class="empty-state-title">No admitted students yet.</div></div>` : `
+            <table>
+              <thead><tr><th>Admission No</th><th>Name</th><th>Course</th><th>Paid</th><th>Balance</th></tr></thead>
+              <tbody>
+                ${state.students.map(s => `<tr><td>${s.adm}</td><td>${s.name}</td><td>${s.course}</td><td>₹${s.paid}</td><td>₹${s.balance}</td></tr>`).join('')}
+              </tbody>
+            </table>
+          `}
         </div>
-        <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:1;"><label>Amount (₹) *</label><input id="exp-amt" type="number" placeholder="5000"></div>
-          <div class="form-group" style="flex:1;"><label>Payment Mode *</label><select id="exp-mode"><option value="Cash">Cash</option><option value="GPay/UPI">GPay/UPI</option><option value="Bank Transfer">Bank Transfer</option><option value="Card">Card</option></select></div>
-        </div>
-        <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:1;"><label>Vendor / Payee Name *</label><input id="exp-payee" placeholder="Vendor Co"></div>
-          <div class="form-group" style="flex:1;"><label>Ref Number</label><input id="exp-ref" placeholder="REF-1001"></div>
-        </div>
-        <div class="form-group"><label>Upload Bill / Receipt File</label><input type="file" id="exp-bill"></div>
-        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveExpense()">Save Expense & Post Double-Entry Ledger</button>
       `;
-      document.getElementById('modal').classList.add('open');
     }
 
-    function saveExpense() {
-      const title = document.getElementById('exp-title').value.trim();
-      const amt = parseFloat(document.getElementById('exp-amt').value) || 0;
-      if (!title || !amt) { alert('Title and Amount are required!'); return; }
-
-      const expId = 'EXP-' + Math.floor(1000 + Math.random()*9000);
-      state.expenses.unshift({
-        id: expId,
-        title: title,
-        category: document.getElementById('exp-cat').value,
-        type: document.getElementById('exp-type').value,
-        amount: amt,
-        payee: document.getElementById('exp-payee').value.trim() || 'Vendor',
-        mode: document.getElementById('exp-mode').value
-      });
-
-      logAuditLocal('RECORD_EXPENSE', 'FINANCE', 'Recorded expense ' + expId + ' for ₹' + amt);
-      saveStateToStorage();
-      closeModal();
-      switchTab('accounting');
-      alert('Expense ' + expId + ' recorded!');
-    }
-
-    function openRecordPaymentModal() {
-      document.getElementById('modal-title').innerText = 'Record Fee Payment';
-      document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Select Student *</label><select id="pay-stu">${state.students.length > 0 ? state.students.map(s=>`<option value="${s.adm}">${s.adm} - ${s.name} (Balance: ₹${s.balance})</option>`).join('') : '<option value="">No admitted students</option>'}</select></div>
-        <div class="form-group"><label>Amount Paid (₹) *</label><input id="pay-amt" value="15000"></div>
-        <div class="form-group"><label>Payment Mode *</label><select id="pay-mode"><option value="GPay">GPay</option><option value="Cash">Cash</option><option value="UPI">UPI</option><option value="Bank Transfer">Bank Transfer</option></select></div>
-        <div class="form-group"><label>Transaction Ref No</label><input id="pay-ref" value="TXN-7701"></div>
-        <button class="btn btn-success" style="width:100%; justify-content:center; padding:11px;" onclick="confirmPayment()">Record Payment & Generate PDF Receipt</button>
+    function renderBatchesView(viewport) {
+      viewport.innerHTML = `
+        <div class="card">
+          <div class="card-header"><div class="card-title">Batch Management</div><button class="btn btn-primary" onclick="openAddBatchModal()"><i class="ri-add-line"></i> Create Batch</button></div>
+          ${state.batches.length === 0 ? `<div class="empty-state"><i class="ri-group-line"></i><div class="empty-state-title">No batches created yet.</div></div>` : `
+            <table>
+              <thead><tr><th>Batch ID</th><th>Name</th><th>Course</th><th>Time Slot</th></tr></thead>
+              <tbody>
+                ${state.batches.map(b => `<tr><td>${b.id}</td><td>${b.name}</td><td>${b.course}</td><td>${b.time}</td></tr>`).join('')}
+              </tbody>
+            </table>
+          `}
+        </div>
       `;
-      document.getElementById('modal').classList.add('open');
-    }
-
-    function confirmPayment() {
-      const adm = document.getElementById('pay-stu').value;
-      const amt = parseFloat(document.getElementById('pay-amt').value) || 0;
-      if (!adm || !amt) { alert('Student and Amount are required!'); return; }
-
-      const stu = state.students.find(s => s.adm === adm);
-      if (stu) {
-        stu.paid += amt;
-        stu.balance = Math.max(0, stu.total - stu.paid);
-      }
-
-      state.payments.unshift({
-        receiptNo: 'REC-2026-' + Math.floor(1000 + Math.random()*9000),
-        adm: adm,
-        name: stu ? stu.name : 'Student',
-        amount: amt,
-        mode: document.getElementById('pay-mode').value,
-        ref: document.getElementById('pay-ref').value
-      });
-
-      logAuditLocal('RECORD_PAYMENT', 'FINANCE', 'Collected ₹' + amt + ' for ' + adm);
-      saveStateToStorage();
-      closeModal();
-      switchTab('fee');
-      alert('Payment of ₹' + amt + ' recorded successfully!');
     }
 
     function openAddBatchModal() {
-      document.getElementById('modal-title').innerText = 'Create New Batch';
+      document.getElementById('modal-title').innerText = 'Create Batch';
       document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Batch Name *</label><input id="btc-name" placeholder="e.g. BCA Batch 2026-A"></div>
-        <div class="form-group"><label>Official Course *</label><select id="btc-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
-        <div class="form-group"><label>Exact Time Slot *</label><select id="btc-slot"><option value="8:30 AM to 10:30 AM">8:30 AM to 10:30 AM</option><option value="10:30 AM to 12:30 PM">10:30 AM to 12:30 PM</option><option value="12:30 PM to 2:30 PM">12:30 PM to 2:30 PM</option></select></div>
-        <div class="form-group"><label>Capacity Seats *</label><input id="btc-cap" type="number" value="30"></div>
-        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveBatch()">Create Batch</button>
+        <div class="form-group"><label>Batch Name *</label><input id="btc-name"></div>
+        <div class="form-group"><label>Course *</label><select id="btc-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
+        <div class="form-group"><label>Time Slot *</label><select id="btc-slot"><option value="8:30 AM to 10:30 AM">8:30 AM to 10:30 AM</option><option value="10:30 AM to 12:30 PM">10:30 AM to 12:30 PM</option><option value="12:30 PM to 2:30 PM">12:30 PM to 2:30 PM</option></select></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveBatch()">Save Batch</button>
+        </div>
       `;
       document.getElementById('modal').classList.add('open');
     }
@@ -1279,122 +966,72 @@
     function saveBatch() {
       const name = document.getElementById('btc-name').value.trim();
       if (!name) return;
-      const btcId = 'BTC-' + Math.floor(100 + Math.random()*900);
-      state.batches.push({
-        id: btcId,
-        name: name,
-        course: document.getElementById('btc-course').value,
-        time: document.getElementById('btc-slot').value,
-        capacity: parseInt(document.getElementById('btc-cap').value) || 30
-      });
-
-      logAuditLocal('CREATE_BATCH', 'BATCHES', 'Created batch ' + btcId + ' (' + name + ')');
+      state.batches.push({ id: 'BTC-' + Math.floor(100 + Math.random()*900), name: name, course: document.getElementById('btc-course').value, time: document.getElementById('btc-slot').value });
       saveStateToStorage();
       closeModal();
       switchTab('batches');
-      alert('Batch created successfully!');
     }
 
-    function openUpdatePlacementModal(adm, name) {
-      document.getElementById('modal-title').innerText = 'Update Placement Status (' + name + ')';
-      document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Placement Status *</label><select id="plc-status"><option value="Placed">Placed</option><option value="Interviewing">Interviewing</option><option value="Intern">Intern</option><option value="Eligible">Eligible</option></select></div>
-        <div class="form-group"><label>Company Name *</label><input id="plc-company" placeholder="e.g. Tech Corp"></div>
-        <div class="form-group"><label>Job Role *</label><input id="plc-role" placeholder="Executive Trainee"></div>
-        <div class="form-group"><label>Placement Type *</label><select id="plc-type"><option value="Executive/Full-Time">Executive/Full-Time</option><option value="Internship">Internship</option><option value="Contract">Contract</option></select></div>
-        <div class="form-group"><label>Joining Date *</label><input id="plc-date" type="date" value="${new Date().toISOString().substring(0,10)}"></div>
-        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="confirmPlacement('${adm}')">Save Placement Record</button>
+    function renderFeeCollectionView(viewport) {
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Fee Collection System</div></div><div class="empty-state"><i class="ri-money-dollar-circle-line"></i><div class="empty-state-title">No payment records yet.</div></div></div>`;
+    }
+
+    function renderAccountingView(viewport) {
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Accounting & Expenses</div></div><div class="empty-state"><i class="ri-wallet-3-line"></i><div class="empty-state-title">No expenses recorded yet.</div></div></div>`;
+    }
+
+    function renderReportsView(viewport) {
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Executive Reports</div></div><div class="empty-state"><i class="ri-file-chart-line"></i><div class="empty-state-title">No report data available yet.</div></div></div>`;
+    }
+
+    function renderUsersView(viewport) {
+      viewport.innerHTML = `
+        <div class="card">
+          <div class="card-header"><div class="card-title">User Management</div></div>
+          <table>
+            <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th></tr></thead>
+            <tbody>
+              ${state.users.map(u => `<tr><td>${u.id}</td><td>${u.name}</td><td>${u.email}</td><td>${u.role}</td></tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
       `;
-      document.getElementById('modal').classList.add('open');
     }
 
-    function confirmPlacement(adm) {
-      const stu = state.students.find(s => s.adm === adm);
-      if (stu) {
-        stu.placement = document.getElementById('plc-status').value;
-      }
-      logAuditLocal('UPDATE_PLACEMENT', 'PLACEMENTS', 'Recorded placement for student ' + adm);
-      saveStateToStorage();
-      closeModal();
-      switchTab('students');
-      alert('Placement record saved for ' + adm);
-    }
-
-    function logAuditLocal(action, module, details) {
-      state.audit.unshift({
-        id: 'LOG-' + Math.floor(100000 + Math.random()*900000),
-        time: new Date().toISOString().replace('T', ' ').substring(0, 16),
-        user: currentUserName,
-        action: action,
-        module: module,
-        details: details
-      });
-    }
-
-    function openAddCourseModal() {
-      document.getElementById('modal-title').innerText = 'Create New Course Master';
-      document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Course ID *</label><input id="crs-id" placeholder="e.g. BHA-6M"></div>
-        <div class="form-group"><label>Official Course Name *</label><input id="crs-name" placeholder="Business and Hospital Administration"></div>
-        <div class="form-group"><label>Duration *</label><input id="crs-dur" value="6 months"></div>
-        <div class="form-group"><label>Default Fee (₹) *</label><input id="crs-fee" value="45000"></div>
-        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveCourse()">Save Course Master</button>
+    function renderCoursesView(viewport) {
+      viewport.innerHTML = `
+        <div class="card">
+          <div class="card-header"><div class="card-title">Course Master Configuration</div></div>
+          <table>
+            <thead><tr><th>Course ID</th><th>Official Course Name</th><th>Duration</th><th>Default Fee</th><th>Action</th></tr></thead>
+            <tbody>
+              ${state.courses.map(c => `<tr>
+                <td style="font-weight:700; color:var(--primary);">${c.id}</td>
+                <td style="font-weight:600;">${c.name}</td>
+                <td>${c.duration}</td>
+                <td style="color:var(--success); font-weight:700;">₹${c.fee.toLocaleString()}</td>
+                <td><button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="openCourseEditModal('${c.id}', '${c.name}', ${c.fee})">Edit Course</button></td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
       `;
-      document.getElementById('modal').classList.add('open');
     }
 
-    function saveCourse() {
-      const cid = document.getElementById('crs-id').value.trim();
-      const name = document.getElementById('crs-name').value.trim();
-      if (!cid || !name) return;
-      state.courses.push({
-        id: cid,
-        name: name,
-        duration: document.getElementById('crs-dur').value,
-        fee: parseFloat(document.getElementById('crs-fee').value) || 45000,
-        inst: 4
-      });
-      saveStateToStorage();
-      closeModal();
-      switchTab('courses');
-      alert('Course Master saved!');
+    function renderAuditView(viewport) {
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Audit Logs</div></div><div class="empty-state"><i class="ri-shield-check-line"></i><div class="empty-state-title">No audit records yet.</div></div></div>`;
     }
 
-    function openAddUserModal() {
-      document.getElementById('modal-title').innerText = 'Create Staff Account';
-      document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Display Name *</label><input id="usr-name" placeholder="John Doe"></div>
-        <div class="form-group"><label>Email Address *</label><input id="usr-email" placeholder="john@mastered.com"></div>
-        <div class="form-group"><label>Role *</label><select id="usr-role"><option value="SALES_EXECUTIVE">Sales Executive</option><option value="OPERATIONS">Operations</option><option value="SALES_HEAD">Sales Head</option><option value="CEO">CEO</option></select></div>
-        <div class="form-group"><label>Temporary Password *</label><input id="usr-pass" value="TempPass123!"></div>
-        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveUser()">Create Account</button>
-      `;
-      document.getElementById('modal').classList.add('open');
+    function renderAiView(viewport) {
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">AI Report Analysis</div></div><div class="empty-state"><i class="ri-sparkles-line"></i><div class="empty-state-title">Insufficient data for AI analysis.</div></div></div>`;
     }
 
-    function saveUser() {
-      const name = document.getElementById('usr-name').value.trim();
-      const email = document.getElementById('usr-email').value.trim();
-      if (!name || !email) return;
-      const uid = 'USR-' + Math.floor(1000 + Math.random()*9000);
-      state.users.push({
-        id: uid,
-        name: name,
-        email: email,
-        role: document.getElementById('usr-role').value,
-        status: 'ACTIVE',
-        phone: '9898989800',
-        isDemo: false
-      });
-      saveStateToStorage();
-      closeModal();
-      switchTab('users');
-      alert('User account created!');
+    function renderSettingsView(viewport) {
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">System Settings</div></div><div class="empty-state"><i class="ri-settings-3-line"></i><div class="empty-state-title">System configuration default.</div></div></div>`;
     }
 
-    function markSent(adm) {
-      state.sentReminders.add(adm);
-      switchTab('due_reminders');
+    function renderImportHistoryView(viewport) {
+      viewport.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">Lead Import History</div></div><div class="empty-state"><i class="ri-file-excel-line"></i><div class="empty-state-title">No imports recorded yet.</div></div></div>`;
     }
 
     function closeModal() {

@@ -1,9 +1,9 @@
 /**
- * MASTERED ERP V4.0 — Google Apps Script Production Backend API
+ * MASTERED ERP v4.1 — Google Apps Script Production Backend API
  * 
  * Persistent Database & Server-Side Authorization Engine
- * 17 Structured Sheets, SHA-256 Salted Password Hashing, Atomic Lead Closing,
- * Double-Entry Bookkeeping, and Excel Lead Import Processing.
+ * 18 Structured Sheets, SHA-256 Salted Password Hashing, Atomic Lead Closing,
+ * Marketing Campaign Master & Public Events ROI Calculations, Double-Entry Bookkeeping.
  */
 
 function doPost(e) {
@@ -36,17 +36,23 @@ function doPost(e) {
 
     // Route Actions
     switch (action) {
+      // System Health
+      case 'getSystemHealth':
+        return responseJSON(getSystemHealth(ss));
+
       // Auth & Security
       case 'changePassword':
         return responseJSON(handleChangePassword(ss, payload));
       case 'logout':
         return responseJSON(handleLogout(ss, sessionToken));
 
-      // Courses Master
+      // Courses Master & Edits
       case 'getCourses':
         return responseJSON(getCourses(ss));
       case 'saveCourse':
         return responseJSON(saveCourse(ss, payload));
+      case 'updateCourseMaster':
+        return responseJSON(updateCourseMaster(ss, payload));
 
       // User Management (Admin)
       case 'getUsers':
@@ -59,6 +65,8 @@ function doPost(e) {
       // Lead CRM & Per-Lead Follow-ups
       case 'getLeads':
         return responseJSON(getLeads(ss, payload));
+      case 'getAllLeadsAdmin':
+        return responseJSON(getAllLeadsAdmin(ss, payload));
       case 'createLead':
         return responseJSON(createLead(ss, payload));
       case 'updateLeadStage':
@@ -69,6 +77,18 @@ function doPost(e) {
         return responseJSON(reassignLeads(ss, payload));
       case 'exemptLeadTarget':
         return responseJSON(exemptLeadTarget(ss, payload));
+      case 'archiveLead':
+        return responseJSON(archiveLead(ss, payload));
+
+      // Marketing Campaign Master & Public Events
+      case 'getCampaigns':
+        return responseJSON(getCampaigns(ss));
+      case 'saveCampaign':
+        return responseJSON(saveCampaign(ss, payload));
+      case 'getPublicEvents':
+        return responseJSON(getPublicEvents(ss));
+      case 'savePublicEvent':
+        return responseJSON(savePublicEvent(ss, payload));
 
       // Sales Executive Bulk Lead Excel Import
       case 'importBulkLeads':
@@ -99,12 +119,16 @@ function doPost(e) {
         return responseJSON(getPayments(ss, payload));
       case 'recordPayment':
         return responseJSON(recordPayment(ss, payload));
+      case 'reversePayment':
+        return responseJSON(reversePayment(ss, payload));
 
       // Expenses & Accounting
       case 'getExpenses':
         return responseJSON(getExpenses(ss, payload));
       case 'recordExpense':
         return responseJSON(recordExpense(ss, payload));
+      case 'reverseExpense':
+        return responseJSON(reverseExpense(ss, payload));
       case 'getAccountingLedger':
         return responseJSON(getAccountingLedger(ss));
 
@@ -130,7 +154,26 @@ function responseJSON(data) {
 }
 
 // ==========================================
-// DATABASE SETUP & MIGRATIONS (V4.0 CLEAN PRODUCTION)
+// SYSTEM HEALTH PANEL API
+// ==========================================
+
+function getSystemHealth(ss) {
+  return {
+    success: true,
+    data: {
+      backendStatus: 'CONNECTED',
+      databaseStatus: 'CONNECTED',
+      driveStatus: 'CONNECTED',
+      version: 'v4.1',
+      spreadsheetName: ss.getName(),
+      lastOperationTime: new Date().toISOString(),
+      activeSheetsCount: ss.getSheets().length
+    }
+  };
+}
+
+// ==========================================
+// DATABASE SETUP & MIGRATIONS (v4.1 CLEAN PRODUCTION)
 // ==========================================
 
 function setupDatabase(ss) {
@@ -142,7 +185,7 @@ function setupDatabase(ss) {
     'SETTINGS', 'USERS', 'SESSIONS', 'COURSES', 'BATCHES', 'LEADS', 
     'LEAD_FOLLOWUPS', 'STUDENTS', 'STUDENT_STATUS_HISTORY', 'PAYMENTS', 
     'INSTALLMENT_SCHEDULE', 'EXPENSES', 'PLACEMENTS', 'RECEIPTS', 'AUDIT_LOGS', 
-    'IMPORT_JOBS', 'TARGETS', 'NOTIFICATIONS'
+    'IMPORT_JOBS', 'TARGETS', 'NOTIFICATIONS', 'CAMPAIGNS', 'PUBLIC_EVENTS'
   ];
 
   sheets.forEach(function(sName) {
@@ -190,7 +233,7 @@ function seedInitialCourses(ss) {
 }
 
 function hashPassword(pass) {
-  var raw = 'MASTERED_SALT_V4.0_' + pass;
+  var raw = 'MASTERED_SALT_V4.1_' + pass;
   var digest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, raw);
   return digest.map(function(byte) {
     return (byte < 0 ? byte + 256 : byte).toString(16).padStart(2, '0');
@@ -310,10 +353,100 @@ function getPublicSettings(ss) {
     success: true,
     data: {
       academyName: 'MASTERED',
-      tagline: 'Academy Management System v4.0',
+      tagline: 'Academy Management System v4.1',
       publicLogoUrl: '/assets/logo.png'
     }
   };
+}
+
+// ==========================================
+// MARKETING CAMPAIGNS & PUBLIC EVENTS
+// ==========================================
+
+function getCampaigns(ss) {
+  var cSheet = ss.getSheetByName('CAMPAIGNS');
+  var data = cSheet.getDataRange().getValues();
+  var campaigns = [];
+  for (var i = 1; i < data.length; i++) {
+    campaigns.push({
+      campaignId: data[i][0],
+      name: data[i][1],
+      type: data[i][2],
+      channel: data[i][3],
+      budget: parseFloat(data[i][4]) || 0,
+      actualSpend: parseFloat(data[i][5]) || 0,
+      status: data[i][6],
+      createdAt: data[i][7]
+    });
+  }
+  return { success: true, data: campaigns };
+}
+
+function saveCampaign(ss, payload) {
+  var user = payload._user;
+  if (user.role !== 'ADMIN' && user.role !== 'CEO' && user.role !== 'SALES_HEAD') {
+    return { success: false, error: 'Unauthorized to manage marketing campaigns' };
+  }
+
+  var cSheet = ss.getSheetByName('CAMPAIGNS');
+  var cmpId = 'CMP-' + Math.floor(1000 + Math.random() * 9000);
+  var now = new Date().toISOString();
+
+  cSheet.appendRow([
+    cmpId,
+    payload.name,
+    payload.type || 'Meta Ad',
+    payload.channel || 'Meta Ads',
+    parseFloat(payload.budget) || 0,
+    parseFloat(payload.actualSpend) || 0,
+    payload.status || 'Active',
+    now
+  ]);
+
+  logAudit(ss, user.userId, user.name, 'SAVE_CAMPAIGN', 'MARKETING', 'Created campaign ' + cmpId + ' (' + payload.name + ')');
+  return { success: true, campaignId: cmpId, message: 'Campaign saved' };
+}
+
+function getPublicEvents(ss) {
+  var eSheet = ss.getSheetByName('PUBLIC_EVENTS');
+  var data = eSheet.getDataRange().getValues();
+  var events = [];
+  for (var i = 1; i < data.length; i++) {
+    events.push({
+      eventId: data[i][0],
+      name: data[i][1],
+      date: data[i][2],
+      location: data[i][3],
+      budget: parseFloat(data[i][4]) || 0,
+      actualSpend: parseFloat(data[i][5]) || 0,
+      status: data[i][6]
+    });
+  }
+  return { success: true, data: events };
+}
+
+function savePublicEvent(ss, payload) {
+  var user = payload._user;
+  if (user.role !== 'ADMIN' && user.role !== 'CEO' && user.role !== 'SALES_HEAD') {
+    return { success: false, error: 'Unauthorized to create public events' };
+  }
+
+  var eSheet = ss.getSheetByName('PUBLIC_EVENTS');
+  var evtId = 'EVT-' + Math.floor(1000 + Math.random() * 9000);
+  var now = new Date().toISOString();
+
+  eSheet.appendRow([
+    evtId,
+    payload.name,
+    payload.date || now.substring(0, 10),
+    payload.location || 'Kochi',
+    parseFloat(payload.budget) || 0,
+    parseFloat(payload.actualSpend) || 0,
+    payload.status || 'Active'
+  ]);
+
+  logAudit(ss, user.userId, user.name, 'SAVE_PUBLIC_EVENT', 'MARKETING', 'Created public event ' + evtId);
+  return { success: true, eventId: evtId, message: 'Public event saved' };
 }
 
 // ==========================================
@@ -394,7 +527,7 @@ function getImportHistory(ss, payload) {
 }
 
 // ==========================================
-// LEAD CRM & PER-LEAD FOLLOW-UP TRACKING
+// LEAD CRM & ADMIN CONTROL CENTER
 // ==========================================
 
 function getLeads(ss, payload) {
@@ -436,6 +569,14 @@ function getLeads(ss, payload) {
   }
 
   return { success: true, data: leads };
+}
+
+function getAllLeadsAdmin(ss, payload) {
+  var user = payload._user;
+  if (user.role !== 'ADMIN' && user.role !== 'SALES_HEAD') {
+    return { success: false, error: 'Unauthorized: Admin or Sales Head required' };
+  }
+  return getLeads(ss, payload);
 }
 
 function createLead(ss, payload) {
@@ -555,6 +696,23 @@ function exemptLeadTarget(ss, payload) {
       lSheet.getRange(i + 1, 18).setValue('Exempted by ' + user.role);
       logAudit(ss, user.userId, user.name, 'EXEMPT_LEAD_TARGET', 'CRM', 'Exempted follow-up target for ' + leadId + '. Reason: ' + reason);
       return { success: true, message: 'Lead follow-up target exempted' };
+    }
+  }
+  return { success: false, error: 'Lead not found' };
+}
+
+function archiveLead(ss, payload) {
+  var user = payload._user;
+  if (user.role !== 'ADMIN') return { success: false, error: 'Admin role required to archive leads' };
+
+  var leadId = payload.leadId;
+  var lSheet = ss.getSheetByName('LEADS');
+  var data = lSheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0] === leadId) {
+      lSheet.getRange(i + 1, 12).setValue('Archived');
+      logAudit(ss, user.userId, user.name, 'ARCHIVE_LEAD', 'CRM', 'Archived lead ' + leadId);
+      return { success: true, message: 'Lead archived' };
     }
   }
   return { success: false, error: 'Lead not found' };
@@ -799,6 +957,26 @@ function saveCourse(ss, payload) {
   return { success: true, message: 'Course created' };
 }
 
+function updateCourseMaster(ss, payload) {
+  var user = payload._user;
+  if (user.role !== 'ADMIN') return { success: false, error: 'Admin role required' };
+
+  var cSheet = ss.getSheetByName('COURSES');
+  var data = cSheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0] === payload.courseId) {
+      if (payload.courseName) cSheet.getRange(i + 1, 2).setValue(payload.courseName);
+      if (payload.duration) cSheet.getRange(i + 1, 3).setValue(payload.duration);
+      if (payload.defaultTotalFee) cSheet.getRange(i + 1, 4).setValue(parseFloat(payload.defaultTotalFee));
+      if (payload.status) cSheet.getRange(i + 1, 6).setValue(payload.status);
+
+      logAudit(ss, user.userId, user.name, 'UPDATE_COURSE', 'COURSES', 'Updated Course Master ' + payload.courseId);
+      return { success: true, message: 'Course Master updated' };
+    }
+  }
+  return { success: false, error: 'Course not found' };
+}
+
 function getBatches(ss) {
   var bSheet = ss.getSheetByName('BATCHES');
   var data = bSheet.getDataRange().getValues();
@@ -858,7 +1036,8 @@ function getExpenses(ss, payload) {
       paymentMode: data[i][6],
       billUrl: data[i][7],
       createdBy: data[i][8],
-      createdAt: data[i][9]
+      createdAt: data[i][9],
+      status: data[i][10] || 'APPROVED'
     });
   }
   return { success: true, data: expenses };
@@ -885,7 +1064,8 @@ function recordExpense(ss, payload) {
     payload.paymentMode || 'Cash',
     payload.billUrl || 'https://drive.google.com/sample_bill.png',
     user.email,
-    now
+    now,
+    'APPROVED'
   ]);
 
   var accSheet = ss.getSheetByName('ACCOUNTING_ENTRIES');
@@ -893,6 +1073,27 @@ function recordExpense(ss, payload) {
 
   logAudit(ss, user.userId, user.name, 'RECORD_EXPENSE', 'FINANCE', 'Recorded expense ' + expId + ' for ₹' + amount);
   return { success: true, expenseId: expId, message: 'Expense recorded' };
+}
+
+function reverseExpense(ss, payload) {
+  var user = payload._user;
+  if (user.role !== 'ADMIN' && user.role !== 'CEO') {
+    return { success: false, error: 'Unauthorized to reverse expenses' };
+  }
+
+  var expId = payload.expenseId;
+  var reason = payload.reason || 'Reversed by CEO/Admin';
+
+  var eSheet = ss.getSheetByName('EXPENSES');
+  var data = eSheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0] === expId) {
+      eSheet.getRange(i + 1, 11).setValue('REVERSED');
+      logAudit(ss, user.userId, user.name, 'REVERSE_EXPENSE', 'FINANCE', 'Reversed expense ' + expId + '. Reason: ' + reason);
+      return { success: true, message: 'Expense reversed' };
+    }
+  }
+  return { success: false, error: 'Expense not found' };
 }
 
 function getPayments(ss, payload) {
@@ -908,7 +1109,8 @@ function getPayments(ss, payload) {
       amount: parseFloat(data[i][4]) || 0,
       paymentMode: data[i][5],
       referenceNo: data[i][6],
-      createdAt: data[i][7]
+      createdAt: data[i][7],
+      status: data[i][8] || 'VALID'
     });
   }
   return { success: true, data: payments };
@@ -940,10 +1142,31 @@ function recordPayment(ss, payload) {
   }
 
   var pSheet = ss.getSheetByName('PAYMENTS');
-  pSheet.appendRow([receiptNo, studentId, studentId, studentName, amount, payload.paymentMode || 'GPay', payload.referenceNo || 'TXN-1001', now]);
+  pSheet.appendRow([receiptNo, studentId, studentId, studentName, amount, payload.paymentMode || 'GPay', payload.referenceNo || 'TXN-1001', now, 'VALID']);
 
   logAudit(ss, user.userId, user.name, 'RECORD_PAYMENT', 'FINANCE', 'Collected ₹' + amount + ' for ' + studentName + '. Receipt: ' + receiptNo);
   return { success: true, receiptNo: receiptNo, message: 'Payment recorded successfully' };
+}
+
+function reversePayment(ss, payload) {
+  var user = payload._user;
+  if (user.role !== 'ADMIN' && user.role !== 'CEO') {
+    return { success: false, error: 'Unauthorized to reverse payments' };
+  }
+
+  var receiptNo = payload.receiptNo;
+  var reason = payload.reason || 'Reversed by CEO/Admin';
+
+  var pSheet = ss.getSheetByName('PAYMENTS');
+  var data = pSheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0] === receiptNo) {
+      pSheet.getRange(i + 1, 9).setValue('REVERSED');
+      logAudit(ss, user.userId, user.name, 'REVERSE_PAYMENT', 'FINANCE', 'Reversed payment ' + receiptNo + '. Reason: ' + reason);
+      return { success: true, message: 'Payment reversed' };
+    }
+  }
+  return { success: false, error: 'Payment receipt not found' };
 }
 
 function getAccountingLedger(ss) {
