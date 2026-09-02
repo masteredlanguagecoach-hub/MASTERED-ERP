@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=1200, initial-scale=0.35, maximum-scale=2.0, user-scalable=yes">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>MASTERED ERP v5.5 - Minute-Perfect Complete System</title>
+  <title>MASTERED ERP v6.0 - Universal Laptop System</title>
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MASTERED ERP">
   <link rel="apple-touch-icon" href="assets/logo.png">
-  <link rel="icon" type="image/png" href="assets/logo.png?v=5.5">
+  <link rel="icon" type="image/png" href="assets/logo.png?v=6.0">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -35,21 +35,16 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background-color: var(--bg); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
+    body { background-color: var(--bg); color: var(--text-primary); min-height: 100vh; overflow-x: auto; }
 
     /* Pure Public Landing Container */
     .landing-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 500; display: flex; flex-direction: column; overflow-y: auto; }
     .landing-header { background: white; border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
     .landing-hero { background: linear-gradient(135deg, #1E293B, #0F172A); color: white; padding: 60px 20px; text-align: center; }
 
-    /* ERP Mobile-First Responsive Layout */
-    .app-container { display: flex; width: 100vw; height: 100vh; overflow: hidden; position: relative; }
-    .sidebar { width: 260px; background-color: var(--secondary); color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; transition: transform 0.3s ease; }
-    
-    @media (max-width: 768px) {
-      .sidebar { position: absolute; top: 0; left: 0; z-index: 450; transform: translateX(-100%); }
-      .sidebar.open { transform: translateX(0); }
-    }
+    /* ERP Universal Laptop Workspace - EXACT SIDEBAR & MAIN AREA ON ALL DEVICES */
+    .app-container { display: flex; width: 100vw; min-width: 1150px; height: 100vh; overflow: hidden; position: relative; }
+    .sidebar { width: 260px; background-color: var(--secondary); color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
 
     .brand-header { padding: 20px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--secondary-light); flex-shrink: 0; }
     .brand-logo { width: 36px; height: 36px; border-radius: 8px; background: white; padding: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -71,62 +66,57 @@
     .sidebar-footer { padding: 12px 14px 20px 14px; border-top: 1px solid var(--secondary-light); flex-shrink: 0; }
     .logout-btn { width: 100%; padding: 10px; border: 1px solid rgba(255,255,255,0.25); background: transparent; color: white; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 12px; min-height: 44px; }
 
-    .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100vh; width: 100%; }
-    .top-bar { height: 60px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; flex-shrink: 0; }
-    .mobile-hamburger { display: none; font-size: 24px; cursor: pointer; margin-right: 12px; color: var(--secondary); }
-    
-    @media (max-width: 768px) {
-      .mobile-hamburger { display: block; }
-    }
+    .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100vh; width: calc(100% - 260px); }
+    .top-bar { height: 60px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; }
 
-    .page-title { font-size: 15px; font-weight: 700; }
-    .top-user-badge { display: flex; align-items: center; gap: 8px; font-size: 11px; background: #F1F5F9; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); }
+    .page-title { font-size: 16px; font-weight: 700; }
+    .top-user-badge { display: flex; align-items: center; gap: 8px; font-size: 12px; background: #F1F5F9; padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); }
 
-    .content-viewport { flex: 1; padding: 16px; overflow-y: auto; }
+    .content-viewport { flex: 1; padding: 20px; overflow-y: auto; }
 
-    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
-    .stat-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-    .stat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-    .stat-title { font-size: 10.5px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat-value { font-size: 20px; font-weight: 700; margin-top: 2px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+    .stat-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 18px; display: flex; align-items: center; gap: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .stat-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+    .stat-title { font-size: 11px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-value { font-size: 22px; font-weight: 700; margin-top: 2px; }
 
-    .btn { padding: 9px 14px; border-radius: 6px; border: none; font-weight: 600; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; white-space: nowrap; }
+    .btn { padding: 9px 16px; border-radius: 6px; border: none; font-weight: 600; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; white-space: nowrap; }
     .btn-primary { background: var(--primary); color: white; }
     .btn-primary:hover { background: var(--primary-dark); }
     .btn-success { background: var(--success); color: white; }
     .btn-secondary { background: var(--secondary); color: white; }
     .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-primary); }
 
-    .card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
-    .card-title { font-size: 14.5px; font-weight: 700; }
+    .card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 10px; }
+    .card-title { font-size: 15px; font-weight: 700; }
 
-    .table-responsive { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid var(--border); }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; min-width: 600px; }
-    th { padding: 11px 12px; background: #F1F5F9; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border); }
-    td { padding: 11px 12px; border-bottom: 1px solid var(--border); color: var(--text-primary); }
+    .table-responsive { overflow-x: auto; width: 100%; border-radius: 8px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12.5px; }
+    th { padding: 11px 14px; background: #F1F5F9; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border); }
+    td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--text-primary); }
     tr:hover { background: #F8FAFC; }
 
-    .badge { padding: 3px 10px; border-radius: 16px; font-size: 10px; font-weight: 600; display: inline-block; }
+    .badge { padding: 4px 10px; border-radius: 16px; font-size: 10.5px; font-weight: 600; display: inline-block; }
     .badge-info { background: #DBEAFE; color: #1D4ED8; }
     .badge-success { background: #DCFCE7; color: #15803D; }
     .badge-warning { background: #FEF3C7; color: #B45309; }
     .badge-danger { background: #FEE2E2; color: #B91C1C; }
     .badge-demo { background: #FEF3C7; color: #B45309; border: 1px solid #F59E0B; font-size: 9px; padding: 2px 6px; }
 
-    .empty-state { padding: 30px 16px; text-align: center; color: var(--text-secondary); }
-    .empty-state i { font-size: 36px; color: var(--text-muted); margin-bottom: 10px; display: block; }
+    .empty-state { padding: 40px 20px; text-align: center; color: var(--text-secondary); }
+    .empty-state i { font-size: 40px; color: var(--text-muted); margin-bottom: 12px; display: block; }
 
     .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 600; }
     .modal-backdrop.open { display: flex; }
-    .modal { background: white; border-radius: 12px; width: 680px; max-width: 95%; padding: 20px; max-height: 90vh; overflow-y: auto; }
-    .modal-header { font-size: 15px; font-weight: 700; margin-bottom: 14px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-    .modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); }
-    .form-group { margin-bottom: 12px; }
-    .form-group label { display: block; font-size: 11.5px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 9px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; min-height: 44px; }
+    .modal { background: white; border-radius: 12px; width: 680px; max-width: 95%; padding: 24px; max-height: 90vh; overflow-y: auto; }
+    .modal-header { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--border); }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 9px; border: 1px solid var(--border); border-radius: 6px; font-size: 12.5px; }
 
-    .health-panel { background: #1E293B; color: white; padding: 14px 16px; border-radius: 10px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 11.5px; flex-wrap: wrap; }
+    .health-panel { background: #1E293B; color: white; padding: 14px 20px; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-size: 12px; }
     .health-item { display: flex; align-items: center; gap: 6px; }
     .health-dot { width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block; }
   </style>
@@ -136,22 +126,22 @@
   <!-- Pure Public Landing Container -->
   <div class="landing-container" id="landing-page">
     <div class="landing-header">
-      <div style="display:flex; align-items:center; gap:10px;">
-        <img src="assets/logo.png" height="32" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <img src="assets/logo.png" height="36" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';">
         <div>
-          <div style="font-weight:700; font-size:15px;">MASTERED</div>
-          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v5.5</div>
+          <div style="font-weight:700; font-size:16px;">MASTERED</div>
+          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v6.0</div>
         </div>
       </div>
       <button class="btn btn-primary" onclick="openLoginModal()"><i class="ri-lock-line"></i> Sign In</button>
     </div>
 
     <div class="landing-hero">
-      <span style="background:rgba(220,38,38,0.2); border:1px solid rgba(220,38,38,0.4); padding:4px 12px; border-radius:20px; font-size:10.5px; font-weight:700;">MASTERED ACADEMY SYSTEM</span>
-      <h1 style="font-size:26px; font-weight:700; margin-top:16px;">Academy Operations, CRM & Fee Collections</h1>
-      <p style="color:#94A3B8; font-size:13px; margin-top:10px;">Unified portal for admissions, course ledgers, batch management, and financial accounting.</p>
-      <div style="margin-top:24px;">
-        <button class="btn btn-primary" style="padding:12px 24px; font-size:13px;" onclick="openLoginModal()"><i class="ri-login-box-line"></i> SIGN IN TO PORTAL</button>
+      <span style="background:rgba(220,38,38,0.2); border:1px solid rgba(220,38,38,0.4); padding:4px 14px; border-radius:20px; font-size:11px; font-weight:700;">MASTERED ACADEMY SYSTEM</span>
+      <h1 style="font-size:32px; font-weight:700; margin-top:20px;">Academy Operations, CRM & Fee Collections</h1>
+      <p style="color:#94A3B8; font-size:14px; margin-top:12px;">Unified portal for admissions, course ledgers, batch management, and financial accounting.</p>
+      <div style="margin-top:32px;">
+        <button class="btn btn-primary" style="padding:14px 28px; font-size:14px;" onclick="openLoginModal()"><i class="ri-login-box-line"></i> SIGN IN TO PORTAL</button>
       </div>
     </div>
   </div>
@@ -207,7 +197,7 @@
       ],
       activities: [],
       audit: [
-        { id: 'LOG-1001', timestamp: new Date().toISOString(), userName: 'System Administrator', action: 'SYSTEM_BOOT', module: 'CORE', details: 'MASTERED ERP v5.5 system initialized successfully' }
+        { id: 'LOG-1001', timestamp: new Date().toISOString(), userName: 'System Administrator', action: 'SYSTEM_BOOT', module: 'CORE', details: 'MASTERED ERP v6.0 universal system booted successfully' }
       ],
       importHistory: []
     };
@@ -386,11 +376,6 @@
       switchTab('dashboard');
     }
 
-    function toggleMobileSidebar() {
-      const sidebar = document.querySelector('.sidebar');
-      if (sidebar) sidebar.classList.toggle('open');
-    }
-
     function mountErpShell() {
       const root = document.getElementById('app-root');
       root.innerHTML = `
@@ -398,7 +383,7 @@
           <div class="sidebar">
             <div class="brand-header">
               <div class="brand-logo"><img src="assets/logo.png" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';"></div>
-              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v5.5</div></div>
+              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v6.0</div></div>
             </div>
 
             <div class="user-pill">
@@ -419,13 +404,12 @@
 
           <div class="main-area">
             <div class="top-bar">
-              <div style="display:flex; align-items:center;">
-                <i class="ri-menu-line mobile-hamburger" onclick="toggleMobileSidebar()"></i>
-                <div class="page-title" id="page-title">Executive Overview</div>
-              </div>
+              <div class="page-title" id="page-title">Executive Overview</div>
               <div class="top-user-badge">
                 <i class="ri-user-3-line" style="color:var(--primary);"></i>
                 <span style="font-weight:700;">${currentUserName}</span>
+                <span style="color:var(--text-muted);">|</span>
+                <span style="color:var(--primary); font-weight:600;">${currentRole}</span>
               </div>
             </div>
 
@@ -449,7 +433,7 @@
       const navList = document.getElementById('nav-list');
       if (navList) {
         navList.innerHTML = allowedNavs.map((item, idx) => `
-          <li class="nav-item ${item.id === currentTab ? 'active' : ''}" onclick="switchTab('${item.id}'); toggleMobileSidebar();">
+          <li class="nav-item ${item.id === currentTab ? 'active' : ''}" onclick="switchTab('${item.id}');">
             <i class="${item.icon}"></i> ${item.label}
           </li>
         `).join('');
@@ -525,7 +509,7 @@
         title.innerText = 'AI Analysis';
         renderAiView(viewport);
       } else if (tab === 'settings') {
-        title.innerText = 'System Settings';
+        title.innerText = 'Settings';
         renderSettingsView(viewport);
       } else if (tab === 'import_history') {
         title.innerText = 'My Lead Import History';
@@ -751,7 +735,7 @@
       `;
     }
 
-    // MINUTE-PERFECT 10-FIELD ADD LEAD FORM
+    // 10-FIELD ADD LEAD FORM
     function openAddLeadModal() {
       document.getElementById('modal-title').innerText = 'Add New Lead (Complete 10-Field Record)';
       document.getElementById('modal-body').innerHTML = `
@@ -828,7 +812,7 @@
       switchTab('leads');
     }
 
-    // MINUTE-PERFECT ATOMIC STUDENT ADMISSION WIZARD
+    // ATOMIC STUDENT ADMISSION WIZARD
     function openAdmissionModal(leadId, leadName) {
       document.getElementById('modal-title').innerText = 'Atomic Student Admission Wizard (' + leadName + ')';
       document.getElementById('modal-body').innerHTML = `
