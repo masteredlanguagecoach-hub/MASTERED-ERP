@@ -6,13 +6,13 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>MASTERED ERP v7.0 - Secure Production System</title>
+  <title>MASTERED ERP v7.1 - Complete Production System</title>
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MASTERED ERP">
   <link rel="apple-touch-icon" href="assets/logo.png">
-  <link rel="icon" type="image/png" href="assets/logo.png?v=7.0">
+  <link rel="icon" type="image/png" href="assets/logo.png?v=7.1">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -140,7 +140,7 @@
         <img src="assets/logo.png" height="32" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';">
         <div>
           <div style="font-weight:700; font-size:15px;">MASTERED</div>
-          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v7.0</div>
+          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v7.1</div>
         </div>
       </div>
       <button class="btn btn-primary" onclick="openLoginModal()"><i class="ri-lock-line"></i> Sign In</button>
@@ -207,7 +207,7 @@
       ],
       activities: [],
       audit: [
-        { id: 'LOG-1001', timestamp: new Date().toISOString(), userName: 'System Administrator', action: 'SYSTEM_BOOT', module: 'CORE', details: 'MASTERED ERP v7.0 system booted successfully' }
+        { id: 'LOG-1001', timestamp: new Date().toISOString(), userName: 'System Administrator', action: 'SYSTEM_BOOT', module: 'CORE', details: 'MASTERED ERP v7.1 system booted successfully' }
       ],
       importHistory: []
     };
@@ -289,7 +289,6 @@
 
     loadStateFromStorage();
 
-    // STRICT ROLE PERMISSION NAVIGATION
     const roleNavigation = {
       'ADMIN': [
         { id: 'dashboard', label: 'Executive Overview', icon: 'ri-dashboard-line' },
@@ -399,7 +398,7 @@
           <div class="sidebar">
             <div class="brand-header">
               <div class="brand-logo"><img src="assets/logo.png" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';"></div>
-              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v7.0</div></div>
+              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v7.1</div></div>
             </div>
 
             <div class="user-pill">
@@ -571,7 +570,13 @@
           <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-gift-line"></i></div><div><div class="stat-title">Earned Sales Incentives</div><div class="stat-value">₹${myIncentives.toLocaleString()}</div></div></div>
         </div>
         <div class="card">
-          <div class="card-header"><div class="card-title">My Assigned Leads CRM Summary</div></div>
+          <div class="card-header">
+            <div class="card-title">My Assigned Leads CRM Summary</div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-success" onclick="openImportLeadsModal()"><i class="ri-file-excel-line"></i> Import Leads (Excel / CSV)</button>
+              <button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Add New Lead</button>
+            </div>
+          </div>
           ${myLeads.length === 0 ? `<div class="empty-state"><i class="ri-line-chart-line"></i><div class="empty-state-title">No assigned leads in your pipeline yet.</div></div>` : `
             <div class="table-responsive">
               <table>
@@ -586,7 +591,7 @@
       `;
     }
 
-    // 1. EXECUTIVE OVERVIEW DASHBOARD (ADMIN / CEO / OPS)
+    // 1. EXECUTIVE OVERVIEW DASHBOARD
     function renderMainExecutiveOverview(viewport) {
       const grossRev = state.students.reduce((acc, s) => acc + (s.paid || 0), 0);
       const pendingBal = state.students.reduce((acc, s) => acc + (s.balance || 0), 0);
@@ -610,7 +615,10 @@
         <div class="card">
           <div class="card-header">
             <div class="card-title">All Leads Control Center (${state.leads.length} Records)</div>
-            <button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Register Lead</button>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-success" onclick="openImportLeadsModal()"><i class="ri-file-excel-line"></i> Import Leads (Excel / CSV)</button>
+              <button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Register Lead</button>
+            </div>
           </div>
           ${state.leads.length === 0 ? `<div class="empty-state"><i class="ri-shield-star-line"></i><div class="empty-state-title">No leads in database.</div></div>` : `
             <div class="table-responsive">
@@ -754,7 +762,7 @@
       switchTab('campaigns');
     }
 
-    // 9. LEADS CRM VIEW
+    // 9. LEADS CRM VIEW WITH PROMINENT IMPORT BUTTON
     function renderLeadsView(viewport) {
       let filteredLeads = state.leads;
       if (currentRole === 'SALES_EXEC') filteredLeads = state.leads.filter(l => l.assigned === currentUserName);
@@ -763,9 +771,12 @@
         <div class="card">
           <div class="card-header">
             <div class="card-title">Active CRM Lead Pipeline (${filteredLeads.length} Leads)</div>
-            <button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Add New Lead</button>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-success" onclick="openImportLeadsModal()"><i class="ri-file-excel-line"></i> Import Leads (Excel / CSV)</button>
+              <button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Add New Lead</button>
+            </div>
           </div>
-          ${filteredLeads.length === 0 ? `<div class="empty-state"><i class="ri-line-chart-line"></i><div class="empty-state-title">No leads recorded yet.</div></div>` : `
+          ${filteredLeads.length === 0 ? `<div class="empty-state"><i class="ri-line-chart-line"></i><div class="empty-state-title">No leads recorded yet. Use Add New Lead or Import Leads to begin.</div></div>` : `
             <div class="table-responsive">
               <table>
                 <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Official Course</th><th>Assigned Rep</th><th>Stage</th><th>Follow-ups</th><th>Action</th></tr></thead>
@@ -786,6 +797,84 @@
           `}
         </div>
       `;
+    }
+
+    // GENUINE EXCEL IMPORT MODAL & PARSER
+    function openImportLeadsModal() {
+      document.getElementById('modal-title').innerText = 'Import Lead Workbook (Excel / CSV)';
+      document.getElementById('modal-body').innerHTML = `
+        <div style="padding:16px; border:2px dashed var(--border); border-radius:8px; text-align:center; background:#F8FAFC; margin-bottom:16px;">
+          <i class="ri-file-excel-2-line" style="font-size:36px; color:var(--success);"></i>
+          <div style="font-weight:700; font-size:13px; margin-top:8px;">Select or Drop Excel Workbook (.xlsx, .xls, .csv)</div>
+          <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">Columns parsed: Full Name, Phone, Email, City, Course, Lead Source, Remarks</div>
+          <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" style="margin-top:12px; font-size:12px;" onchange="handleExcelImportFile(event)">
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <button class="btn btn-outline" onclick="downloadSampleExcel()"><i class="ri-download-line"></i> Download Sample Excel Format (.xlsx)</button>
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        </div>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function handleExcelImportFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          const jsonRows = XLSX.utils.sheet_to_json(worksheet);
+
+          if (!jsonRows || jsonRows.length === 0) {
+            alert('Error: The uploaded Excel sheet is empty.');
+            return;
+          }
+
+          let importedCount = 0;
+          jsonRows.forEach(row => {
+            const name = row['Full Name'] || row['Name'] || row['name'] || row['Student Name'];
+            const phone = row['Phone Number'] || row['Phone'] || row['phone'] || row['Mobile'];
+            if (name && phone) {
+              importedCount++;
+              state.leads.unshift({
+                id: 'LD-2026-' + Math.floor(1000 + Math.random()*9000),
+                name: String(name).trim(),
+                phone: String(phone).trim(),
+                email: String(row['Email Address'] || row['Email'] || '').trim(),
+                city: String(row['City'] || row['Location'] || 'Kochi').trim(),
+                course: String(row['Interested Course'] || row['Course'] || 'BCA-1Y').trim(),
+                source: String(row['Lead Source'] || row['Source'] || 'Meta Ad').trim(),
+                assigned: currentUserName,
+                status: 'New',
+                remarks: String(row['Remarks'] || 'Excel Workbook Import').trim(),
+                completed: 0
+              });
+            }
+          });
+
+          state.importHistory.unshift({
+            batchId: 'IMP-2026-' + Math.floor(1000 + Math.random()*9000),
+            fileName: file.name,
+            totalLeads: importedCount,
+            date: new Date().toLocaleString(),
+            importedBy: currentUserName
+          });
+
+          saveStateToStorage();
+          closeModal();
+          switchTab('leads');
+          alert('Successfully imported ' + importedCount + ' leads from ' + file.name + ' into your CRM pipeline!');
+        } catch (err) {
+          console.error('Error parsing Excel file:', err);
+          alert('Error parsing Excel file. Please ensure it is a valid .xlsx or .csv workbook.');
+        }
+      };
+      reader.readAsArrayBuffer(file);
     }
 
     // 10-FIELD ADD LEAD FORM
@@ -1276,15 +1365,33 @@
       `;
     }
 
-    // 22. IMPORT HISTORY VIEW
+    // 22. IMPORT HISTORY VIEW WITH DIRECT UPLOAD BUTTON
     function renderImportHistoryView(viewport) {
       viewport.innerHTML = `
         <div class="card">
           <div class="card-header">
             <div class="card-title">My Lead Import History & Excel Utilities</div>
-            <button class="btn btn-outline" onclick="downloadSampleExcel()"><i class="ri-file-excel-line"></i> Download Sample Excel Format (.xlsx)</button>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-success" onclick="openImportLeadsModal()"><i class="ri-file-excel-line"></i> Import New Lead Workbook</button>
+              <button class="btn btn-outline" onclick="downloadSampleExcel()"><i class="ri-download-line"></i> Download Sample Excel Format (.xlsx)</button>
+            </div>
           </div>
-          <div class="empty-state"><i class="ri-file-excel-line"></i><div class="empty-state-title">No lead workbook imports performed yet.</div></div>
+          ${state.importHistory.length === 0 ? `<div class="empty-state"><i class="ri-file-excel-line"></i><div class="empty-state-title">No lead workbook imports performed yet. Click "Import New Lead Workbook" to start.</div></div>` : `
+            <div class="table-responsive">
+              <table>
+                <thead><tr><th>Import Batch ID</th><th>File Name</th><th>Total Leads</th><th>Date & Time</th><th>Imported By</th></tr></thead>
+                <tbody>
+                  ${state.importHistory.map(h => `<tr>
+                    <td style="font-weight:700; color:var(--primary);">${h.batchId}</td>
+                    <td style="font-weight:600;">${h.fileName}</td>
+                    <td><span class="badge badge-success">${h.totalLeads} Leads</span></td>
+                    <td>${h.date}</td>
+                    <td>${h.importedBy}</td>
+                  </tr>`).join('')}
+                </tbody>
+              </table>
+            </div>
+          `}
         </div>
       `;
     }
