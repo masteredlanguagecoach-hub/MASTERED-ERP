@@ -28,10 +28,12 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
     body { background-color: var(--bg); color: var(--text-primary); display: flex; height: 100vh; overflow: hidden; }
 
+    /* Landing Page */
     .landing-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 200; display: flex; flex-direction: column; overflow-y: auto; }
     .landing-header { background: white; border-bottom: 1px solid var(--border); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
     .landing-hero { background: linear-gradient(135deg, #1E293B, #0F172A); color: white; padding: 80px 24px; text-align: center; }
 
+    /* Sidebar Layout - Fixed Unclipped Bottom */
     .sidebar { width: 250px; background-color: var(--secondary); color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
     .brand-header { padding: 20px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--secondary-light); flex-shrink: 0; }
     .brand-logo { width: 36px; height: 36px; border-radius: 8px; background: white; padding: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -54,20 +56,20 @@
     .logout-btn { width: 100%; padding: 10px; border: 1px solid rgba(255,255,255,0.25); background: transparent; color: white; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 12px; }
     .logout-btn:hover { background: rgba(255,255,255,0.1); }
 
+    /* Main Area - Clean Top Bar (No Role Switcher exposed!) */
     .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100vh; }
     .top-bar { height: 60px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; }
     .page-title { font-size: 17px; font-weight: 700; }
-    .role-switcher { display: flex; gap: 6px; align-items: center; font-size: 12px; }
-    .role-chip { padding: 4px 10px; border-radius: 12px; background: var(--bg); border: 1px solid var(--border); cursor: pointer; font-size: 11px; font-weight: 600; color: var(--text-secondary); }
-    .role-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .top-user-badge { display: flex; align-items: center; gap: 10px; font-size: 12px; background: #F1F5F9; padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); }
 
     .content-viewport { flex: 1; padding: 20px; overflow-y: auto; }
 
-    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px; }
-    .stat-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; align-items: center; gap: 14px; }
-    .stat-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-    .stat-title { font-size: 11px; color: var(--text-secondary); font-weight: 600; }
-    .stat-value { font-size: 20px; font-weight: 700; margin-top: 2px; }
+    /* Metrics Cards */
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 20px; }
+    .stat-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 18px; display: flex; align-items: center; gap: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .stat-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+    .stat-title { font-size: 11px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-value { font-size: 22px; font-weight: 700; margin-top: 2px; }
 
     .btn { padding: 8px 14px; border-radius: 6px; border: none; font-weight: 600; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
     .btn-primary { background: var(--primary); color: white; }
@@ -76,16 +78,16 @@
     .btn-secondary { background: var(--secondary); color: white; }
     .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-primary); }
 
-    .card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 20px; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-    .card-title { font-size: 14px; font-weight: 700; }
+    .card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .card-title { font-size: 15px; font-weight: 700; }
 
     table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12.5px; }
-    th { padding: 10px 12px; background: #F1F5F9; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border); }
+    th { padding: 11px 12px; background: #F1F5F9; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border); }
     td { padding: 12px; border-bottom: 1px solid var(--border); color: var(--text-primary); }
     tr:hover { background: #F8FAFC; }
 
-    .badge { padding: 3px 8px; border-radius: 16px; font-size: 10.5px; font-weight: 600; display: inline-block; }
+    .badge { padding: 3px 10px; border-radius: 16px; font-size: 10.5px; font-weight: 600; display: inline-block; }
     .badge-info { background: #DBEAFE; color: #1D4ED8; }
     .badge-success { background: #DCFCE7; color: #15803D; }
     .badge-warning { background: #FEF3C7; color: #B45309; }
@@ -102,7 +104,7 @@
 </head>
 <body>
 
-  <!-- Clean Public Landing Page -->
+  <!-- Pure Public Landing Page -->
   <div class="landing-container" id="landing-page">
     <div class="landing-header">
       <div style="display:flex; align-items:center; gap:12px;">
@@ -135,8 +137,8 @@
     <div class="user-pill">
       <div class="avatar" id="user-avatar">A</div>
       <div class="user-info">
-        <div class="user-name" id="user-name-display">System Admin</div>
-        <div class="user-role" id="user-role-display">System Owner</div>
+        <div class="user-name" id="user-name-display">System Administrator</div>
+        <div class="user-role" id="user-role-display">System Owner (Admin)</div>
       </div>
     </div>
 
@@ -149,17 +151,15 @@
     </div>
   </div>
 
-  <!-- Main View Area -->
+  <!-- Main View Area - Clean Header Without Role Switcher Bar -->
   <div class="main-area">
     <div class="top-bar">
       <div class="page-title" id="page-title">Dashboard Overview</div>
-      <div class="role-switcher">
-        <span style="color: var(--text-muted); font-size: 11px;">Select Role Workspace:</span>
-        <button class="role-chip active" onclick="setRole('ADMIN')">ADMIN</button>
-        <button class="role-chip" onclick="setRole('CEO')">CEO (Rasheed)</button>
-        <button class="role-chip" onclick="setRole('SALES_HEAD')">SALES HEAD (Ashif)</button>
-        <button class="role-chip" onclick="setRole('SALES_EXEC')">SALES EXEC</button>
-        <button class="role-chip" onclick="setRole('OPS')">OPERATIONS</button>
+      <div class="top-user-badge">
+        <i class="ri-user-3-line" style="color:var(--primary);"></i>
+        <span id="header-user-display" style="font-weight:700;">System Administrator</span>
+        <span style="color:var(--text-muted);">|</span>
+        <span id="header-role-display" style="color:var(--primary); font-weight:600;">Admin</span>
       </div>
     </div>
 
@@ -181,6 +181,8 @@
 
   <script>
     let currentRole = 'ADMIN';
+    let currentUserEmail = 'admin@mastered.com';
+    let currentUserName = 'System Administrator';
     const sentReminderIds = new Set();
 
     const roleNavigation = {
@@ -243,31 +245,31 @@
         { adm: 'ADM-2026-102', name: 'Kavya Nair', course: 'BCA-1Y', batch: 'Weekend Culinary Batch 1', total: 75000, paid: 60000, balance: 15000, dueDate: '2026-09-05', status: 'ACTIVE', phone: '9898989802' }
       ],
       batches: [
-        { id: 'BTC-101', name: 'Batch 2026-A', course: 'BCA-1Y' },
-        { id: 'BTC-102', name: 'Weekend Culinary Batch 1', course: 'HRCA-6M' }
+        { id: 'BTC-101', name: 'Batch 2026-A', course: 'BCA-1Y', time: '8:30 AM to 10:30 AM' },
+        { id: 'BTC-102', name: 'Weekend Culinary Batch 1', course: 'HRCA-6M', time: '10:30 AM to 12:30 PM' }
       ]
     };
 
     function openLoginModal() {
       document.getElementById('modal-title').innerText = 'Secure ERP Portal Login';
       document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Account Email *</label><input id="login-email" placeholder="user@mastered.com"></div>
+        <div class="form-group"><label>Account Email *</label><input id="login-email" placeholder="e.g. ceo@mastered.com, saleshead@mastered.com"></div>
         <div class="form-group"><label>Password *</label><input id="login-pass" type="password" placeholder="••••••••"></div>
-        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="processLogin()">Authenticate & Launch</button>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="processLogin()">Authenticate & Launch Workspace</button>
       `;
       document.getElementById('modal').classList.add('open');
     }
 
     function processLogin() {
-      const email = document.getElementById('login-email').value.toLowerCase();
+      const email = document.getElementById('login-email').value.toLowerCase().trim();
       closeModal();
       document.getElementById('landing-page').style.display = 'none';
 
-      if (email.includes('ceo')) setRole('CEO');
-      else if (email.includes('saleshead')) setRole('SALES_HEAD');
-      else if (email.includes('salesexec')) setRole('SALES_EXEC');
-      else if (email.includes('ops')) setRole('OPS');
-      else setRole('ADMIN');
+      if (email.includes('ceo')) setLoggedInUser('CEO', 'Rasheed', 'Rasheed (CEO)', email);
+      else if (email.includes('saleshead') || email.includes('ashif')) setLoggedInUser('SALES_HEAD', 'Ashif', 'Ashif (Sales Head)', email);
+      else if (email.includes('salesexec')) setLoggedInUser('SALES_EXEC', 'Demo Sales Executive', 'Sales Executive', email);
+      else if (email.includes('ops')) setLoggedInUser('OPS', 'Operations', 'Operations (Operations)', email);
+      else setLoggedInUser('ADMIN', 'System Administrator', 'System Owner (Admin)', email || 'admin@mastered.com');
     }
 
     function showLanding() {
@@ -284,23 +286,17 @@
       `).join('');
     }
 
-    function setRole(role) {
+    function setLoggedInUser(role, name, title, email) {
       currentRole = role;
-      document.querySelectorAll('.role-chip').forEach(c => c.classList.remove('active'));
-      const chip = Array.from(document.querySelectorAll('.role-chip')).find(c => c.innerText.includes(role.replace('_', ' ')));
-      if (chip) chip.classList.add('active');
+      currentUserName = name;
+      currentUserEmail = email;
 
-      const roleLabels = {
-        'ADMIN': { name: 'System Administrator', title: 'System Owner (Admin)' },
-        'CEO': { name: 'Rasheed', title: 'CEO (Rasheed)' },
-        'SALES_HEAD': { name: 'Ashif', title: 'Sales Head (Ashif)' },
-        'SALES_EXEC': { name: 'Demo Sales Executive', title: 'Sales Executive' },
-        'OPS': { name: 'Operations', title: 'Operations (Operations)' }
-      };
+      document.getElementById('user-name-display').innerText = name;
+      document.getElementById('user-role-display').innerText = title;
+      document.getElementById('user-avatar').innerText = name[0];
 
-      document.getElementById('user-name-display').innerText = roleLabels[role].name;
-      document.getElementById('user-role-display').innerText = roleLabels[role].title;
-      document.getElementById('user-avatar').innerText = roleLabels[role].name[0];
+      document.getElementById('header-user-display').innerText = name;
+      document.getElementById('header-role-display').innerText = title;
 
       renderSidebar();
       switchTab('dashboard');
@@ -314,7 +310,10 @@
       const viewport = document.getElementById('viewport');
       const title = document.getElementById('page-title');
 
-      if (tab === 'students') {
+      if (tab === 'dashboard') {
+        title.innerText = 'Dashboard Overview (' + currentUserName + ')';
+        renderRoleDashboard(viewport);
+      } else if (tab === 'students') {
         title.innerText = 'Students Directory & Batch-wise Records';
         const roleLabel = currentRole === 'CEO' ? 'Rasheed (CEO)' : (currentRole === 'SALES_HEAD' ? 'Ashif (Sales Head)' : 'Admin');
         
@@ -404,7 +403,91 @@
           </div>
         `;
       } else {
-        viewport.innerHTML = `<div class="card"><div class="card-title">Workspace (${tab.toUpperCase()})</div></div>`;
+        viewport.innerHTML = `<div class="card"><div class="card-title">Workspace Module (${tab.toUpperCase()})</div></div>`;
+      }
+    }
+
+    function renderRoleDashboard(viewport) {
+      if (currentRole === 'ADMIN') {
+        viewport.innerHTML = `
+          <div class="grid-4">
+            <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-user-star-line"></i></div><div><div class="stat-title">Active Students</div><div class="stat-value">2</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-bank-card-line"></i></div><div><div class="stat-title">Monthly Collections</div><div class="stat-value">₹90,000</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-alarm-warning-line"></i></div><div><div class="stat-title">Pending Balances</div><div class="stat-value">₹30,000</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#FEE2E2; color:#DC2626;"><i class="ri-line-chart-line"></i></div><div><div class="stat-title">CRM Active Leads</div><div class="stat-value">3</div></div></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Admin System Control Shortcuts</div></div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn btn-primary" onclick="switchTab('courses')"><i class="ri-book-read-line"></i> Course Master</button>
+              <button class="btn btn-secondary" onclick="switchTab('users')"><i class="ri-user-settings-line"></i> User Management</button>
+              <button class="btn btn-outline" onclick="switchTab('audit')"><i class="ri-shield-check-line"></i> Audit Logs</button>
+              <button class="btn btn-success" onclick="switchTab('ai')"><i class="ri-sparkles-line"></i> AI Report Summarizer</button>
+            </div>
+          </div>
+        `;
+      } else if (currentRole === 'CEO') {
+        viewport.innerHTML = `
+          <div class="grid-4">
+            <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-wallet-3-line"></i></div><div><div class="stat-title">Gross Revenue</div><div class="stat-value">₹120,000</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-money-dollar-circle-line"></i></div><div><div class="stat-title">Collections Realized</div><div class="stat-value">₹90,000</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#FEE2E2; color:#DC2626;"><i class="ri-shopping-bag-3-line"></i></div><div><div class="stat-title">Recorded Expenses</div><div class="stat-value">₹15,000</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-scales-3-line"></i></div><div><div class="stat-title">Net Financial Surplus</div><div class="stat-value">₹75,000</div></div></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">CEO Financial Control & Expense Entry</div></div>
+            <button class="btn btn-primary" onclick="switchTab('accounting')"><i class="ri-add-line"></i> Record New Business Expense (with Bill Receipt Upload)</button>
+          </div>
+        `;
+      } else if (currentRole === 'SALES_HEAD') {
+        viewport.innerHTML = `
+          <div class="grid-4">
+            <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-line-chart-line"></i></div><div><div class="stat-title">Total Active Pipeline</div><div class="stat-value">3 Leads</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-trophy-line"></i></div><div><div class="stat-title">Monthly Conversions</div><div class="stat-value">1 Closed</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-percent-line"></i></div><div><div class="stat-title">Team Conversion Rate</div><div class="stat-value">33.3% (Target: 25%)</div></div></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Sales Head Actions</div></div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn btn-primary" onclick="switchTab('leads')"><i class="ri-arrow-left-right-line"></i> Reassign Team Leads</button>
+              <button class="btn btn-success" onclick="switchTab('students')"><i class="ri-briefcase-line"></i> Placement Survey WhatsApp</button>
+            </div>
+          </div>
+        `;
+      } else if (currentRole === 'SALES_EXEC') {
+        viewport.innerHTML = `
+          <div class="card" style="background:linear-gradient(135deg, #1E293B, #0F172A); color:white;">
+            <div style="font-size:12px; color:#FCA5A5; font-weight:700;">DAILY FOLLOW-UP TARGET: 10 / WORKING DAY</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px;">
+              <div>
+                <div style="font-size:24px; font-weight:700; color:#4ADE80;">25% Monthly Conversion Target</div>
+                <div style="font-size:12px; color:#94A3B8; margin-top:4px;">1 Lead Closed to Student (Status: On Track)</div>
+              </div>
+              <button class="btn btn-primary" style="padding:12px 20px;" onclick="switchTab('followups')"><i class="ri-phone-line"></i> Open Daily Follow-ups Workspace</button>
+            </div>
+          </div>
+          <div class="grid-4">
+            <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-user-shared-line"></i></div><div><div class="stat-title">My Assigned Leads</div><div class="stat-value">2</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-checkbox-circle-line"></i></div><div><div class="stat-title">My Closed Students</div><div class="stat-value">1</div></div></div>
+          </div>
+        `;
+      } else if (currentRole === 'OPS') {
+        const pendingReminders = mockData.students.filter(s => s.balance > 0 && !sentReminderIds.has(s.adm)).length;
+        viewport.innerHTML = `
+          <div class="grid-4">
+            <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-alarm-warning-line"></i></div><div><div class="stat-title">3-Day Fee Reminders</div><div class="stat-value">${pendingReminders} Pending</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-money-dollar-circle-line"></i></div><div><div class="stat-title">Today's Collections</div><div class="stat-value">₹30,000</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-group-line"></i></div><div><div class="stat-title">Active Batches</div><div class="stat-value">2 Batches</div></div></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Operations Quick Controls</div></div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn btn-primary" onclick="switchTab('due_reminders')"><i class="ri-alarm-warning-line"></i> 3-Day Fee Reminders Portal</button>
+              <button class="btn btn-secondary" onclick="switchTab('fee')"><i class="ri-receipt-line"></i> Record Fee Payment</button>
+              <button class="btn btn-outline" onclick="switchTab('students')"><i class="ri-calendar-event-line"></i> Extend Fee Due Date (Max 10 Days)</button>
+            </div>
+          </div>
+        `;
       }
     }
 
