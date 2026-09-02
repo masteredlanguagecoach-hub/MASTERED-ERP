@@ -1,8 +1,13 @@
 /**
- * MASTERED ERP V2.1 — Google Apps Script Production Backend API
+ * MASTERED ERP V3.0 — Google Apps Script Production Backend API
  * 
- * Supports 19 Database Sheets with Salted Password Hashing, Session Authentication,
- * Strict Server-Side Role Enforcement, Atomic Transactions, and Double-Entry Accounting.
+ * Official Course Names:
+ * - BHA-6M: Business and Hospital Administration (6 months)
+ * - HRCA-6M: Human Resources and Corporate Administration (6 months)
+ * - BCA-1Y: Professional Diploma in Entrepreneurship (1 year)
+ * - HRCA-1Y: Human Resources and Corporate Administration (1 year)
+ * 
+ * Follow-up Target: Per-Lead Lifecycle Target (10 completed follow-ups per lead)
  */
 
 function doPost(e) {
@@ -55,7 +60,7 @@ function doPost(e) {
       case 'updateUserStatus':
         return responseJSON(updateUserStatus(ss, payload));
 
-      // Lead CRM
+      // Lead CRM & Per-Lead Follow-ups
       case 'getLeads':
         return responseJSON(getLeads(ss, payload));
       case 'createLead':
@@ -66,6 +71,8 @@ function doPost(e) {
         return responseJSON(recordFollowupActivity(ss, payload));
       case 'reassignLeads':
         return responseJSON(reassignLeads(ss, payload));
+      case 'exemptLeadTarget':
+        return responseJSON(exemptLeadTarget(ss, payload));
 
       // Batches Management
       case 'getBatches':
@@ -148,7 +155,6 @@ function seedInitialUsers(ss) {
   if (userSheet.getLastRow() <= 1) {
     userSheet.appendRow(['User ID', 'Name', 'Email', 'Password Hash', 'Role', 'Phone', 'Status', 'Must Change Password', 'Created At']);
     
-    // Rotated Secure V2.1 Default Credentials
     var now = new Date().toISOString();
     userSheet.appendRow(['USR-1001', 'System Administrator', 'admin@mastered.com', hashPassword('Admin@Mastered2026!Sec'), 'ADMIN', '9898989800', 'ACTIVE', 'FALSE', now]);
     userSheet.appendRow(['USR-1002', 'Rasheed', 'ceo@mastered.com', hashPassword('CEO@Rasheed2026!Sec'), 'CEO', '9898989801', 'ACTIVE', 'FALSE', now]);
@@ -163,10 +169,10 @@ function seedInitialCourses(ss) {
   if (cSheet.getLastRow() <= 1) {
     cSheet.appendRow(['Course ID', 'Course Name', 'Duration', 'Default Total Fee', 'Default Installment Count', 'Status', 'Created At']);
     var now = new Date().toISOString();
-    cSheet.appendRow(['BHA-6M', 'Bachelor in Hospitality Administration', '6 months', 45000, 4, 'ACTIVE', now]);
-    cSheet.appendRow(['HRCA-6M', 'Hospitality & Retail Culinary Arts (6 Months)', '6 months', 50000, 4, 'ACTIVE', now]);
-    cSheet.appendRow(['BCA-1Y', 'Bachelor in Computer Applications', '1 year', 75000, 4, 'ACTIVE', now]);
-    cSheet.appendRow(['HRCA-1Y', 'Hospitality & Retail Culinary Arts (1 Year)', '1 year', 90000, 4, 'ACTIVE', now]);
+    cSheet.appendRow(['BHA-6M', 'Business and Hospital Administration', '6 months', 45000, 4, 'ACTIVE', now]);
+    cSheet.appendRow(['HRCA-6M', 'Human Resources and Corporate Administration', '6 months', 50000, 4, 'ACTIVE', now]);
+    cSheet.appendRow(['BCA-1Y', 'Professional Diploma in Entrepreneurship', '1 year', 75000, 4, 'ACTIVE', now]);
+    cSheet.appendRow(['HRCA-1Y', 'Human Resources and Corporate Administration', '1 year', 90000, 4, 'ACTIVE', now]);
   }
 }
 
@@ -175,14 +181,14 @@ function seedInitialBatches(ss) {
   if (bSheet.getLastRow() <= 1) {
     bSheet.appendRow(['Batch ID', 'Batch Name', 'Course', 'Time Slot', 'Capacity', 'Status', 'Created By', 'Created At']);
     var now = new Date().toISOString();
-    bSheet.appendRow(['BTC-101', 'BCA Batch 2026-A', 'BCA-1Y', '8:30 AM to 10:30 AM', 30, 'ACTIVE', 'admin@mastered.com', now]);
-    bSheet.appendRow(['BTC-102', 'Culinary Arts Batch 2026-A', 'HRCA-6M', '10:30 AM to 12:30 PM', 25, 'ACTIVE', 'admin@mastered.com', now]);
-    bSheet.appendRow(['BTC-103', 'Hospitality Batch 2026-A', 'BHA-6M', '12:30 PM to 2:30 PM', 25, 'ACTIVE', 'admin@mastered.com', now]);
+    bSheet.appendRow(['BTC-101', 'Business and Hospital Administration — Morning Batch', 'BHA-6M', '8:30 AM to 10:30 AM', 30, 'ACTIVE', 'admin@mastered.com', now]);
+    bSheet.appendRow(['BTC-102', 'Human Resources and Corporate Administration — Morning Batch', 'HRCA-6M', '10:30 AM to 12:30 PM', 25, 'ACTIVE', 'admin@mastered.com', now]);
+    bSheet.appendRow(['BTC-103', 'Professional Diploma in Entrepreneurship — Morning Batch', 'BCA-1Y', '12:30 PM to 2:30 PM', 25, 'ACTIVE', 'admin@mastered.com', now]);
   }
 }
 
 function hashPassword(pass) {
-  var raw = 'MASTERED_SALT_V2.1_' + pass;
+  var raw = 'MASTERED_SALT_V3.0_' + pass;
   var digest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, raw);
   return digest.map(function(byte) {
     return (byte < 0 ? byte + 256 : byte).toString(16).padStart(2, '0');
@@ -300,14 +306,14 @@ function getPublicSettings(ss) {
     success: true,
     data: {
       academyName: 'MASTERED',
-      tagline: 'Academy Management System v2.1',
+      tagline: 'Academy Management System v3.0',
       publicLogoUrl: '/assets/logo.png'
     }
   };
 }
 
 // ==========================================
-// LEAD CRM & STAGE TRANSITIONS
+// LEAD CRM & PER-LEAD FOLLOW-UP TRACKING
 // ==========================================
 
 function getLeads(ss, payload) {
@@ -320,7 +326,6 @@ function getLeads(ss, payload) {
     var leadOwner = data[i][9];
     var leadAssigned = data[i][10];
 
-    // Strict Role Privacy Guard
     if (user.role === 'SALES_EXECUTIVE') {
       if (leadOwner !== user.email && leadAssigned !== user.name) {
         continue;
@@ -342,7 +347,10 @@ function getLeads(ss, payload) {
       status: data[i][11],
       nextFollowup: data[i][12],
       remarks: data[i][13],
-      updatedAt: data[i][14]
+      updatedAt: data[i][14],
+      followUpTarget: parseInt(data[i][15]) || 10,
+      completedFollowUpCount: parseInt(data[i][16]) || 0,
+      followUpTargetStatus: data[i][17] || 'In Progress'
     });
   }
 
@@ -370,7 +378,10 @@ function createLead(ss, payload) {
     'New',
     payload.nextFollowup || now.substring(0, 10),
     payload.remarks || 'Lead registered',
-    now
+    now,
+    10, // Default Per-Lead Follow-up Target
+    0,  // Completed Follow-ups Count
+    'Not Started'
   ]);
 
   logAudit(ss, user.userId, user.name, 'CREATE_LEAD', 'CRM', 'Created lead ' + leadId + ' for ' + payload.name);
@@ -393,6 +404,11 @@ function updateLeadStage(ss, payload) {
       if (reason) lSheet.getRange(i + 1, 14).setValue(reason);
       lSheet.getRange(i + 1, 15).setValue(new Date().toISOString());
 
+      // Update per-lead target status
+      if (newStage === 'Not Interested' || newStage === 'Unqualified') {
+        lSheet.getRange(i + 1, 18).setValue('Discontinued');
+      }
+
       logAudit(ss, user.userId, user.name, 'UPDATE_LEAD_STAGE', 'CRM', 'Lead ' + leadId + ' stage updated to ' + newStage);
       return { success: true, message: 'Lead stage updated' };
     }
@@ -412,18 +428,57 @@ function recordFollowupActivity(ss, payload) {
     user.userId,
     user.name,
     payload.activityType || 'Phone Call',
-    payload.outcome || 'Discussed course fee',
+    payload.outcome || 'Contacted customer',
     payload.updatedStage || 'Follow-up',
     payload.nextFollowupDate || '',
     now
   ]);
 
-  if (payload.leadId && payload.nextFollowupDate) {
-    updateLeadStage(ss, { leadId: payload.leadId, newStage: payload.updatedStage || 'Follow-up', nextFollowup: payload.nextFollowupDate, _user: user });
+  // Increment Per-Lead Follow-up Counter
+  var lSheet = ss.getSheetByName('LEADS');
+  var data = lSheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0] === payload.leadId) {
+      var currentCount = parseInt(data[i][16]) || 0;
+      var newCount = currentCount + 1;
+      var target = parseInt(data[i][15]) || 10;
+      
+      lSheet.getRange(i + 1, 17).setValue(newCount);
+      if (newCount >= target) {
+        lSheet.getRange(i + 1, 18).setValue('Target Completed');
+      } else {
+        lSheet.getRange(i + 1, 18).setValue('In Progress');
+      }
+      
+      if (payload.nextFollowupDate) lSheet.getRange(i + 1, 13).setValue(payload.nextFollowupDate);
+      if (payload.updatedStage) lSheet.getRange(i + 1, 12).setValue(payload.updatedStage);
+      break;
+    }
   }
 
   logAudit(ss, user.userId, user.name, 'LOG_FOLLOWUP', 'CRM', 'Logged follow-up for ' + payload.leadId);
   return { success: true, message: 'Follow-up recorded' };
+}
+
+function exemptLeadTarget(ss, payload) {
+  var user = payload._user;
+  if (user.role !== 'ADMIN' && user.role !== 'SALES_HEAD') {
+    return { success: false, error: 'Unauthorized: Only Sales Head or Admin can exempt lead targets' };
+  }
+
+  var leadId = payload.leadId;
+  var reason = payload.reason || 'Exempted by Sales Head';
+
+  var lSheet = ss.getSheetByName('LEADS');
+  var data = lSheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0] === leadId) {
+      lSheet.getRange(i + 1, 18).setValue('Exempted by ' + user.role);
+      logAudit(ss, user.userId, user.name, 'EXEMPT_LEAD_TARGET', 'CRM', 'Exempted follow-up target for ' + leadId + '. Reason: ' + reason);
+      return { success: true, message: 'Lead follow-up target exempted' };
+    }
+  }
+  return { success: false, error: 'Lead not found' };
 }
 
 function reassignLeads(ss, payload) {
@@ -463,9 +518,9 @@ function closeLeadToStudent(ss, payload) {
   var leadId = payload.leadId;
   var studentName = payload.name || payload.studentName;
   var course = payload.course;
-  var batchName = payload.batchName || 'BCA Batch 2026-A';
-  var totalFee = parseFloat(payload.totalFee) || 50000;
-  var initialPaid = parseFloat(payload.paidFee) || 15000;
+  var batchName = payload.batchName || 'Professional Diploma in Entrepreneurship — Morning Batch';
+  var totalFee = parseFloat(payload.totalFee) || 75000;
+  var initialPaid = parseFloat(payload.paidFee) || 25000;
   var balance = totalFee - initialPaid;
 
   var year = new Date().getFullYear();
@@ -492,6 +547,19 @@ function closeLeadToStudent(ss, payload) {
     driveFolderId,
     now
   ]);
+
+  // Check if lead was closed before 10 follow-ups
+  var lSheet = ss.getSheetByName('LEADS');
+  var data = lSheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0] === leadId) {
+      var completedCount = parseInt(data[i][16]) || 0;
+      var target = parseInt(data[i][15]) || 10;
+      var status = completedCount < target ? 'Closed Before Target' : 'Target Completed';
+      lSheet.getRange(i + 1, 18).setValue(status);
+      break;
+    }
+  }
 
   updateLeadStage(ss, { leadId: leadId, newStage: 'Closed', remarks: 'Converted to Student ' + admNo, _user: user });
 

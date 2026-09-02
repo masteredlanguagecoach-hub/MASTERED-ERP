@@ -14,6 +14,10 @@ class LeadModel {
   final String remarks;
   final String createdBy;
   final String updatedAt;
+  final int followUpTarget;
+  final int completedFollowUpCount;
+  final String followUpTargetStatus;
+  final String followUpExemptionReason;
 
   LeadModel({
     required this.leadId,
@@ -31,7 +35,14 @@ class LeadModel {
     required this.remarks,
     required this.createdBy,
     required this.updatedAt,
+    this.followUpTarget = 10,
+    this.completedFollowUpCount = 0,
+    this.followUpTargetStatus = 'In Progress',
+    this.followUpExemptionReason = '',
   });
+
+  int get remainingFollowUpCount => (followUpTarget - completedFollowUpCount).clamp(0, followUpTarget);
+  double get followUpProgressPercentage => ((completedFollowUpCount / followUpTarget) * 100).clamp(0.0, 100.0);
 
   factory LeadModel.fromJson(Map<String, dynamic> json) {
     return LeadModel(
@@ -50,6 +61,10 @@ class LeadModel {
       remarks: json['remarks']?.toString() ?? '',
       createdBy: json['created_by']?.toString() ?? '',
       updatedAt: json['updated_at']?.toString() ?? '',
+      followUpTarget: int.tryParse(json['follow_up_target']?.toString() ?? '10') ?? 10,
+      completedFollowUpCount: int.tryParse(json['completed_follow_up_count']?.toString() ?? '0') ?? 0,
+      followUpTargetStatus: json['follow_up_target_status']?.toString() ?? 'In Progress',
+      followUpExemptionReason: json['follow_up_exemption_reason']?.toString() ?? '',
     );
   }
 
@@ -70,6 +85,10 @@ class LeadModel {
       'remarks': remarks,
       'created_by': createdBy,
       'updated_at': updatedAt,
+      'follow_up_target': followUpTarget,
+      'completed_follow_up_count': completedFollowUpCount,
+      'follow_up_target_status': followUpTargetStatus,
+      'follow_up_exemption_reason': followUpExemptionReason,
     };
   }
 }

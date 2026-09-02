@@ -6,8 +6,8 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>MASTERED ERP v2.1 - Complete Production System</title>
-  <link rel="icon" type="image/png" href="assets/logo.png?v=2.1">
+  <title>MASTERED ERP v3.0 - Complete Production System</title>
+  <link rel="icon" type="image/png" href="assets/logo.png?v=3.0">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <style>
@@ -95,6 +95,10 @@
     .badge-warning { background: #FEF3C7; color: #B45309; }
     .badge-danger { background: #FEE2E2; color: #B91C1C; }
 
+    /* Progress bar for per-lead target */
+    .progress-bar-bg { width: 100px; height: 8px; background: #E2E8F0; border-radius: 4px; overflow: hidden; display: inline-block; vertical-align: middle; }
+    .progress-bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+
     .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 600; }
     .modal-backdrop.open { display: flex; }
     .modal { background: white; border-radius: 12px; width: 540px; max-width: 95%; padding: 24px; max-height: 90vh; overflow-y: auto; }
@@ -106,14 +110,14 @@
 </head>
 <body>
 
-  <!-- Pure Public Landing Page (Unauthenticated Entry Point - No ERP Nodes in DOM) -->
+  <!-- Pure Public Landing Container (Unauthenticated Entry Point - No ERP Nodes in DOM) -->
   <div class="landing-container" id="landing-page">
     <div class="landing-header">
       <div style="display:flex; align-items:center; gap:12px;">
         <img src="assets/logo.png" height="36" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';">
         <div>
           <div style="font-weight:700; font-size:16px;">MASTERED</div>
-          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v2.1</div>
+          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v3.0</div>
         </div>
       </div>
       <button class="btn btn-primary" onclick="openLoginModal()"><i class="ri-lock-line"></i> Sign In to ERP Portal</button>
@@ -149,27 +153,27 @@
     let currentUserName = 'System Administrator';
     let sessionToken = null;
 
-    // ERP State Collections
+    // ERP State Collections — Official Courses & Per-Lead Follow-up Counter (X/10)
     const state = {
-      leads: [
-        { id: 'LD-2026-1001', name: 'Aarav Patel', phone: '9898989801', email: 'aarav@gmail.com', city: 'Kochi', course: 'BCA-1Y', source: 'Meta Ad', status: 'Interested', assigned: 'Demo Sales Executive', followup: '2026-09-04', remarks: 'Interested in software domain' },
-        { id: 'LD-2026-1002', name: 'Ananya Roy', phone: '9898989802', email: 'ananya@gmail.com', city: 'Trivandrum', course: 'HRCA-6M', source: 'Organic Lead', status: 'Follow-up', assigned: 'Demo Sales Executive', followup: '2026-09-03', remarks: 'Requested morning culinary slot' },
-        { id: 'LD-2026-1003', name: 'Rohan Mehta', phone: '9898989803', email: 'rohan@gmail.com', city: 'Calicut', course: 'BHA-6M', source: 'Referral', status: 'Closed', assigned: 'Ashif', followup: '-', remarks: 'Converted to ADM-2026-101' }
-      ],
-      students: [
-        { adm: 'ADM-2026-101', name: 'Rohan Mehta', phone: '9898989803', email: 'rohan@gmail.com', course: 'BHA-6M', batch: 'Hospitality Batch 2026-A', total: 45000, paid: 30000, balance: 15000, dueDate: '2026-09-20', status: 'ACTIVE', exec: 'Ashif', placement: 'Eligible' },
-        { adm: 'ADM-2026-102', name: 'Kavya Nair', phone: '9898989802', email: 'kavya@gmail.com', course: 'BCA-1Y', batch: 'BCA Batch 2026-A', total: 75000, paid: 60000, balance: 15000, dueDate: '2026-09-05', status: 'ACTIVE', exec: 'Demo Sales Executive', placement: 'Placed' }
+      courses: [
+        { id: 'BHA-6M', name: 'Business and Hospital Administration', duration: '6 months', fee: 45000, inst: 4 },
+        { id: 'HRCA-6M', name: 'Human Resources and Corporate Administration', duration: '6 months', fee: 50000, inst: 4 },
+        { id: 'BCA-1Y', name: 'Professional Diploma in Entrepreneurship', duration: '1 year', fee: 75000, inst: 4 },
+        { id: 'HRCA-1Y', name: 'Human Resources and Corporate Administration', duration: '1 year', fee: 90000, inst: 4 }
       ],
       batches: [
-        { id: 'BTC-101', name: 'BCA Batch 2026-A', course: 'BCA-1Y', time: '8:30 AM to 10:30 AM', capacity: 30 },
-        { id: 'BTC-102', name: 'Culinary Arts Batch 2026-A', course: 'HRCA-6M', time: '10:30 AM to 12:30 PM', capacity: 25 },
-        { id: 'BTC-103', name: 'Hospitality Batch 2026-A', course: 'BHA-6M', time: '12:30 PM to 2:30 PM', capacity: 25 }
+        { id: 'BTC-101', name: 'Business and Hospital Administration — Morning Batch', course: 'BHA-6M', time: '8:30 AM to 10:30 AM', capacity: 30 },
+        { id: 'BTC-102', name: 'Human Resources and Corporate Administration — Morning Batch', course: 'HRCA-6M', time: '10:30 AM to 12:30 PM', capacity: 25 },
+        { id: 'BTC-103', name: 'Professional Diploma in Entrepreneurship — Morning Batch', course: 'BCA-1Y', time: '12:30 PM to 2:30 PM', capacity: 25 }
       ],
-      courses: [
-        { id: 'BHA-6M', name: 'Bachelor in Hospitality Administration', duration: '6 months', fee: 45000, inst: 4 },
-        { id: 'HRCA-6M', name: 'Hospitality & Retail Culinary Arts (6 Months)', duration: '6 months', fee: 50000, inst: 4 },
-        { id: 'BCA-1Y', name: 'Bachelor in Computer Applications', duration: '1 year', fee: 75000, inst: 4 },
-        { id: 'HRCA-1Y', name: 'Hospitality & Retail Culinary Arts (1 Year)', duration: '1 year', fee: 90000, inst: 4 }
+      leads: [
+        { id: 'LD-2026-1001', name: 'Aarav Patel', phone: '9898989801', email: 'aarav@gmail.com', city: 'Kochi', course: 'BCA-1Y', source: 'Meta Ad', status: 'Interested', assigned: 'Demo Sales Executive', followup: '2026-09-04', remarks: 'Interested in entrepreneurship module', target: 10, completed: 6, targetStatus: 'In Progress' },
+        { id: 'LD-2026-1002', name: 'Ananya Roy', phone: '9898989802', email: 'ananya@gmail.com', city: 'Trivandrum', course: 'HRCA-6M', source: 'Organic Lead', status: 'Follow-up', assigned: 'Demo Sales Executive', followup: '2026-09-03', remarks: 'Requested HR batch details', target: 10, completed: 3, targetStatus: 'In Progress' },
+        { id: 'LD-2026-1003', name: 'Rohan Mehta', phone: '9898989803', email: 'rohan@gmail.com', city: 'Calicut', course: 'BHA-6M', source: 'Referral', status: 'Closed', assigned: 'Ashif', followup: '-', remarks: 'Converted to ADM-2026-101', target: 10, completed: 4, targetStatus: 'Closed Before Target' }
+      ],
+      students: [
+        { adm: 'ADM-2026-101', name: 'Rohan Mehta', phone: '9898989803', email: 'rohan@gmail.com', course: 'BHA-6M', batch: 'Business and Hospital Administration — Morning Batch', total: 45000, paid: 30000, balance: 15000, dueDate: '2026-09-20', status: 'ACTIVE', exec: 'Ashif', placement: 'Eligible' },
+        { adm: 'ADM-2026-102', name: 'Kavya Nair', phone: '9898989802', email: 'kavya@gmail.com', course: 'BCA-1Y', batch: 'Professional Diploma in Entrepreneurship — Morning Batch', total: 75000, paid: 60000, balance: 15000, dueDate: '2026-09-05', status: 'ACTIVE', exec: 'Demo Sales Executive', placement: 'Placed' }
       ],
       expenses: [
         { id: 'EXP-1001', title: 'Meta Ads Marketing Campaign', category: 'Marketing', amount: 12000, mode: 'UPI', date: '2026-09-01', createdBy: 'ceo@mastered.com' },
@@ -185,14 +189,14 @@
       activities: [],
       audit: [],
       sentReminders: new Set(),
-      targets: { dailyFollowups: 10, monthlyConversion: 25 }
+      settings: { minLeadFollowups: 10, monthlyConversion: 25 }
     };
 
     const roleNavigation = {
       'ADMIN': [
         { id: 'dashboard', label: 'Dashboard', icon: 'ri-dashboard-line' },
         { id: 'leads', label: 'Lead CRM', icon: 'ri-line-chart-line' },
-        { id: 'followups', label: 'Daily Follow-ups', icon: 'ri-phone-line' },
+        { id: 'followups', label: 'Lead Follow-up Workspace', icon: 'ri-phone-line' },
         { id: 'due_reminders', label: '3-Day Fee Reminders', icon: 'ri-alarm-warning-line' },
         { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
         { id: 'batches', label: 'Batch Management', icon: 'ri-group-line' },
@@ -223,7 +227,7 @@
       'SALES_EXEC': [
         { id: 'dashboard', label: 'Dashboard & Incentives', icon: 'ri-dashboard-line' },
         { id: 'leads', label: 'My Assigned Leads', icon: 'ri-line-chart-line' },
-        { id: 'followups', label: 'Daily Follow-ups (10/day)', icon: 'ri-phone-line' },
+        { id: 'followups', label: 'Lead Follow-up Workspace (Per Lead: 10)', icon: 'ri-phone-line' },
         { id: 'students', label: 'My Converted Students', icon: 'ri-user-star-line' }
       ],
       'OPS': [
@@ -277,7 +281,7 @@
           <div class="sidebar">
             <div class="brand-header">
               <div class="brand-logo"><img src="assets/logo.png" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';"></div>
-              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP SYSTEM v2.1</div></div>
+              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP SYSTEM v3.0</div></div>
             </div>
 
             <div class="user-pill">
@@ -348,7 +352,7 @@
         title.innerText = 'Lead Management System (CRM)';
         renderLeadsView(viewport);
       } else if (tab === 'followups') {
-        title.innerText = 'Sales Daily Follow-ups Workspace (Target: 10/day)';
+        title.innerText = 'Lead Follow-up Workspace (Per-Lead Target: 10)';
         renderFollowupsView(viewport);
       } else if (tab === 'due_reminders') {
         title.innerText = 'Operations 3-Day Fee Due Reminders Portal';
@@ -360,7 +364,7 @@
         title.innerText = 'Batch Management & Class Schedules';
         renderBatchesView(viewport);
       } else if (tab === 'sales_team') {
-        title.innerText = 'Sales Team Overview & Target Configuration';
+        title.innerText = 'Sales Team Overview & Lead Target Progress';
         renderSalesTeamView(viewport);
       } else if (tab === 'fee') {
         title.innerText = 'Fee Collection & Receipt Generation System';
@@ -389,6 +393,14 @@
       }
     }
 
+    function getProgressBarColor(completed) {
+      if (completed === 0) return '#94A3B8';
+      if (completed <= 4) return '#DC2626';
+      if (completed <= 7) return '#F59E0B';
+      if (completed <= 9) return '#2563EB';
+      return '#16A34A';
+    }
+
     function renderRoleDashboard(viewport) {
       if (currentRole === 'ADMIN') {
         viewport.innerHTML = `
@@ -399,12 +411,12 @@
             <div class="stat-card"><div class="stat-icon" style="background:#FEE2E2; color:#DC2626;"><i class="ri-line-chart-line"></i></div><div><div class="stat-title">CRM Active Leads</div><div class="stat-value">${state.leads.length}</div></div></div>
           </div>
           <div class="card">
-            <div class="card-header"><div class="card-title">Admin System Control Shortcuts</div></div>
+            <div class="card-header"><div class="card-title">Admin Master System Control Shortcuts</div></div>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="btn btn-primary" onclick="openAddCourseModal()"><i class="ri-book-read-line"></i> Add New Course</button>
+              <button class="btn btn-primary" onclick="openAddCourseModal()"><i class="ri-book-read-line"></i> Add New Official Course</button>
               <button class="btn btn-secondary" onclick="openAddUserModal()"><i class="ri-user-settings-line"></i> Create Staff Account</button>
-              <button class="btn btn-outline" onclick="switchTab('audit')"><i class="ri-shield-check-line"></i> View System Security Audit</button>
-              <button class="btn btn-success" onclick="switchTab('ai')"><i class="ri-sparkles-line"></i> Launch AI Summarizer</button>
+              <button class="btn btn-outline" onclick="switchTab('audit')"><i class="ri-shield-check-line"></i> View Security Audit Trail</button>
+              <button class="btn btn-success" onclick="switchTab('ai')"><i class="ri-sparkles-line"></i> Launch AI Report Summarizer</button>
             </div>
           </div>
         `;
@@ -441,13 +453,13 @@
         const myLeads = state.leads.filter(l => l.assigned.includes('Executive'));
         viewport.innerHTML = `
           <div class="card" style="background:linear-gradient(135deg, #1E293B, #0F172A); color:white;">
-            <div style="font-size:12px; color:#FCA5A5; font-weight:700;">DAILY FOLLOW-UP TARGET: ${state.targets.dailyFollowups} / WORKING DAY</div>
+            <div style="font-size:12px; color:#FCA5A5; font-weight:700;">PER-LEAD LIFECYCLE TARGET: 10 COMPLETED FOLLOW-UPS PER LEAD</div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px;">
               <div>
                 <div style="font-size:24px; font-weight:700; color:#4ADE80;">25% Monthly Conversion Target</div>
                 <div style="font-size:12px; color:#94A3B8; margin-top:4px;">1 Lead Closed to Student (Status: On Track)</div>
               </div>
-              <button class="btn btn-primary" style="padding:12px 20px;" onclick="switchTab('followups')"><i class="ri-phone-line"></i> Open Daily Follow-ups Workspace</button>
+              <button class="btn btn-primary" style="padding:12px 20px;" onclick="switchTab('followups')"><i class="ri-phone-line"></i> Open Lead Follow-up Workspace</button>
             </div>
           </div>
           <div class="grid-4">
@@ -475,7 +487,7 @@
       }
     }
 
-    // Modal Actions
+    // Modal Action Dialogs
     function openAddLeadModal() {
       document.getElementById('modal-title').innerText = 'Add New Lead to CRM';
       document.getElementById('modal-body').innerHTML = `
@@ -486,13 +498,13 @@
         </div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>City / Location *</label><input id="lead-city" placeholder="Kochi"></div>
-          <div class="form-group" style="flex:1;"><label>Course Interested *</label><select id="lead-course">${state.courses.map(c=>`<option value="${c.id}">${c.name} (${c.id})</option>`).join('')}</select></div>
+          <div class="form-group" style="flex:1;"><label>Official Course Interested *</label><select id="lead-course">${state.courses.map(c=>`<option value="${c.id}">${c.name} (${c.id})</option>`).join('')}</select></div>
         </div>
         <div class="form-group"><label>Lead Source *</label><select id="lead-source" onchange="toggleReferral(this.value)"><option value="Meta Ad">Meta Ad</option><option value="Organic Lead">Organic Lead</option><option value="Random Visit">Random Visit</option><option value="Referral">Referral</option></select></div>
         <div class="form-group" id="ref-group" style="display:none;"><label>Referral Student ID (Optional)</label><input id="lead-ref" placeholder="STU-2026-101"></div>
         <div class="form-group"><label>Next Follow-up Date *</label><input id="lead-next" type="date" value="${new Date(Date.now()+86400000).toISOString().substring(0,10)}"></div>
         <div class="form-group"><label>Remarks / Enquiry Note</label><textarea id="lead-remarks" rows="2"></textarea></div>
-        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveLead()">Register & Assign Lead</button>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveLead()">Register & Assign Lead (Target: 10 Follow-ups)</button>
       `;
       document.getElementById('modal').classList.add('open');
     }
@@ -518,7 +530,10 @@
         status: 'New',
         assigned: currentUserName,
         followup: document.getElementById('lead-next').value,
-        remarks: document.getElementById('lead-remarks').value.trim() || 'Registered'
+        remarks: document.getElementById('lead-remarks').value.trim() || 'Registered',
+        target: 10,
+        completed: 0,
+        targetStatus: 'Not Started'
       });
 
       closeModal();
@@ -554,6 +569,9 @@
         lead.status = newStage;
         if (nextDate) lead.followup = nextDate;
         if (notes) lead.remarks = notes;
+        if (newStage === 'Not Interested' || newStage === 'Unqualified') {
+          lead.targetStatus = 'Discontinued';
+        }
       }
 
       closeModal();
@@ -566,7 +584,7 @@
       document.getElementById('modal-body').innerHTML = `
         <div class="form-group"><label>Student Full Name *</label><input id="adm-name" value="Rohan Mehta"></div>
         <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:1;"><label>Enrolled Course *</label><select id="adm-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
+          <div class="form-group" style="flex:1;"><label>Official Course *</label><select id="adm-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
           <div class="form-group" style="flex:1;"><label>Batch Assignment *</label><select id="adm-batch">${state.batches.map(b=>`<option value="${b.name}">${b.name}</option>`).join('')}</select></div>
         </div>
         <div style="display:flex; gap:10px;">
@@ -612,6 +630,58 @@
       alert('Student Admission created atomically! Admission No: ' + admNo);
     }
 
+    function openLogActivityModal(leadId, leadName) {
+      document.getElementById('modal-title').innerText = 'Log Completed Activity (' + leadName + ')';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Activity Type *</label><select id="act-type"><option value="Phone Call">Phone Call</option><option value="WhatsApp Conversation">WhatsApp Conversation</option><option value="Direct Visit">Direct Visit</option><option value="Office Visit">Office Visit</option><option value="Video Call">Video Call</option></select></div>
+        <div class="form-group"><label>Discussion Outcome / Notes *</label><textarea id="act-notes" rows="2" placeholder="Discussed course fee & batch timing..."></textarea></div>
+        <div class="form-group"><label>Resulting Stage *</label><select id="act-stage"><option value="Follow-up">Follow-up</option><option value="Interested">Interested</option><option value="Visited">Visited</option></select></div>
+        <div class="form-group"><label>Next Follow-up Date *</label><input id="act-date" type="date" value="${new Date(Date.now()+86400000).toISOString().substring(0,10)}"></div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="confirmLogActivity('${leadId}')">Save Activity & Increment Follow-up Counter</button>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function confirmLogActivity(leadId) {
+      const notes = document.getElementById('act-notes').value.trim();
+      if (!notes) { alert('Activity notes are required!'); return; }
+
+      const lead = state.leads.find(l => l.id === leadId);
+      if (lead) {
+        lead.completed = (lead.completed || 0) + 1;
+        lead.followup = document.getElementById('act-date').value;
+        lead.status = document.getElementById('act-stage').value;
+        if (lead.completed >= lead.target) {
+          lead.targetStatus = 'Target Completed';
+        } else {
+          lead.targetStatus = 'In Progress';
+        }
+      }
+
+      closeModal();
+      switchTab('followups');
+      alert('Activity logged! Lead follow-up progress updated to ' + lead.completed + '/' + lead.target);
+    }
+
+    function openExemptTargetModal(leadId) {
+      document.getElementById('modal-title').innerText = 'Exempt Lead Target (' + leadId + ')';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Mandatory Exemption Reason *</label><input id="ex-reason" placeholder="Customer requested deferred admission..."></div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="confirmExempt('${leadId}')">Confirm Exemption with Audit Log</button>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function confirmExempt(leadId) {
+      const reason = document.getElementById('ex-reason').value.trim();
+      if (!reason) { alert('Exemption reason required!'); return; }
+      const lead = state.leads.find(l => l.id === leadId);
+      if (lead) lead.targetStatus = 'Exempted by ' + currentRole;
+      closeModal();
+      switchTab('followups');
+      alert('Lead ' + leadId + ' follow-up target exempted!');
+    }
+
     function openAddExpenseModal() {
       document.getElementById('modal-title').innerText = 'Record New Business Expense (with Bill Upload)';
       document.getElementById('modal-body').innerHTML = `
@@ -652,10 +722,10 @@
     }
 
     function openAddBatchModal() {
-      document.getElementById('modal-title').innerText = 'Create New Batch';
+      document.getElementById('modal-title').innerText = 'Create New Official Batch';
       document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Batch Name *</label><input id="btc-name" placeholder="e.g. BCA Batch 2026-B"></div>
-        <div class="form-group"><label>Course *</label><select id="btc-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
+        <div class="form-group"><label>Batch Name *</label><input id="btc-name" placeholder="e.g. Professional Diploma in Entrepreneurship — Morning Batch"></div>
+        <div class="form-group"><label>Official Course *</label><select id="btc-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
         <div class="form-group"><label>Exact Time Slot *</label><select id="btc-slot"><option value="8:30 AM to 10:30 AM">8:30 AM to 10:30 AM</option><option value="10:30 AM to 12:30 PM">10:30 AM to 12:30 PM</option><option value="12:30 PM to 2:30 PM">12:30 PM to 2:30 PM</option></select></div>
         <div class="form-group"><label>Capacity Seats *</label><input id="btc-cap" type="number" value="30"></div>
         <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveBatch()">Create Batch</button>
@@ -680,13 +750,13 @@
     }
 
     function openAddCourseModal() {
-      document.getElementById('modal-title').innerText = 'Create New Course Master';
+      document.getElementById('modal-title').innerText = 'Create New Official Course Master';
       document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Course ID *</label><input id="crs-id" placeholder="e.g. MCA-2Y"></div>
-        <div class="form-group"><label>Course Name *</label><input id="crs-name" placeholder="Master in Computer Applications"></div>
-        <div class="form-group"><label>Duration *</label><input id="crs-dur" value="2 years"></div>
-        <div class="form-group"><label>Default Fee (₹) *</label><input id="crs-fee" value="100000"></div>
-        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveCourse()">Save Course</button>
+        <div class="form-group"><label>Course ID *</label><input id="crs-id" placeholder="e.g. BHA-6M"></div>
+        <div class="form-group"><label>Official Course Name *</label><input id="crs-name" placeholder="Business and Hospital Administration"></div>
+        <div class="form-group"><label>Duration *</label><input id="crs-dur" value="6 months"></div>
+        <div class="form-group"><label>Default Fee (₹) *</label><input id="crs-fee" value="45000"></div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveCourse()">Save Course Master</button>
       `;
       document.getElementById('modal').classList.add('open');
     }
@@ -699,12 +769,12 @@
         id: cid,
         name: name,
         duration: document.getElementById('crs-dur').value,
-        fee: parseFloat(document.getElementById('crs-fee').value) || 100000,
+        fee: parseFloat(document.getElementById('crs-fee').value) || 45000,
         inst: 4
       });
       closeModal();
       switchTab('courses');
-      alert('Course master saved!');
+      alert('Official Course Master saved!');
     }
 
     function openAddUserModal() {
@@ -755,7 +825,7 @@
       if (lead) lead.assigned = exec;
       closeModal();
       switchTab('leads');
-      alert('Lead ' + lid + ' reassigned to ' + exec);
+      alert('Lead ' + lid + ' reassigned to ' + exec + '. Follow-up counter preserved!');
     }
 
     function openRecordPaymentModal() {
@@ -818,9 +888,30 @@
             <button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Add New Lead</button>
           </div>
           <table>
-            <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Course</th><th>Source</th><th>Assigned Exec</th><th>Status</th><th>Action</th></tr></thead>
+            <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Official Course</th><th>Assigned Exec</th><th>Stage Status</th><th>Follow-up Progress</th><th>Action</th></tr></thead>
             <tbody>
-              ${filteredLeads.map(l => `<tr><td style="font-weight:700; color:var(--primary);">${l.id}</td><td style="font-weight:600;">${l.name}</td><td>${l.phone}</td><td>${l.course}</td><td><span class="badge badge-info">${l.source}</span></td><td>${l.assigned}</td><td><span class="badge badge-success">${l.status}</span></td><td><button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="openLeadStageModal('${l.id}', '${l.name}')">Update Stage</button></td></tr>`).join('')}
+              ${filteredLeads.map(l => {
+                const target = l.target || 10;
+                const completed = l.completed || 0;
+                const pct = Math.min(100, Math.round((completed / target) * 100));
+                const barColor = getProgressBarColor(completed);
+                
+                return `<tr>
+                  <td style="font-weight:700; color:var(--primary);">${l.id}</td>
+                  <td style="font-weight:600;">${l.name}</td>
+                  <td>${l.phone}</td>
+                  <td>${l.course}</td>
+                  <td>${l.assigned}</td>
+                  <td><span class="badge badge-success">${l.status}</span></td>
+                  <td>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%; background:${barColor};"></div></div>
+                      <span style="font-weight:700; font-size:11px;">${completed}/${target} (${pct}%)</span>
+                    </div>
+                  </td>
+                  <td><button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="openLeadStageModal('${l.id}', '${l.name}')">Update Stage</button></td>
+                </tr>`;
+              }).join('')}
             </tbody>
           </table>
         </div>
@@ -828,22 +919,49 @@
     }
 
     function renderFollowupsView(viewport) {
+      let filteredLeads = state.leads;
+      if (currentRole === 'SALES_EXEC') filteredLeads = state.leads.filter(l => l.assigned.includes('Executive'));
+
       viewport.innerHTML = `
         <div class="card" style="background:var(--secondary); color:white;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <div>
-              <div style="font-size:16px; font-weight:700;">Sales Daily Follow-up Workspace</div>
-              <div style="font-size:12px; color:#94A3B8; margin-top:4px;">Daily Target: 10 Completed Follow-ups / Working Day</div>
+              <div style="font-size:16px; font-weight:700;">Lead Follow-up Workspace</div>
+              <div style="font-size:12px; color:#94A3B8; margin-top:4px;">Per-Lead Lifecycle Target: Minimum 10 Completed Follow-ups per Lead</div>
             </div>
-            <span class="badge badge-success">Status: On Track</span>
+            ${(currentRole==='ADMIN'||currentRole==='SALES_HEAD') ? `<button class="btn btn-outline" style="color:white; border-color:white;" onclick="alert('Exempt Lead Target Modal')">Exempt Lead Target</button>` : ''}
           </div>
         </div>
         <div class="card">
-          <div class="card-header"><div class="card-title">Scheduled Follow-ups Queue</div></div>
+          <div class="card-header"><div class="card-title">Lead Lifecycle Follow-up Progress Tracker</div></div>
           <table>
-            <thead><tr><th>Lead ID</th><th>Name</th><th>Course</th><th>Due Date</th><th>WhatsApp Action</th><th>Action</th></tr></thead>
+            <thead><tr><th>Lead ID</th><th>Name</th><th>Official Course</th><th>Stage</th><th>Follow-up Progress</th><th>Target Status</th><th>WhatsApp Action</th><th>Action</th></tr></thead>
             <tbody>
-              ${state.leads.filter(l=>l.status!=='Closed').map(l=>`<tr><td style="font-weight:700; color:var(--primary);">${l.id}</td><td>${l.name}</td><td>${l.course}</td><td style="color:var(--danger); font-weight:700;">${l.followup}</td><td><a href="https://wa.me/91${l.phone}?text=Hello%20${l.name}" target="_blank" style="color:var(--success); font-weight:700;"><i class="ri-whatsapp-line"></i> Hello ${l.name}</a></td><td><button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="alert('Logged follow-up for ${l.name}')">Log Activity</button></td></tr>`).join('')}
+              ${filteredLeads.map(l => {
+                const target = l.target || 10;
+                const completed = l.completed || 0;
+                const pct = Math.min(100, Math.round((completed / target) * 100));
+                const barColor = getProgressBarColor(completed);
+                const courseObj = state.courses.find(c => c.id === l.course);
+                const courseName = courseObj ? courseObj.name : l.course;
+                const msg = encodeURIComponent(`Hello ${l.name}, this is ${l.assigned} from MASTERED regarding your enquiry for ${courseName}.`);
+
+                return `<tr>
+                  <td style="font-weight:700; color:var(--primary);">${l.id}</td>
+                  <td style="font-weight:600;">${l.name}</td>
+                  <td>${l.course}</td>
+                  <td><span class="badge badge-info">${l.status}</span></td>
+                  <td>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%; background:${barColor};"></div></div>
+                      <span style="font-weight:700; font-size:11px;">${completed}/${target} (${pct}%)</span>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-warning">${l.targetStatus || 'In Progress'}</span></td>
+                  <td><a href="https://wa.me/91${l.phone}?text=${msg}" target="_blank" style="color:var(--success); font-weight:700;"><i class="ri-whatsapp-line"></i> Hello ${l.name}</a></td>
+                  <td><button class="btn btn-primary" style="padding:4px 8px; font-size:11px;" onclick="openLogActivityModal('${l.id}', '${l.name}')">Log Activity</button></td>
+                </tr>`;
+              }).join('')}
             </tbody>
           </table>
         </div>
@@ -890,7 +1008,7 @@
               <tr>
                 <th>Admission No</th>
                 <th>Student Name</th>
-                <th>Course & Batch</th>
+                <th>Official Course & Batch</th>
                 <th>Total Fee</th>
                 <th>Paid Fee</th>
                 <th>Pending Balance</th>
@@ -928,7 +1046,7 @@
             <button class="btn btn-primary" onclick="openAddBatchModal()"><i class="ri-add-line"></i> Create Batch</button>
           </div>
           <table>
-            <thead><tr><th>Batch ID</th><th>Batch Name</th><th>Course</th><th>Exact Time Slot</th><th>Capacity</th></tr></thead>
+            <thead><tr><th>Batch ID</th><th>Official Batch Name</th><th>Course</th><th>Exact Time Slot</th><th>Capacity</th></tr></thead>
             <tbody>
               ${state.batches.map(b=>`<tr><td style="font-weight:700; color:var(--primary);">${b.id}</td><td style="font-weight:600;">${b.name}</td><td>${b.course}</td><td><span class="badge badge-info">${b.time}</span></td><td>${b.capacity} Seats</td></tr>`).join('')}
             </tbody>
@@ -1040,7 +1158,7 @@
             <button class="btn btn-primary" onclick="openAddCourseModal()"><i class="ri-add-line"></i> Add Course</button>
           </div>
           <table>
-            <thead><tr><th>Course ID</th><th>Course Name</th><th>Duration</th><th>Default Fee</th><th>Installments</th></tr></thead>
+            <thead><tr><th>Course ID</th><th>Official Course Name</th><th>Duration</th><th>Default Fee</th><th>Installments</th></tr></thead>
             <tbody>
               ${state.courses.map(c=>`<tr><td style="font-weight:700; color:var(--primary);">${c.id}</td><td style="font-weight:600;">${c.name}</td><td>${c.duration}</td><td style="color:var(--success); font-weight:700;">₹${c.fee.toLocaleString()}</td><td>${c.inst} Installments</td></tr>`).join('')}
             </tbody>
@@ -1069,7 +1187,7 @@
         <div class="card">
           <div class="card-header"><div class="card-title">Admin AI Report Analysis & Summarizer</div></div>
           <div style="padding:20px; background:#F8FAFC; border-radius:8px; line-height:1.6;">
-            <p><strong>• Conversion Trends:</strong> BCA-1Y holds the highest conversion rate at 50%.</p>
+            <p><strong>• Conversion Trends:</strong> Professional Diploma in Entrepreneurship (BCA-1Y) holds the highest conversion rate at 50%.</p>
             <p><strong>• Lead Source Quality:</strong> Meta Ads account for 60% of total lead volume.</p>
             <p><strong>• Fee Collection Risk:</strong> Total pending balances stand at ₹30,000 with 1 student due in 3 days.</p>
           </div>
@@ -1082,16 +1200,16 @@
         <div class="card">
           <div class="card-header"><div class="card-title">Master System Settings & Sequences</div></div>
           <div class="form-group"><label>Academy Name</label><input id="set-name" value="MASTERED"></div>
-          <div class="form-group"><label>Daily Follow-up Target per Executive</label><input id="set-target" value="${state.targets.dailyFollowups}"></div>
-          <div class="form-group"><label>Monthly Conversion Target (%)</label><input id="set-conv" value="${state.targets.monthlyConversion}"></div>
+          <div class="form-group"><label>Minimum Follow-ups Target per Lead</label><input id="set-min" value="${state.settings.minLeadFollowups}"></div>
+          <div class="form-group"><label>Monthly Conversion Target (%)</label><input id="set-conv" value="${state.settings.monthlyConversion}"></div>
           <button class="btn btn-primary" onclick="saveSettings()">Save Configuration</button>
         </div>
       `;
     }
 
     function saveSettings() {
-      state.targets.dailyFollowups = parseInt(document.getElementById('set-target').value) || 10;
-      state.targets.monthlyConversion = parseInt(document.getElementById('set-conv').value) || 25;
+      state.settings.minLeadFollowups = parseInt(document.getElementById('set-min').value) || 10;
+      state.settings.monthlyConversion = parseInt(document.getElementById('set-conv').value) || 25;
       alert('Master Settings saved successfully!');
     }
 
