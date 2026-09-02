@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_constants.dart';
 import '../../core/permissions/role_permissions.dart';
-import '../../core/utils/date_formatter.dart';
 import '../../data/models/lead_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/lead_provider.dart';
-import '../../providers/user_provider.dart';
+import '../widgets/lead_closing_dialog.dart';
 import '../widgets/status_badge.dart';
 
 class LeadsView extends StatefulWidget {
@@ -19,121 +16,69 @@ class LeadsView extends StatefulWidget {
 }
 
 class _LeadsViewState extends State<LeadsView> {
+  String _selectedStageFilter = 'All';
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final user = Provider.of<AuthProvider>(context, listen: false).currentUser;
-      if (user != null) {
-        Provider.of<LeadProvider>(context, listen: false).fetchLeads(user);
-        Provider.of<UserProvider>(context, listen: false).fetchUsers();
-      }
+      Provider.of<LeadProvider>(context, listen: false).fetchLeads();
     });
   }
 
-  void _openWhatsApp(String phone) async {
-    final cleanPhone = phone.replaceAll(RegExp(r'\D'), '');
-    final url = Uri.parse('https://wa.me/$cleanPhone');
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not open WhatsApp for $phone')),
-        );
-      }
-    }
-  }
+  void _showAddLeadDialog() {
+    final nameCtrl = TextEditingController();
+    final phoneCtrl = TextEditingController();
+    final emailCtrl = TextEditingController();
+    final cityCtrl = TextEditingController();
+    final remarksCtrl = TextEditingController();
+    final refStudentIdCtrl = TextEditingController();
 
-  void _makeCall(String phone) async {
-    final url = Uri.parse('tel:$phone');
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-    }
-  }
-
-  void _showAddEditLeadDialog([LeadModel? lead]) {
-    final isEdit = lead != null;
-    final nameCtrl = TextEditingController(text: lead?.name ?? '');
-    final phoneCtrl = TextEditingController(text: lead?.phone ?? '');
-    final whatsappCtrl = TextEditingController(text: lead?.whatsapp ?? '');
-    final emailCtrl = TextEditingController(text: lead?.email ?? '');
-    final cityCtrl = TextEditingController(text: lead?.city ?? '');
-    final courseCtrl = TextEditingController(text: lead?.courseInterested ?? 'Full Stack Development');
-    final remarksCtrl = TextEditingController(text: lead?.remarks ?? '');
-    final followupCtrl = TextEditingController(text: lead?.nextFollowup ?? '');
-
-    String selectedSource = lead?.source ?? 'Website';
-    String selectedStatus = lead?.status ?? 'New';
-    String selectedAssigned = lead?.assignedTo ?? 'Unassigned';
+    String selectedCourse = 'BCA-1Y';
+    String selectedSource = 'Meta Ad';
 
     showDialog(
       context: context,
-      builder: (context) {
-        final users = Provider.of<UserProvider>(context).users;
-        return AlertDialog(
-          title: Text(isEdit ? 'Edit Lead (${lead.leadId})' : 'Quick Lead Entry'),
-          content: SingleChildScrollView(
-            child: SizedBox(
-              width: 500,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => AlertDialog(
+          title: const Text('Add New Lead to CRM'),
+          content: SizedBox(
+            width: 440,
+            child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Full Name *')),
-                  const SizedBox(height: 12),
+                  TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Lead Full Name *')),
+                  const SizedBox(height: 10),
                   Row(
                     children: [
-                      Expanded(child: TextField(controller: phoneCtrl, decoration: const InputDecoration(labelText: 'Phone *'))),
-                      const SizedBox(width: 12),
-                      Expanded(child: TextField(controller: whatsappCtrl, decoration: const InputDecoration(labelText: 'WhatsApp Number'))),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
+                      Expanded(child: TextField(controller: phoneCtrl, decoration: const InputDecoration(labelText: 'Phone Number *'))),
+                      const SizedBox(width: 10),
                       Expanded(child: TextField(controller: emailCtrl, decoration: const InputDecoration(labelText: 'Email Address'))),
-                      const SizedBox(width: 12),
-                      Expanded(child: TextField(controller: cityCtrl, decoration: const InputDecoration(labelText: 'City'))),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  TextField(controller: courseCtrl, decoration: const InputDecoration(labelText: 'Course Interested *')),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: DropdownButtonFormField<String>(
-                          value: AppConstants.leadSources.contains(selectedSource) ? selectedSource : AppConstants.leadSources.first,
-                          decoration: const InputDecoration(labelText: 'Source'),
-                          items: AppConstants.leadSources.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-                          onChanged: (v) => selectedSource = v ?? selectedSource,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: DropdownButtonFormField<String>(
-                          value: AppConstants.leadStatuses.contains(selectedStatus) ? selectedStatus : AppConstants.leadStatuses.first,
-                          decoration: const InputDecoration(labelText: 'Lead Status'),
-                          items: AppConstants.leadStatuses.map((st) => DropdownMenuItem(value: st, child: Text(st))).toList(),
-                          onChanged: (v) => selectedStatus = v ?? selectedStatus,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 10),
+                  TextField(controller: cityCtrl, decoration: const InputDecoration(labelText: 'City / Location *')),
+                  const SizedBox(height: 10),
                   DropdownButtonFormField<String>(
-                    value: users.any((u) => u.name == selectedAssigned) ? selectedAssigned : 'Unassigned',
-                    decoration: const InputDecoration(labelText: 'Assigned Sales Executive'),
-                    items: [
-                      const DropdownMenuItem(value: 'Unassigned', child: Text('Unassigned')),
-                      ...users.map((u) => DropdownMenuItem(value: u.name, child: Text(u.name))),
-                    ],
-                    onChanged: (v) => selectedAssigned = v ?? 'Unassigned',
+                    value: selectedCourse,
+                    decoration: const InputDecoration(labelText: 'Course Interested *'),
+                    items: ['BHA-6M', 'HRCA-6M', 'BCA-1Y', 'HRCA-1Y'].map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+                    onChanged: (v) => setModalState(() => selectedCourse = v!),
                   ),
-                  const SizedBox(height: 12),
-                  TextField(controller: followupCtrl, decoration: const InputDecoration(labelText: 'Next Follow-up Date (YYYY-MM-DD)', hintText: '2026-09-10')),
-                  const SizedBox(height: 12),
-                  TextField(controller: remarksCtrl, maxLines: 2, decoration: const InputDecoration(labelText: 'Remarks / Notes')),
+                  const SizedBox(height: 10),
+                  DropdownButtonFormField<String>(
+                    value: selectedSource,
+                    decoration: const InputDecoration(labelText: 'Lead Source *'),
+                    items: ['Meta Ad', 'Organic Lead', 'Random Visit', 'Referral'].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+                    onChanged: (v) => setModalState(() => selectedSource = v!),
+                  ),
+                  if (selectedSource == 'Referral') ...[
+                    const SizedBox(height: 10),
+                    TextField(controller: refStudentIdCtrl, decoration: const InputDecoration(labelText: 'Search Referral Student ID (Optional)', hintText: 'STU-2026-101')),
+                  ],
+                  const SizedBox(height: 10),
+                  TextField(controller: remarksCtrl, decoration: const InputDecoration(labelText: 'Initial Remarks / Enquiry Note')),
                 ],
               ),
             ),
@@ -142,113 +87,123 @@ class _LeadsViewState extends State<LeadsView> {
             TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
             ElevatedButton(
               onPressed: () async {
-                if (nameCtrl.text.isEmpty || phoneCtrl.text.isEmpty || courseCtrl.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please fill required fields (Name, Phone, Course)')));
-                  return;
-                }
-
+                if (nameCtrl.text.isEmpty || phoneCtrl.text.isEmpty) return;
                 final leadProvider = Provider.of<LeadProvider>(context, listen: false);
-                final currentUser = Provider.of<AuthProvider>(context, listen: false).currentUser!;
-
-                final payload = {
-                  if (isEdit) 'lead_id': lead.leadId,
-                  'name': nameCtrl.text.trim(),
-                  'phone': phoneCtrl.text.trim(),
-                  'whatsapp': whatsappCtrl.text.trim().isNotEmpty ? whatsappCtrl.text.trim() : phoneCtrl.text.trim(),
-                  'email': emailCtrl.text.trim(),
-                  'city': cityCtrl.text.trim(),
-                  'course_interested': courseCtrl.text.trim(),
-                  'source': selectedSource,
-                  'status': selectedStatus,
-                  'assigned_to': selectedAssigned,
-                  'next_followup': followupCtrl.text.trim(),
-                  'remarks': remarksCtrl.text.trim(),
-                };
-
-                final success = isEdit
-                    ? await leadProvider.updateLead(payload, currentUser)
-                    : await leadProvider.createLead(payload, currentUser);
+                await leadProvider.addLead(
+                  LeadModel(
+                    leadId: '',
+                    date: DateTime.now().toIso8601String().substring(0, 10),
+                    name: nameCtrl.text.trim(),
+                    phone: phoneCtrl.text.trim(),
+                    whatsapp: phoneCtrl.text.trim(),
+                    email: emailCtrl.text.trim(),
+                    city: cityCtrl.text.trim(),
+                    courseInterested: selectedCourse,
+                    source: selectedSource,
+                    createdBy: '',
+                    assignedTo: '',
+                    status: 'New',
+                    nextFollowup: DateTime.now().add(const Duration(days: 1)).toIso8601String().substring(0, 10),
+                    remarks: remarksCtrl.text.trim(),
+                    updatedAt: DateTime.now().toIso8601String(),
+                  ),
+                );
 
                 if (mounted) {
-                  if (success) {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(isEdit ? 'Lead updated successfully' : 'Lead created successfully'), backgroundColor: AppColors.success),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(leadProvider.errorMessage ?? 'Operation failed'), backgroundColor: AppColors.danger),
-                    );
-                  }
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Lead registered and auto-assigned successfully'), backgroundColor: AppColors.success),
+                  );
                 }
               },
-              child: Text(isEdit ? 'Update Lead' : 'Save Lead'),
+              child: const Text('Save Lead'),
             ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 
-  void _showConvertLeadDialog(LeadModel lead) {
-    final courseCtrl = TextEditingController(text: lead.courseInterested);
-    final totalFeeCtrl = TextEditingController(text: '50000');
-    final paidFeeCtrl = TextEditingController(text: '15000');
+  void _handleStageTransition(LeadModel lead, String newStage) {
+    if (newStage == 'Closed') {
+      showDialog(
+        context: context,
+        builder: (context) => LeadClosingDialog(lead: lead),
+      );
+      return;
+    }
+
+    final reasonCtrl = TextEditingController();
+    final dateCtrl = TextEditingController(text: DateTime.now().add(const Duration(days: 2)).toIso8601String().substring(0, 10));
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Convert Lead to Student (${lead.name})'),
+        title: Text('Transition Lead to $newStage (${lead.name})'),
         content: SizedBox(
-          width: 420,
+          width: 400,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Converting this lead will automatically:\n• Generate a Student ID (STU-100X) & Admission No (ADM-2026-00X).\n• Create a Google Drive folder under MASTERED/Students/.\n• Record initial admission fee payment in Fee Ledger.',
-                style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
-              ),
-              const SizedBox(height: 16),
-              TextField(controller: courseCtrl, decoration: const InputDecoration(labelText: 'Final Enrolled Course')),
-              const SizedBox(height: 12),
-              TextField(controller: totalFeeCtrl, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Total Agreed Fee (₹)')),
-              const SizedBox(height: 12),
-              TextField(controller: paidFeeCtrl, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Initial Down Payment Paid (₹)')),
+              if (newStage == 'Not Interested' || newStage == 'Unqualified')
+                TextField(
+                  controller: reasonCtrl,
+                  decoration: InputDecoration(labelText: 'Reason for $newStage *', hintText: 'Not interested in course fee structure...'),
+                ),
+              if (newStage == 'Follow-up' || newStage == 'Interested') ...[
+                TextField(
+                  controller: dateCtrl,
+                  decoration: const InputDecoration(labelText: 'Next Follow-up Date (YYYY-MM-DD) *'),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: reasonCtrl,
+                  decoration: const InputDecoration(labelText: 'Follow-up Discussion Notes *'),
+                ),
+              ],
+              if (newStage == 'Visited') ...[
+                TextField(
+                  controller: reasonCtrl,
+                  maxLines: 2,
+                  decoration: const InputDecoration(labelText: 'Campus Visit Summary & Notes *'),
+                ),
+              ],
             ],
           ),
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.success),
             onPressed: () async {
-              final totalFee = double.tryParse(totalFeeCtrl.text) ?? 50000;
-              final paidFee = double.tryParse(paidFeeCtrl.text) ?? 0;
-              final currentUser = Provider.of<AuthProvider>(context, listen: false).currentUser!;
-
               final leadProvider = Provider.of<LeadProvider>(context, listen: false);
-              final success = await leadProvider.convertLeadToStudent(
-                lead: lead,
-                totalFee: totalFee,
-                paidFee: paidFee,
-                course: courseCtrl.text,
-                currentUser: currentUser,
+              await leadProvider.updateLead(
+                LeadModel(
+                  leadId: lead.leadId,
+                  date: lead.date,
+                  name: lead.name,
+                  phone: lead.phone,
+                  whatsapp: lead.whatsapp,
+                  email: lead.email,
+                  city: lead.city,
+                  courseInterested: lead.courseInterested,
+                  source: lead.source,
+                  assignedTo: lead.assignedTo,
+                  status: newStage,
+                  nextFollowup: dateCtrl.text.trim(),
+                  remarks: reasonCtrl.text.trim(),
+                  createdBy: lead.createdBy,
+                  updatedAt: DateTime.now().toIso8601String(),
+                ),
               );
 
               if (mounted) {
-                if (success) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Lead converted to Student successfully! Drive folder created.'), backgroundColor: AppColors.success),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(leadProvider.errorMessage ?? 'Conversion failed'), backgroundColor: AppColors.danger),
-                  );
-                }
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Lead updated to $newStage'), backgroundColor: AppColors.success),
+                );
               }
             },
-            child: const Text('Confirm Conversion'),
+            child: const Text('Save Stage'),
           ),
         ],
       ),
@@ -258,121 +213,109 @@ class _LeadsViewState extends State<LeadsView> {
   @override
   Widget build(BuildContext context) {
     final leadProvider = Provider.of<LeadProvider>(context);
-    final authUser = Provider.of<AuthProvider>(context).currentUser;
-    final role = authUser?.role ?? AppConstants.roleSalesExecutive;
+    final user = Provider.of<AuthProvider>(context).currentUser;
+    final role = user?.role ?? '';
+
+    List<LeadModel> displayLeads = leadProvider.leads;
+    if (_selectedStageFilter != 'All') {
+      displayLeads = displayLeads.where((l) => l.status == _selectedStageFilter).toList();
+    }
 
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
         cross: CrossAxisAlignment.start,
         children: [
-          // Filter & Search Controls Bar
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: TextField(
-                  onChanged: (q) => leadProvider.setSearchQuery(q),
-                  decoration: const InputDecoration(
-                    hintText: 'Search leads by name, phone, email, course...',
-                    prefixIcon: Icon(Icons.search, size: 20),
-                  ),
-                ),
+              Column(
+                cross: CrossAxisAlignment.start,
+                children: [
+                  const Text('Lead Management System (CRM)', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(role == 'SALES_EXECUTIVE' ? 'Showing leads assigned to ${user?.name}' : 'Showing team active CRM pipeline', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                ],
               ),
-              const SizedBox(width: 12),
-              DropdownButton<String>(
-                value: leadProvider.selectedStatusFilter,
-                underline: const SizedBox(),
-                items: ['All', ...AppConstants.leadStatuses]
-                    .map((st) => DropdownMenuItem(value: st, child: Text('Status: $st', style: const TextStyle(fontSize: 13))))
-                    .toList(),
-                onChanged: (v) => leadProvider.setStatusFilter(v ?? 'All'),
+              ElevatedButton.icon(
+                onPressed: _showAddLeadDialog,
+                icon: const Icon(Icons.add, size: 18),
+                label: const Text('Add Lead'),
               ),
-              const SizedBox(width: 12),
-              if (RolePermissions.canCreateLead(role))
-                ElevatedButton.icon(
-                  onPressed: () => _showAddEditLeadDialog(),
-                  icon: const Icon(Icons.add, size: 18),
-                  label: const Text('Add Lead'),
-                ),
             ],
           ),
           const SizedBox(height: 16),
 
-          // Lead Cards / Table
+          // Stage Filter Bar
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: ['All', 'New', 'Interested', 'Follow-up', 'Visited', 'Closed', 'Not Interested', 'Unqualified'].map((s) {
+                final isSelected = _selectedStageFilter == s;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: ChoiceChip(
+                    label: Text(s, style: TextStyle(color: isSelected ? Colors.white : AppColors.textPrimary, fontSize: 12)),
+                    selected: isSelected,
+                    selectedColor: AppColors.primary,
+                    onSelected: (val) => setState(() => _selectedStageFilter = s),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 16),
+
           Expanded(
             child: leadProvider.isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : leadProvider.leads.isEmpty
-                    ? const Center(child: Text('No leads found.', style: TextStyle(color: AppColors.textMuted)))
+                : displayLeads.isEmpty
+                    ? const Center(child: Text('No leads found in selected stage.', style: TextStyle(color: AppColors.textMuted)))
                     : Card(
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: SingleChildScrollView(
                             child: DataTable(
-                              headingRowHeight: 44,
-                              dataRowHeight: 64,
                               columns: const [
                                 DataColumn(label: Text('Lead ID', style: TextStyle(fontWeight: FontWeight.bold))),
-                                DataColumn(label: Text('Name & City', style: TextStyle(fontWeight: FontWeight.bold))),
-                                DataColumn(label: Text('Contact', style: TextStyle(fontWeight: FontWeight.bold))),
+                                DataColumn(label: Text('Lead Name', style: TextStyle(fontWeight: FontWeight.bold))),
+                                DataColumn(label: Text('Phone', style: TextStyle(fontWeight: FontWeight.bold))),
                                 DataColumn(label: Text('Course Interested', style: TextStyle(fontWeight: FontWeight.bold))),
-                                DataColumn(label: Text('Assigned To', style: TextStyle(fontWeight: FontWeight.bold))),
-                                DataColumn(label: Text('Status', style: TextStyle(fontWeight: FontWeight.bold))),
-                                DataColumn(label: Text('Next Followup', style: TextStyle(fontWeight: FontWeight.bold))),
-                                DataColumn(label: Text('Actions', style: TextStyle(fontWeight: FontWeight.bold))),
+                                DataColumn(label: Text('Source', style: TextStyle(fontWeight: FontWeight.bold))),
+                                DataColumn(label: Text('Assigned Exec', style: TextStyle(fontWeight: FontWeight.bold))),
+                                DataColumn(label: Text('Status Stage', style: TextStyle(fontWeight: FontWeight.bold))),
+                                DataColumn(label: Text('Next Due', style: TextStyle(fontWeight: FontWeight.bold))),
+                                DataColumn(label: Text('Stage Transition Action', style: TextStyle(fontWeight: FontWeight.bold))),
                               ],
-                              rows: leadProvider.leads.map((lead) {
-                                return DataRow(
-                                  cells: [
-                                    DataCell(Text(lead.leadId, style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary))),
-                                    DataCell(Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      cross: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(lead.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                                        if (lead.city.isNotEmpty) Text(lead.city, style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
-                                      ],
-                                    )),
-                                    DataCell(Row(
-                                      children: [
-                                        Text(lead.phone, style: const TextStyle(fontSize: 12)),
-                                        const SizedBox(width: 6),
-                                        IconButton(
-                                          icon: const Icon(Icons.phone, size: 16, color: AppColors.info),
-                                          onPressed: () => _makeCall(lead.phone),
-                                          tooltip: 'Call',
+                              rows: displayLeads.map((lead) {
+                                return DataRow(cells: [
+                                  DataCell(Text(lead.leadId, style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary))),
+                                  DataCell(Text(lead.name, style: const TextStyle(fontWeight: FontWeight.bold))),
+                                  DataCell(Text(lead.phone)),
+                                  DataCell(Text(lead.courseInterested)),
+                                  DataCell(StatusBadge(label: lead.source)),
+                                  DataCell(Text(lead.assignedTo, style: const TextStyle(fontSize: 12))),
+                                  DataCell(StatusBadge(label: lead.status)),
+                                  DataCell(Text(lead.nextFollowup, style: const TextStyle(color: AppColors.danger, fontWeight: FontWeight.bold))),
+                                  DataCell(
+                                    PopupMenuButton<String>(
+                                      onSelected: (newStage) => _handleStageTransition(lead, newStage),
+                                      itemBuilder: (context) => ['Interested', 'Follow-up', 'Visited', 'Closed', 'Not Interested', 'Unqualified']
+                                          .map((stg) => PopupMenuItem(value: stg, child: Text('Mark $stg')))
+                                          .toList(),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                        decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.1), borderRadius: BorderRadius.circular(6)),
+                                        child: const Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text('Change Stage', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 11)),
+                                            Icon(Icons.arrow_drop_down, color: AppColors.primary, size: 16),
+                                          ],
                                         ),
-                                        IconButton(
-                                          icon: const Icon(Icons.chat_bubble_outline, size: 16, color: AppColors.success),
-                                          onPressed: () => _openWhatsApp(lead.whatsapp),
-                                          tooltip: 'WhatsApp',
-                                        ),
-                                      ],
-                                    )),
-                                    DataCell(Text(lead.courseInterested, style: const TextStyle(fontSize: 12))),
-                                    DataCell(Text(lead.assignedTo, style: const TextStyle(fontSize: 12))),
-                                    DataCell(StatusBadge(label: lead.status)),
-                                    DataCell(Text(DateFormatter.formatDisplay(lead.nextFollowup), style: const TextStyle(fontSize: 11))),
-                                    DataCell(Row(
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.edit, size: 18, color: AppColors.textSecondary),
-                                          onPressed: () => _showAddEditLeadDialog(lead),
-                                          tooltip: 'Edit Lead',
-                                        ),
-                                        if (lead.status != 'Converted')
-                                          ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: AppColors.success,
-                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                            ),
-                                            onPressed: () => _showConvertLeadDialog(lead),
-                                            child: const Text('Convert', style: TextStyle(fontSize: 11)),
-                                          ),
-                                      ],
-                                    )),
-                                  ],
-                                );
+                                      ),
+                                    ),
+                                  ),
+                                ]);
                               }).toList(),
                             ),
                           ),
