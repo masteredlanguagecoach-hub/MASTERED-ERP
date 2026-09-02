@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MASTERED ERP - Academy Management System</title>
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #DC2626;
+      --primary-dark: #B91C1C;
+      --secondary: #1E293B;
+      --secondary-light: #334155;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-primary: #0F172A;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      --border: #E2E8F0;
+      --success: #16A34A;
+      --warning: #F59E0B;
+      --danger: #DC2626;
+      --info: #2563EB;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background-color: var(--bg); color: var(--text-primary); display: flex; height: 100vh; overflow: hidden; }
+
+    .landing-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 200; display: flex; flex-direction: column; overflow-y: auto; }
+    .landing-header { background: white; border-bottom: 1px solid var(--border); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
+    .landing-hero { background: linear-gradient(135deg, #1E293B, #0F172A); color: white; padding: 80px 24px; text-align: center; }
+
+    .sidebar { width: 250px; background-color: var(--secondary); color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
+    .brand-header { padding: 20px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--secondary-light); flex-shrink: 0; }
+    .brand-logo { width: 36px; height: 36px; border-radius: 8px; background: white; padding: 4px; display: flex; align-items: center; justify-content: center; }
+    .brand-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .brand-title { font-size: 15px; font-weight: 700; letter-spacing: 1px; }
+    .brand-sub { font-size: 9px; color: var(--text-muted); font-weight: 600; }
+
+    .user-pill { margin: 10px; padding: 10px; background: rgba(255,255,255,0.06); border-radius: 8px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background-color: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+    .user-info { flex: 1; overflow: hidden; }
+    .user-name { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-role { font-size: 10px; color: #FCA5A5; }
+
+    .nav-list { list-style: none; padding: 8px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; color: #94A3B8; cursor: pointer; transition: all 0.2s; font-size: 12.5px; font-weight: 500; }
+    .nav-item:hover, .nav-item.active { background-color: var(--primary); color: white; font-weight: 600; }
+    .nav-item i { font-size: 17px; }
+
+    .sidebar-footer { padding: 12px 14px 20px 14px; border-top: 1px solid var(--secondary-light); flex-shrink: 0; }
+    .logout-btn { width: 100%; padding: 10px; border: 1px solid rgba(255,255,255,0.25); background: transparent; color: white; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 12px; }
+    .logout-btn:hover { background: rgba(255,255,255,0.1); }
+
+    .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100vh; }
+    .top-bar { height: 60px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; }
+    .page-title { font-size: 17px; font-weight: 700; }
+    .role-switcher { display: flex; gap: 6px; align-items: center; font-size: 12px; }
+    .role-chip { padding: 4px 10px; border-radius: 12px; background: var(--bg); border: 1px solid var(--border); cursor: pointer; font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+    .role-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    .content-viewport { flex: 1; padding: 20px; overflow-y: auto; }
+
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px; }
+    .stat-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; align-items: center; gap: 14px; }
+    .stat-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .stat-title { font-size: 11px; color: var(--text-secondary); font-weight: 600; }
+    .stat-value { font-size: 20px; font-weight: 700; margin-top: 2px; }
+
+    .btn { padding: 8px 14px; border-radius: 6px; border: none; font-weight: 600; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-success { background: var(--success); color: white; }
+    .btn-secondary { background: var(--secondary); color: white; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-primary); }
+
+    .card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 20px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .card-title { font-size: 14px; font-weight: 700; }
+
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12.5px; }
+    th { padding: 10px 12px; background: #F1F5F9; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border); }
+    td { padding: 12px; border-bottom: 1px solid var(--border); color: var(--text-primary); }
+    tr:hover { background: #F8FAFC; }
+
+    .badge { padding: 3px 8px; border-radius: 16px; font-size: 10.5px; font-weight: 600; display: inline-block; }
+    .badge-info { background: #DBEAFE; color: #1D4ED8; }
+    .badge-success { background: #DCFCE7; color: #15803D; }
+    .badge-warning { background: #FEF3C7; color: #B45309; }
+    .badge-danger { background: #FEE2E2; color: #B91C1C; }
+
+    .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 300; }
+    .modal-backdrop.open { display: flex; }
+    .modal { background: white; border-radius: 12px; width: 500px; max-width: 90%; padding: 24px; }
+    .modal-header { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
+    .form-group input, .form-group select { width: 100%; padding: 9px; border: 1px solid var(--border); border-radius: 6px; font-size: 12.5px; }
+  </style>
+</head>
+<body>
+
+  <!-- Clean Public Landing Page -->
+  <div class="landing-container" id="landing-page">
+    <div class="landing-header">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <img src="/assets/logo.png" height="36" alt="Logo">
+        <div>
+          <div style="font-weight:700; font-size:16px;">MASTERED</div>
+          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="openLoginModal()"><i class="ri-lock-line"></i> Sign In to ERP Portal</button>
+    </div>
+
+    <div class="landing-hero">
+      <span style="background:rgba(220,38,38,0.2); border:1px solid rgba(220,38,38,0.4); padding:4px 14px; border-radius:20px; font-size:11px; font-weight:700;">MASTERED ACADEMY MANAGEMENT SYSTEM</span>
+      <h1 style="font-size:32px; font-weight:700; margin-top:20px;">Empowering Excellence in Academy Operations, CRM & Fee Collections</h1>
+      <p style="color:#94A3B8; font-size:14px; margin-top:12px;">Unified secure portal for student admissions, course ledgers, batch management, and academy financial accounting.</p>
+      <div style="margin-top:32px;">
+        <button class="btn btn-primary" style="padding:14px 28px; font-size:14px;" onclick="openLoginModal()"><i class="ri-login-box-line"></i> SIGN IN TO PORTAL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar Navigation -->
+  <div class="sidebar">
+    <div class="brand-header">
+      <div class="brand-logo"><img src="/assets/logo.png" alt="Logo"></div>
+      <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP SYSTEM</div></div>
+    </div>
+
+    <div class="user-pill">
+      <div class="avatar" id="user-avatar">A</div>
+      <div class="user-info">
+        <div class="user-name" id="user-name-display">System Admin</div>
+        <div class="user-role" id="user-role-display">System Owner</div>
+      </div>
+    </div>
+
+    <ul class="nav-list" id="nav-list">
+      <!-- Nav Links -->
+    </ul>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="showLanding()"><i class="ri-logout-box-r-line"></i> Sign Out to Public Portal</button>
+    </div>
+  </div>
+
+  <!-- Main View Area -->
+  <div class="main-area">
+    <div class="top-bar">
+      <div class="page-title" id="page-title">Dashboard Overview</div>
+      <div class="role-switcher">
+        <span style="color: var(--text-muted); font-size: 11px;">Select Role Workspace:</span>
+        <button class="role-chip active" onclick="setRole('ADMIN')">ADMIN</button>
+        <button class="role-chip" onclick="setRole('CEO')">CEO (Rasheed)</button>
+        <button class="role-chip" onclick="setRole('SALES_HEAD')">SALES HEAD (Ashif)</button>
+        <button class="role-chip" onclick="setRole('SALES_EXEC')">SALES EXEC</button>
+        <button class="role-chip" onclick="setRole('OPS')">OPERATIONS</button>
+      </div>
+    </div>
+
+    <div class="content-viewport" id="viewport">
+      <!-- View Content -->
+    </div>
+  </div>
+
+  <!-- Global Modal Dialog -->
+  <div class="modal-backdrop" id="modal">
+    <div class="modal">
+      <div class="modal-header">
+        <span id="modal-title">Action Dialog</span>
+        <i class="ri-close-line" style="cursor:pointer;" onclick="closeModal()"></i>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script>
+    let currentRole = 'ADMIN';
+    const sentReminderIds = new Set();
+
+    const roleNavigation = {
+      'ADMIN': [
+        { id: 'dashboard', label: 'Dashboard', icon: 'ri-dashboard-line' },
+        { id: 'leads', label: 'Lead CRM', icon: 'ri-line-chart-line' },
+        { id: 'followups', label: 'Daily Follow-ups', icon: 'ri-phone-line' },
+        { id: 'due_reminders', label: '3-Day Fee Reminders', icon: 'ri-alarm-warning-line' },
+        { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
+        { id: 'batches', label: 'Batch Management', icon: 'ri-group-line' },
+        { id: 'sales_team', label: 'Sales Team Overview', icon: 'ri-team-line' },
+        { id: 'fee', label: 'Fee Collection', icon: 'ri-money-dollar-circle-line' },
+        { id: 'accounting', label: 'Accounting', icon: 'ri-wallet-3-line' },
+        { id: 'reports', label: 'Reports & Analytics', icon: 'ri-file-chart-line' },
+        { id: 'users', label: 'User Management', icon: 'ri-user-settings-line' },
+        { id: 'courses', label: 'Course Master', icon: 'ri-book-read-line' },
+        { id: 'audit', label: 'Audit Logs', icon: 'ri-shield-check-line' },
+        { id: 'ai', label: 'AI Analysis', icon: 'ri-sparkles-line' },
+        { id: 'settings', label: 'Settings', icon: 'ri-settings-3-line' }
+      ],
+      'CEO': [
+        { id: 'dashboard', label: 'Executive Financials', icon: 'ri-dashboard-line' },
+        { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
+        { id: 'accounting', label: 'Accounting & Expense Entry', icon: 'ri-wallet-3-line' },
+        { id: 'reports', label: 'Executive Reports', icon: 'ri-file-chart-line' }
+      ],
+      'SALES_HEAD': [
+        { id: 'dashboard', label: 'Dashboard', icon: 'ri-dashboard-line' },
+        { id: 'leads', label: 'Team Leads CRM', icon: 'ri-line-chart-line' },
+        { id: 'sales_team', label: 'Sales Team & Performance', icon: 'ri-team-line' },
+        { id: 'batches', label: 'Batch Management', icon: 'ri-group-line' },
+        { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
+        { id: 'reports', label: 'Sales Reports', icon: 'ri-file-chart-line' }
+      ],
+      'SALES_EXEC': [
+        { id: 'dashboard', label: 'Dashboard & Incentives', icon: 'ri-dashboard-line' },
+        { id: 'leads', label: 'My Assigned Leads', icon: 'ri-line-chart-line' },
+        { id: 'followups', label: 'Daily Follow-ups (10/day)', icon: 'ri-phone-line' },
+        { id: 'students', label: 'My Converted Students', icon: 'ri-user-star-line' }
+      ],
+      'OPS': [
+        { id: 'dashboard', label: 'Dashboard', icon: 'ri-dashboard-line' },
+        { id: 'due_reminders', label: '3-Day Fee Reminders', icon: 'ri-alarm-warning-line' },
+        { id: 'students', label: 'New Admissions & Due Dates', icon: 'ri-user-star-line' },
+        { id: 'batches', label: 'Batch Management & Transfers', icon: 'ri-group-line' },
+        { id: 'fee', label: 'Fee Collection', icon: 'ri-money-dollar-circle-line' },
+        { id: 'accounting', label: 'Expenses & Petty Cash', icon: 'ri-wallet-3-line' },
+        { id: 'reports', label: 'Operations Reports', icon: 'ri-file-chart-line' }
+      ]
+    };
+
+    const mockData = {
+      leads: [
+        { id: 'LD-1001', name: 'Aarav Patel', phone: '9898989801', course: 'BCA-1Y', status: 'Interested', assigned: 'Demo Sales Executive', followup: '2026-09-04' },
+        { id: 'LD-1002', name: 'Ananya Roy', phone: '9898989802', course: 'HRCA-6M', status: 'Follow-up', assigned: 'Demo Sales Executive', followup: '2026-09-03' },
+        { id: 'LD-1003', name: 'Rohan Mehta', phone: '9898989803', course: 'BHA-6M', status: 'Closed', assigned: 'Ashif', followup: '-' }
+      ],
+      students: [
+        { adm: 'ADM-2026-101', name: 'Rohan Mehta', course: 'BHA-6M', batch: 'Batch 2026-A', total: 45000, paid: 30000, balance: 15000, dueDate: '2026-09-20', status: 'ACTIVE', phone: '9898989803' },
+        { adm: 'ADM-2026-102', name: 'Kavya Nair', course: 'BCA-1Y', batch: 'Weekend Culinary Batch 1', total: 75000, paid: 60000, balance: 15000, dueDate: '2026-09-05', status: 'ACTIVE', phone: '9898989802' }
+      ],
+      batches: [
+        { id: 'BTC-101', name: 'Batch 2026-A', course: 'BCA-1Y' },
+        { id: 'BTC-102', name: 'Weekend Culinary Batch 1', course: 'HRCA-6M' }
+      ]
+    };
+
+    function openLoginModal() {
+      document.getElementById('modal-title').innerText = 'Secure ERP Portal Login';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Account Email *</label><input id="login-email" placeholder="user@mastered.com"></div>
+        <div class="form-group"><label>Password *</label><input id="login-pass" type="password" placeholder="••••••••"></div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="processLogin()">Authenticate & Launch</button>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function processLogin() {
+      const email = document.getElementById('login-email').value.toLowerCase();
+      closeModal();
+      document.getElementById('landing-page').style.display = 'none';
+
+      if (email.includes('ceo')) setRole('CEO');
+      else if (email.includes('saleshead')) setRole('SALES_HEAD');
+      else if (email.includes('salesexec')) setRole('SALES_EXEC');
+      else if (email.includes('ops')) setRole('OPS');
+      else setRole('ADMIN');
+    }
+
+    function showLanding() {
+      document.getElementById('landing-page').style.display = 'flex';
+    }
+
+    function renderSidebar() {
+      const allowedNavs = roleNavigation[currentRole] || roleNavigation['ADMIN'];
+      const navList = document.getElementById('nav-list');
+      navList.innerHTML = allowedNavs.map((item, idx) => `
+        <li class="nav-item ${idx === 0 ? 'active' : ''}" onclick="switchTab('${item.id}')">
+          <i class="${item.icon}"></i> ${item.label}
+        </li>
+      `).join('');
+    }
+
+    function setRole(role) {
+      currentRole = role;
+      document.querySelectorAll('.role-chip').forEach(c => c.classList.remove('active'));
+      const chip = Array.from(document.querySelectorAll('.role-chip')).find(c => c.innerText.includes(role.replace('_', ' ')));
+      if (chip) chip.classList.add('active');
+
+      const roleLabels = {
+        'ADMIN': { name: 'System Administrator', title: 'System Owner (Admin)' },
+        'CEO': { name: 'Rasheed', title: 'CEO (Rasheed)' },
+        'SALES_HEAD': { name: 'Ashif', title: 'Sales Head (Ashif)' },
+        'SALES_EXEC': { name: 'Demo Sales Executive', title: 'Sales Executive' },
+        'OPS': { name: 'Operations', title: 'Operations (Operations)' }
+      };
+
+      document.getElementById('user-name-display').innerText = roleLabels[role].name;
+      document.getElementById('user-role-display').innerText = roleLabels[role].title;
+      document.getElementById('user-avatar').innerText = roleLabels[role].name[0];
+
+      renderSidebar();
+      switchTab('dashboard');
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      const activeNav = Array.from(document.querySelectorAll('.nav-item')).find(i => i.innerText.toLowerCase().includes(tab));
+      if (activeNav) activeNav.classList.add('active');
+
+      const viewport = document.getElementById('viewport');
+      const title = document.getElementById('page-title');
+
+      if (tab === 'students') {
+        title.innerText = 'Students Directory & Batch-wise Records';
+        const roleLabel = currentRole === 'CEO' ? 'Rasheed (CEO)' : (currentRole === 'SALES_HEAD' ? 'Ashif (Sales Head)' : 'Admin');
+        
+        viewport.innerHTML = `
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Enrolled Students (Batch-wise Filter)</div>
+              <select style="padding:6px 12px; border:1px solid var(--border); border-radius:6px; font-size:12px;" onchange="filterStudentBatch(this.value)">
+                <option value="">All Batches</option>
+                <option value="Batch 2026-A">Batch 2026-A</option>
+                <option value="Weekend Culinary Batch 1">Weekend Culinary Batch 1</option>
+              </select>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Admission No</th>
+                  <th>Student Name</th>
+                  <th>Course & Batch</th>
+                  <th>Total Fee</th>
+                  <th>Paid Fee</th>
+                  <th>Pending Balance</th>
+                  ${(currentRole==='ADMIN'||currentRole==='CEO')?'<th>Feedback Collection</th>':''}
+                  ${(currentRole==='SALES_HEAD'||currentRole==='ADMIN')?'<th>Placement Survey</th>':''}
+                </tr>
+              </thead>
+              <tbody id="student-batch-body">
+                ${mockData.students.map(s => {
+                  const feedbackMsg = encodeURIComponent(`Hello ${s.name}, this is ${roleLabel} from MASTERED. We would love to get your valuable feedback regarding your course ${s.course} in ${s.batch}. Please reply with your feedback!`);
+                  const placementMsg = encodeURIComponent(`Hello ${s.name}, this is Ashif (Sales Head) from MASTERED regarding placement support. Please reply with:\n1. Do you want Placement? (Yes/No)\n2. Email ID\n3. Preferred Job Locations\n4. Role/Domain Interested in.`);
+                  
+                  return `<tr>
+                    <td style="font-weight:700; color:var(--primary);">${s.adm}</td>
+                    <td style="font-weight:600;">${s.name}</td>
+                    <td>${s.course} • <span class="badge badge-info">${s.batch}</span></td>
+                    <td>₹${s.total.toLocaleString()}</td>
+                    <td style="color:var(--success); font-weight:700;">₹${s.paid.toLocaleString()}</td>
+                    <td style="color:var(--danger); font-weight:700;">₹${s.balance.toLocaleString()}</td>
+                    ${(currentRole==='ADMIN'||currentRole==='CEO')?`<td><a href="https://wa.me/91${s.phone}?text=${feedbackMsg}" target="_blank" style="color:var(--info); font-weight:700;"><i class="ri-chat-1-line"></i> Feedback WhatsApp</a></td>`:''}
+                    ${(currentRole==='SALES_HEAD'||currentRole==='ADMIN')?`<td><a href="https://wa.me/91${s.phone}?text=${placementMsg}" target="_blank" style="color:var(--success); font-weight:700;"><i class="ri-briefcase-line"></i> Placement Survey</a></td>`:''}
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      } else if (tab === 'followups') {
+        title.innerText = 'Sales Daily Follow-ups (Target: 10/day)';
+        viewport.innerHTML = `
+          <div class="card">
+            <div class="card-header"><div class="card-title">Pending Sales Follow-up Queue</div></div>
+            <table>
+              <thead><tr><th>Lead ID</th><th>Name</th><th>Course</th><th>Due Date</th><th>WhatsApp Action</th></tr></thead>
+              <tbody>
+                ${mockData.leads.filter(l=>l.status!=='Closed').map(l=>`<tr><td style="font-weight:700; color:var(--primary);">${l.id}</td><td>${l.name}</td><td>${l.course}</td><td style="color:var(--danger); font-weight:700;">${l.followup}</td><td><a href="https://wa.me/91${l.phone}?text=Hello%20${l.name}" target="_blank" style="color:var(--success); font-weight:700;"><i class="ri-whatsapp-line"></i> Hello ${l.name}</a></td></tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      } else if (tab === 'due_reminders') {
+        title.innerText = 'Operations 3-Day Fee Due Reminders Portal';
+        const pendingReminders = mockData.students.filter(s => s.balance > 0 && !sentReminderIds.has(s.adm)).length;
+        viewport.innerHTML = `
+          <div class="card" style="background:var(--secondary); color:white;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <div style="font-size:16px; font-weight:700;">Operations Batch-wise 3-Day Fee Due Reminders</div>
+                <div style="font-size:12px; color:#94A3B8; margin-top:4px;">Pending Reminders: ${pendingReminders}</div>
+              </div>
+              <span class="badge badge-warning">Pending: ${pendingReminders}</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Students Due for Installment (Batch Filter)</div>
+            </div>
+            <table>
+              <thead><tr><th>Admission No</th><th>Student Name</th><th>Batch</th><th>Balance Due</th><th>Due Date</th><th>WhatsApp Reminder</th><th>Action</th></tr></thead>
+              <tbody>
+                ${mockData.students.filter(s=>s.balance>0).map(s => {
+                  const isSent = sentReminderIds.has(s.adm);
+                  const msg = encodeURIComponent(`Hello ${s.name}, this is a reminder from MASTERED. Your fee installment of ₹${s.balance.toLocaleString()} is due on ${s.dueDate}.`);
+                  return `<tr><td style="font-weight:700; color:var(--primary);">${s.adm}</td><td>${s.name}</td><td>${s.batch}</td><td style="color:var(--danger); font-weight:700;">₹${s.balance.toLocaleString()}</td><td style="color:var(--danger); font-weight:700;">${s.dueDate}</td><td><a href="https://wa.me/91${s.phone}?text=${msg}" target="_blank" style="color:var(--success); font-weight:700;"><i class="ri-whatsapp-line"></i> Fee Reminder</a></td><td><button class="btn ${isSent?'btn-outline':'btn-primary'}" style="padding:4px 8px; font-size:11px;" onclick="markSent('${s.adm}')">${isSent?'Sent':'Mark as Sent'}</button></td></tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      } else {
+        viewport.innerHTML = `<div class="card"><div class="card-title">Workspace (${tab.toUpperCase()})</div></div>`;
+      }
+    }
+
+    function filterStudentBatch(batch) {
+      const body = document.getElementById('student-batch-body');
+      const filtered = batch ? mockData.students.filter(s => s.batch === batch) : mockData.students;
+      const roleLabel = currentRole === 'CEO' ? 'Rasheed (CEO)' : 'Admin';
+
+      body.innerHTML = filtered.map(s => {
+        const feedbackMsg = encodeURIComponent(`Hello ${s.name}, this is ${roleLabel} from MASTERED. We would love to get your valuable feedback regarding your course ${s.course} in ${s.batch}. Please reply with your feedback!`);
+        const placementMsg = encodeURIComponent(`Hello ${s.name}, this is Ashif (Sales Head) from MASTERED regarding placement support. Please reply with:\n1. Do you want Placement? (Yes/No)\n2. Email ID\n3. Preferred Job Locations\n4. Role/Domain Interested in.`);
+        
+        return `<tr>
+          <td style="font-weight:700; color:var(--primary);">${s.adm}</td>
+          <td style="font-weight:600;">${s.name}</td>
+          <td>${s.course} • <span class="badge badge-info">${s.batch}</span></td>
+          <td>₹${s.total.toLocaleString()}</td>
+          <td style="color:var(--success); font-weight:700;">₹${s.paid.toLocaleString()}</td>
+          <td style="color:var(--danger); font-weight:700;">₹${s.balance.toLocaleString()}</td>
+          ${(currentRole==='ADMIN'||currentRole==='CEO')?`<td><a href="https://wa.me/91${s.phone}?text=${feedbackMsg}" target="_blank" style="color:var(--info); font-weight:700;"><i class="ri-chat-1-line"></i> Feedback WhatsApp</a></td>`:''}
+          ${(currentRole==='SALES_HEAD'||currentRole==='ADMIN')?`<td><a href="https://wa.me/91${s.phone}?text=${placementMsg}" target="_blank" style="color:var(--success); font-weight:700;"><i class="ri-briefcase-line"></i> Placement Survey</a></td>`:''}
+        </tr>`;
+      }).join('');
+    }
+
+    function markSent(adm) {
+      sentReminderIds.add(adm);
+      switchTab('due_reminders');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('open');
+    }
+
+    renderSidebar();
+    switchTab('dashboard');
+  </script>
+</body>
+</html>
