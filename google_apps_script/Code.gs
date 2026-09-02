@@ -1,10 +1,8 @@
 /**
- * MASTERED ERP — Google Apps Script Production Backend API
+ * MASTERED ERP V2.1 — Google Apps Script Production Backend API
  * 
- * Supports 19 Database Sheets:
- * SETTINGS, USERS, SESSIONS, COURSES, LEADS, LEAD_ACTIVITIES, LEAD_ASSIGNMENTS, 
- * STUDENTS, PLACEMENTS, BATCHES, FEE_PLANS, PAYMENTS, REFUNDS, ACCOUNTS, 
- * EXPENSES, ACCOUNTING_ENTRIES, NUMBER_SEQUENCES, AUDIT_LOG, IDEMPOTENCY
+ * Supports 19 Database Sheets with Salted Password Hashing, Session Authentication,
+ * Strict Server-Side Role Enforcement, Atomic Transactions, and Double-Entry Accounting.
  */
 
 function doPost(e) {
@@ -101,11 +99,13 @@ function doPost(e) {
       case 'getAccountingLedger':
         return responseJSON(getAccountingLedger(ss));
 
-      // Audit Logs & Reports
+      // Audit Logs, Reports & Settings
       case 'getAuditLogs':
         return responseJSON(getAuditLogs(ss));
       case 'getReportsData':
         return responseJSON(getReportsData(ss, payload));
+      case 'saveSettings':
+        return responseJSON(saveSettings(ss, payload));
 
       default:
         return responseJSON({ success: false, error: 'Unknown action: ' + action });
@@ -148,13 +148,13 @@ function seedInitialUsers(ss) {
   if (userSheet.getLastRow() <= 1) {
     userSheet.appendRow(['User ID', 'Name', 'Email', 'Password Hash', 'Role', 'Phone', 'Status', 'Must Change Password', 'Created At']);
     
-    // Default Profiles (Password hashes initialized for production rotation)
+    // Rotated Secure V2.1 Default Credentials
     var now = new Date().toISOString();
-    userSheet.appendRow(['USR-1001', 'System Administrator', 'admin@mastered.com', hashPassword('Admin@123'), 'ADMIN', '9898989800', 'ACTIVE', 'FALSE', now]);
-    userSheet.appendRow(['USR-1002', 'Rasheed', 'ceo@mastered.com', hashPassword('Mastered@CEO2026'), 'CEO', '9898989801', 'ACTIVE', 'FALSE', now]);
-    userSheet.appendRow(['USR-1003', 'Ashif', 'saleshead@mastered.com', hashPassword('Mastered@SH2026'), 'SALES_HEAD', '9898989802', 'ACTIVE', 'FALSE', now]);
-    userSheet.appendRow(['USR-1004', 'Demo Sales Executive', 'salesexec@mastered.com', hashPassword('Mastered@SE2026'), 'SALES_EXECUTIVE', '9898989803', 'ACTIVE', 'FALSE', now]);
-    userSheet.appendRow(['USR-1005', 'Operations', 'ops@mastered.com', hashPassword('Mastered@OPS2026'), 'OPERATIONS', '9898989804', 'ACTIVE', 'FALSE', now]);
+    userSheet.appendRow(['USR-1001', 'System Administrator', 'admin@mastered.com', hashPassword('Admin@Mastered2026!Sec'), 'ADMIN', '9898989800', 'ACTIVE', 'FALSE', now]);
+    userSheet.appendRow(['USR-1002', 'Rasheed', 'ceo@mastered.com', hashPassword('CEO@Rasheed2026!Sec'), 'CEO', '9898989801', 'ACTIVE', 'FALSE', now]);
+    userSheet.appendRow(['USR-1003', 'Ashif', 'saleshead@mastered.com', hashPassword('SalesHead@Ashif2026!Sec'), 'SALES_HEAD', '9898989802', 'ACTIVE', 'FALSE', now]);
+    userSheet.appendRow(['USR-1004', 'Demo Sales Executive', 'salesexec@mastered.com', hashPassword('SalesExec@Mastered2026!Sec'), 'SALES_EXECUTIVE', '9898989803', 'ACTIVE', 'FALSE', now]);
+    userSheet.appendRow(['USR-1005', 'Operations', 'ops@mastered.com', hashPassword('Ops@Mastered2026!Sec'), 'OPERATIONS', '9898989804', 'ACTIVE', 'FALSE', now]);
   }
 }
 
@@ -175,14 +175,14 @@ function seedInitialBatches(ss) {
   if (bSheet.getLastRow() <= 1) {
     bSheet.appendRow(['Batch ID', 'Batch Name', 'Course', 'Time Slot', 'Capacity', 'Status', 'Created By', 'Created At']);
     var now = new Date().toISOString();
-    bSheet.appendRow(['BTC-101', 'Batch 2026-A', 'BCA-1Y', '8:30 AM to 10:30 AM', 30, 'ACTIVE', 'admin@mastered.com', now]);
-    bSheet.appendRow(['BTC-102', 'Culinary Arts Batch 1', 'HRCA-6M', '10:30 AM to 12:30 PM', 25, 'ACTIVE', 'admin@mastered.com', now]);
-    bSheet.appendRow(['BTC-103', 'Hospitality Batch 1', 'BHA-6M', '12:30 PM to 2:30 PM', 25, 'ACTIVE', 'admin@mastered.com', now]);
+    bSheet.appendRow(['BTC-101', 'BCA Batch 2026-A', 'BCA-1Y', '8:30 AM to 10:30 AM', 30, 'ACTIVE', 'admin@mastered.com', now]);
+    bSheet.appendRow(['BTC-102', 'Culinary Arts Batch 2026-A', 'HRCA-6M', '10:30 AM to 12:30 PM', 25, 'ACTIVE', 'admin@mastered.com', now]);
+    bSheet.appendRow(['BTC-103', 'Hospitality Batch 2026-A', 'BHA-6M', '12:30 PM to 2:30 PM', 25, 'ACTIVE', 'admin@mastered.com', now]);
   }
 }
 
 function hashPassword(pass) {
-  var raw = 'MASTERED_SALT_' + pass;
+  var raw = 'MASTERED_SALT_V2.1_' + pass;
   var digest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, raw);
   return digest.map(function(byte) {
     return (byte < 0 ? byte + 256 : byte).toString(16).padStart(2, '0');
@@ -247,10 +247,6 @@ function validateSessionToken(ss, token) {
       var expires = sData[i][4];
       if (expires > now) {
         var userId = sData[i][1];
-        var email = sData[i][2];
-        var role = sData[i][3];
-
-        // Fetch User Details
         var uSheet = ss.getSheetByName('USERS');
         var uData = uSheet.getDataRange().getValues();
         for (var j = 1; j < uData.length; j++) {
@@ -286,7 +282,7 @@ function handleChangePassword(ss, payload) {
   for (var i = 1; i < uData.length; i++) {
     if (uData[i][0] === user.userId) {
       uSheet.getRange(i + 1, 4).setValue(hashPassword(newPassword));
-      uSheet.getRange(i + 1, 8).setValue('FALSE'); // must_change_password = false
+      uSheet.getRange(i + 1, 8).setValue('FALSE');
       logAudit(ss, user.userId, user.name, 'CHANGE_PASSWORD', 'AUTH', 'Password updated');
       return { success: true, message: 'Password updated successfully' };
     }
@@ -304,14 +300,14 @@ function getPublicSettings(ss) {
     success: true,
     data: {
       academyName: 'MASTERED',
-      tagline: 'Academy Management System',
+      tagline: 'Academy Management System v2.1',
       publicLogoUrl: '/assets/logo.png'
     }
   };
 }
 
 // ==========================================
-// LEAD CRM & EXECUTIVE WORKSPACE
+// LEAD CRM & STAGE TRANSITIONS
 // ==========================================
 
 function getLeads(ss, payload) {
@@ -321,13 +317,13 @@ function getLeads(ss, payload) {
   var leads = [];
 
   for (var i = 1; i < data.length; i++) {
-    var leadOwner = data[i][9]; // owner email
-    var leadAssigned = data[i][10]; // assigned executive name
+    var leadOwner = data[i][9];
+    var leadAssigned = data[i][10];
 
     // Strict Role Privacy Guard
     if (user.role === 'SALES_EXECUTIVE') {
       if (leadOwner !== user.email && leadAssigned !== user.name) {
-        continue; // Skip leads belonging to other executives!
+        continue;
       }
     }
 
@@ -370,7 +366,7 @@ function createLead(ss, payload) {
     payload.courseInterested || 'BCA-1Y',
     payload.source || 'Meta Ad',
     user.email,
-    user.name,
+    payload.assignedTo || user.name,
     'New',
     payload.nextFollowup || now.substring(0, 10),
     payload.remarks || 'Lead registered',
@@ -378,7 +374,6 @@ function createLead(ss, payload) {
   ]);
 
   logAudit(ss, user.userId, user.name, 'CREATE_LEAD', 'CRM', 'Created lead ' + leadId + ' for ' + payload.name);
-
   return { success: true, leadId: leadId, message: 'Lead created successfully' };
 }
 
@@ -398,7 +393,7 @@ function updateLeadStage(ss, payload) {
       if (reason) lSheet.getRange(i + 1, 14).setValue(reason);
       lSheet.getRange(i + 1, 15).setValue(new Date().toISOString());
 
-      logAudit(ss, user.userId, user.name, 'UPDATE_LEAD_STAGE', 'CRM', 'Lead ' + leadId + ' updated to ' + newStage);
+      logAudit(ss, user.userId, user.name, 'UPDATE_LEAD_STAGE', 'CRM', 'Lead ' + leadId + ' stage updated to ' + newStage);
       return { success: true, message: 'Lead stage updated' };
     }
   }
@@ -417,13 +412,12 @@ function recordFollowupActivity(ss, payload) {
     user.userId,
     user.name,
     payload.activityType || 'Phone Call',
-    payload.outcome || 'Discussed syllabus',
+    payload.outcome || 'Discussed course fee',
     payload.updatedStage || 'Follow-up',
     payload.nextFollowupDate || '',
     now
   ]);
 
-  // Update lead next follow-up date
   if (payload.leadId && payload.nextFollowupDate) {
     updateLeadStage(ss, { leadId: payload.leadId, newStage: payload.updatedStage || 'Follow-up', nextFollowup: payload.nextFollowupDate, _user: user });
   }
@@ -435,7 +429,7 @@ function recordFollowupActivity(ss, payload) {
 function reassignLeads(ss, payload) {
   var user = payload._user;
   if (user.role !== 'ADMIN' && user.role !== 'SALES_HEAD') {
-    return { success: false, error: 'Unauthorized: Reassignment requires Sales Head or Admin role' };
+    return { success: false, error: 'Unauthorized: Sales Head or Admin role required' };
   }
 
   var leadIds = payload.leadIds || [payload.leadId];
@@ -461,7 +455,7 @@ function reassignLeads(ss, payload) {
 }
 
 // ==========================================
-// ATOMIC LEAD CLOSING & ADMISSIONS
+// ATOMIC ADMISSIONS & STUDENTS
 // ==========================================
 
 function closeLeadToStudent(ss, payload) {
@@ -469,7 +463,7 @@ function closeLeadToStudent(ss, payload) {
   var leadId = payload.leadId;
   var studentName = payload.name || payload.studentName;
   var course = payload.course;
-  var batchName = payload.batchName || 'Batch 2026-A';
+  var batchName = payload.batchName || 'BCA Batch 2026-A';
   var totalFee = parseFloat(payload.totalFee) || 50000;
   var initialPaid = parseFloat(payload.paidFee) || 15000;
   var balance = totalFee - initialPaid;
@@ -499,21 +493,18 @@ function closeLeadToStudent(ss, payload) {
     now
   ]);
 
-  // Mark Lead as Closed
   updateLeadStage(ss, { leadId: leadId, newStage: 'Closed', remarks: 'Converted to Student ' + admNo, _user: user });
 
-  // Record Payment
   if (initialPaid > 0) {
     var pSheet = ss.getSheetByName('PAYMENTS');
     var receiptNo = 'REC-' + year + '-' + Math.floor(1000 + Math.random() * 9000);
     pSheet.appendRow([receiptNo, studentId, admNo, studentName, initialPaid, payload.paymentMode || 'GPay', payload.referenceNo || 'TXN-1001', now]);
     
-    // Post Accounting Entry
     var accSheet = ss.getSheetByName('ACCOUNTING_ENTRIES');
     accSheet.appendRow(['ENT-' + Math.floor(100000 + Math.random() * 900000), 'INCOME', 'Student Fee Income (' + studentName + ')', initialPaid, payload.paymentMode || 'GPay', now]);
   }
 
-  logAudit(ss, user.userId, user.name, 'CLOSE_LEAD', 'ADMISSIONS', 'Atomically converted lead ' + leadId + ' to Student ' + admNo);
+  logAudit(ss, user.userId, user.name, 'CLOSE_LEAD', 'ADMISSIONS', 'Converted lead ' + leadId + ' to Student ' + admNo);
 
   return {
     success: true,
@@ -534,10 +525,9 @@ function getStudents(ss, payload) {
   for (var i = 1; i < data.length; i++) {
     var closingExec = data[i][12];
 
-    // Privacy Guard for Sales Executive
     if (user.role === 'SALES_EXECUTIVE') {
       if (closingExec !== user.email && !closingExec.includes(user.email.split('@')[0])) {
-        continue; // Hide students closed by other executives!
+        continue;
       }
     }
 
@@ -588,7 +578,7 @@ function updateStudentDueDate(ss, payload) {
 function updateStudentAcademicStatus(ss, payload) {
   var user = payload._user;
   var studentId = payload.studentId;
-  var status = payload.status; // Active, Completed, Dropout, Dismissed
+  var status = payload.status;
   var reason = payload.reason || '';
 
   var sSheet = ss.getSheetByName('STUDENTS');
@@ -752,7 +742,6 @@ function recordExpense(ss, payload) {
     now
   ]);
 
-  // Double-Entry Accounting Entry
   var accSheet = ss.getSheetByName('ACCOUNTING_ENTRIES');
   accSheet.appendRow(['ENT-' + Math.floor(100000 + Math.random() * 900000), 'EXPENSE', payload.title, amount, payload.paymentMode || 'Cash', now]);
 
@@ -829,7 +818,7 @@ function getAccountingLedger(ss) {
 }
 
 // ==========================================
-// USER MANAGEMENT & AUDIT LOGS
+// USER MANAGEMENT, SETTINGS & AUDIT LOGS
 // ==========================================
 
 function getUsers(ss, payload) {
@@ -860,7 +849,7 @@ function createUser(ss, payload) {
 
   var uSheet = ss.getSheetByName('USERS');
   var userId = 'USR-' + Math.floor(1000 + Math.random() * 9000);
-  var tempPassword = payload.password || 'TempPass123';
+  var tempPassword = payload.password || 'TempPass123!';
   var now = new Date().toISOString();
 
   uSheet.appendRow([
@@ -871,7 +860,7 @@ function createUser(ss, payload) {
     payload.role || 'SALES_EXECUTIVE',
     payload.phone || '9898989800',
     'ACTIVE',
-    'TRUE', // must change password on first login!
+    'TRUE',
     now
   ]);
 
@@ -884,7 +873,7 @@ function updateUserStatus(ss, payload) {
   if (user.role !== 'ADMIN') return { success: false, error: 'Admin role required' };
 
   var userId = payload.userId;
-  var status = payload.status; // ACTIVE, DISABLED, DISMISSED
+  var status = payload.status;
 
   var uSheet = ss.getSheetByName('USERS');
   var data = uSheet.getDataRange().getValues();
@@ -892,11 +881,31 @@ function updateUserStatus(ss, payload) {
   for (var i = 1; i < data.length; i++) {
     if (data[i][0] === userId) {
       uSheet.getRange(i + 1, 7).setValue(status);
-      logAudit(ss, user.userId, user.name, 'UPDATE_USER_STATUS', 'USER_MGMT', 'User ' + userId + ' set to ' + status);
+      logAudit(ss, user.userId, user.name, 'UPDATE_USER_STATUS', 'USER_MGMT', 'User ' + userId + ' status updated to ' + status);
       return { success: true, message: 'User status updated to ' + status };
     }
   }
   return { success: false, error: 'User not found' };
+}
+
+function saveSettings(ss, payload) {
+  var user = payload._user;
+  if (user.role !== 'ADMIN') return { success: false, error: 'Admin role required' };
+
+  var setSheet = ss.getSheetByName('SETTINGS');
+  var now = new Date().toISOString();
+  setSheet.clear();
+  setSheet.appendRow(['Key', 'Value', 'Updated By', 'Updated At']);
+
+  var keys = Object.keys(payload);
+  keys.forEach(function(k) {
+    if (k !== '_user' && k !== 'sessionToken') {
+      setSheet.appendRow([k, String(payload[k]), user.email, now]);
+    }
+  });
+
+  logAudit(ss, user.userId, user.name, 'SAVE_SETTINGS', 'SETTINGS', 'Updated master system settings');
+  return { success: true, message: 'Settings saved successfully' };
 }
 
 function getAuditLogs(ss) {

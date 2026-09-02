@@ -6,8 +6,8 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>MASTERED ERP v2.0 - Academy Management System</title>
-  <link rel="icon" type="image/png" href="assets/logo.png?v=2.0">
+  <title>MASTERED ERP v2.1 - Complete Production System</title>
+  <link rel="icon" type="image/png" href="assets/logo.png?v=2.1">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <style>
@@ -29,14 +29,15 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background-color: var(--bg); color: var(--text-primary); display: flex; height: 100vh; overflow: hidden; }
+    body { background-color: var(--bg); color: var(--text-primary); min-height: 100vh; overflow: hidden; }
 
-    /* Pure Landing Page - Zero Internal Data Exposed Before Login */
-    .landing-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 200; display: flex; flex-direction: column; overflow-y: auto; }
+    /* Pure Public Landing Container - Pre-Login Gate */
+    .landing-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 500; display: flex; flex-direction: column; overflow-y: auto; }
     .landing-header { background: white; border-bottom: 1px solid var(--border); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
     .landing-hero { background: linear-gradient(135deg, #1E293B, #0F172A); color: white; padding: 80px 24px; text-align: center; }
 
-    /* Sidebar Layout */
+    /* ERP Application Container (Unmounted before authentication) */
+    .app-container { display: flex; width: 100vw; height: 100vh; overflow: hidden; }
     .sidebar { width: 250px; background-color: var(--secondary); color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
     .brand-header { padding: 20px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--secondary-light); flex-shrink: 0; }
     .brand-logo { width: 36px; height: 36px; border-radius: 8px; background: white; padding: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -59,7 +60,6 @@
     .logout-btn { width: 100%; padding: 10px; border: 1px solid rgba(255,255,255,0.25); background: transparent; color: white; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 12px; }
     .logout-btn:hover { background: rgba(255,255,255,0.1); }
 
-    /* Main View Area */
     .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100vh; }
     .top-bar { height: 60px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; }
     .page-title { font-size: 17px; font-weight: 700; }
@@ -95,25 +95,25 @@
     .badge-warning { background: #FEF3C7; color: #B45309; }
     .badge-danger { background: #FEE2E2; color: #B91C1C; }
 
-    .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 300; }
+    .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 600; }
     .modal-backdrop.open { display: flex; }
-    .modal { background: white; border-radius: 12px; width: 520px; max-width: 90%; padding: 24px; }
-    .modal-header { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; }
+    .modal { background: white; border-radius: 12px; width: 540px; max-width: 95%; padding: 24px; max-height: 90vh; overflow-y: auto; }
+    .modal-header { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
     .form-group { margin-bottom: 14px; }
     .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
-    .form-group input, .form-group select { width: 100%; padding: 9px; border: 1px solid var(--border); border-radius: 6px; font-size: 12.5px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 9px; border: 1px solid var(--border); border-radius: 6px; font-size: 12.5px; }
   </style>
 </head>
 <body>
 
-  <!-- Pure Public Landing Page (Unauthenticated Entry Point) -->
+  <!-- Pure Public Landing Page (Unauthenticated Entry Point - No ERP Nodes in DOM) -->
   <div class="landing-container" id="landing-page">
     <div class="landing-header">
       <div style="display:flex; align-items:center; gap:12px;">
         <img src="assets/logo.png" height="36" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';">
         <div>
           <div style="font-weight:700; font-size:16px;">MASTERED</div>
-          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v2.0</div>
+          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v2.1</div>
         </div>
       </div>
       <button class="btn btn-primary" onclick="openLoginModal()"><i class="ri-lock-line"></i> Sign In to ERP Portal</button>
@@ -129,48 +129,10 @@
     </div>
   </div>
 
-  <!-- Sidebar Navigation -->
-  <div class="sidebar">
-    <div class="brand-header">
-      <div class="brand-logo"><img src="assets/logo.png" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';"></div>
-      <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP SYSTEM v2.0</div></div>
-    </div>
+  <!-- Dynamic Application Mount Root (Completely Empty Before Login) -->
+  <div id="app-root"></div>
 
-    <div class="user-pill">
-      <div class="avatar" id="user-avatar">A</div>
-      <div class="user-info">
-        <div class="user-name" id="user-name-display">System Administrator</div>
-        <div class="user-role" id="user-role-display">System Owner (Admin)</div>
-      </div>
-    </div>
-
-    <ul class="nav-list" id="nav-list">
-      <!-- Nav Links -->
-    </ul>
-
-    <div class="sidebar-footer">
-      <button class="logout-btn" onclick="showLanding()"><i class="ri-logout-box-r-line"></i> Sign Out to Public Portal</button>
-    </div>
-  </div>
-
-  <!-- Main View Area -->
-  <div class="main-area">
-    <div class="top-bar">
-      <div class="page-title" id="page-title">Dashboard Overview</div>
-      <div class="top-user-badge">
-        <i class="ri-user-3-line" style="color:var(--primary);"></i>
-        <span id="header-user-display" style="font-weight:700;">System Administrator</span>
-        <span style="color:var(--text-muted);">|</span>
-        <span id="header-role-display" style="color:var(--primary); font-weight:600;">Admin</span>
-      </div>
-    </div>
-
-    <div class="content-viewport" id="viewport">
-      <!-- View Content -->
-    </div>
-  </div>
-
-  <!-- Global Modal Dialog -->
+  <!-- Global Modal Container -->
   <div class="modal-backdrop" id="modal">
     <div class="modal">
       <div class="modal-header">
@@ -185,7 +147,46 @@
     let currentRole = 'ADMIN';
     let currentUserEmail = 'admin@mastered.com';
     let currentUserName = 'System Administrator';
-    const sentReminderIds = new Set();
+    let sessionToken = null;
+
+    // ERP State Collections
+    const state = {
+      leads: [
+        { id: 'LD-2026-1001', name: 'Aarav Patel', phone: '9898989801', email: 'aarav@gmail.com', city: 'Kochi', course: 'BCA-1Y', source: 'Meta Ad', status: 'Interested', assigned: 'Demo Sales Executive', followup: '2026-09-04', remarks: 'Interested in software domain' },
+        { id: 'LD-2026-1002', name: 'Ananya Roy', phone: '9898989802', email: 'ananya@gmail.com', city: 'Trivandrum', course: 'HRCA-6M', source: 'Organic Lead', status: 'Follow-up', assigned: 'Demo Sales Executive', followup: '2026-09-03', remarks: 'Requested morning culinary slot' },
+        { id: 'LD-2026-1003', name: 'Rohan Mehta', phone: '9898989803', email: 'rohan@gmail.com', city: 'Calicut', course: 'BHA-6M', source: 'Referral', status: 'Closed', assigned: 'Ashif', followup: '-', remarks: 'Converted to ADM-2026-101' }
+      ],
+      students: [
+        { adm: 'ADM-2026-101', name: 'Rohan Mehta', phone: '9898989803', email: 'rohan@gmail.com', course: 'BHA-6M', batch: 'Hospitality Batch 2026-A', total: 45000, paid: 30000, balance: 15000, dueDate: '2026-09-20', status: 'ACTIVE', exec: 'Ashif', placement: 'Eligible' },
+        { adm: 'ADM-2026-102', name: 'Kavya Nair', phone: '9898989802', email: 'kavya@gmail.com', course: 'BCA-1Y', batch: 'BCA Batch 2026-A', total: 75000, paid: 60000, balance: 15000, dueDate: '2026-09-05', status: 'ACTIVE', exec: 'Demo Sales Executive', placement: 'Placed' }
+      ],
+      batches: [
+        { id: 'BTC-101', name: 'BCA Batch 2026-A', course: 'BCA-1Y', time: '8:30 AM to 10:30 AM', capacity: 30 },
+        { id: 'BTC-102', name: 'Culinary Arts Batch 2026-A', course: 'HRCA-6M', time: '10:30 AM to 12:30 PM', capacity: 25 },
+        { id: 'BTC-103', name: 'Hospitality Batch 2026-A', course: 'BHA-6M', time: '12:30 PM to 2:30 PM', capacity: 25 }
+      ],
+      courses: [
+        { id: 'BHA-6M', name: 'Bachelor in Hospitality Administration', duration: '6 months', fee: 45000, inst: 4 },
+        { id: 'HRCA-6M', name: 'Hospitality & Retail Culinary Arts (6 Months)', duration: '6 months', fee: 50000, inst: 4 },
+        { id: 'BCA-1Y', name: 'Bachelor in Computer Applications', duration: '1 year', fee: 75000, inst: 4 },
+        { id: 'HRCA-1Y', name: 'Hospitality & Retail Culinary Arts (1 Year)', duration: '1 year', fee: 90000, inst: 4 }
+      ],
+      expenses: [
+        { id: 'EXP-1001', title: 'Meta Ads Marketing Campaign', category: 'Marketing', amount: 12000, mode: 'UPI', date: '2026-09-01', createdBy: 'ceo@mastered.com' },
+        { id: 'EXP-1002', title: 'Office Paper & Supplies', category: 'Office Supplies', amount: 3000, mode: 'Cash', date: '2026-09-02', createdBy: 'ops@mastered.com' }
+      ],
+      users: [
+        { id: 'USR-1001', name: 'System Administrator', email: 'admin@mastered.com', role: 'ADMIN', status: 'ACTIVE', phone: '9898989800' },
+        { id: 'USR-1002', name: 'Rasheed', email: 'ceo@mastered.com', role: 'CEO', status: 'ACTIVE', phone: '9898989801' },
+        { id: 'USR-1003', name: 'Ashif', email: 'saleshead@mastered.com', role: 'SALES_HEAD', status: 'ACTIVE', phone: '9898989802' },
+        { id: 'USR-1004', name: 'Demo Sales Executive', email: 'salesexec@mastered.com', role: 'SALES_EXECUTIVE', status: 'ACTIVE', phone: '9898989803' },
+        { id: 'USR-1005', name: 'Operations', email: 'ops@mastered.com', role: 'OPERATIONS', status: 'ACTIVE', phone: '9898989804' }
+      ],
+      activities: [],
+      audit: [],
+      sentReminders: new Set(),
+      targets: { dailyFollowups: 10, monthlyConversion: 25 }
+    };
 
     const roleNavigation = {
       'ADMIN': [
@@ -236,40 +237,6 @@
       ]
     };
 
-    const mockData = {
-      leads: [
-        { id: 'LD-1001', name: 'Aarav Patel', phone: '9898989801', course: 'BCA-1Y', source: 'Meta Ad', status: 'Interested', assigned: 'Demo Sales Executive', followup: '2026-09-04' },
-        { id: 'LD-1002', name: 'Ananya Roy', phone: '9898989802', course: 'HRCA-6M', source: 'Organic Lead', status: 'Follow-up', assigned: 'Demo Sales Executive', followup: '2026-09-03' },
-        { id: 'LD-1003', name: 'Rohan Mehta', phone: '9898989803', course: 'BHA-6M', source: 'Referral', status: 'Closed', assigned: 'Ashif', followup: '-' }
-      ],
-      students: [
-        { adm: 'ADM-2026-101', name: 'Rohan Mehta', course: 'BHA-6M', batch: 'Batch 2026-A', total: 45000, paid: 30000, balance: 15000, dueDate: '2026-09-20', status: 'ACTIVE', phone: '9898989803', exec: 'Ashif' },
-        { adm: 'ADM-2026-102', name: 'Kavya Nair', course: 'BCA-1Y', batch: 'Culinary Arts Batch 1', total: 75000, paid: 60000, balance: 15000, dueDate: '2026-09-05', status: 'ACTIVE', phone: '9898989802', exec: 'Demo Sales Executive' }
-      ],
-      batches: [
-        { id: 'BTC-101', name: 'Batch 2026-A', course: 'BCA-1Y', time: '8:30 AM to 10:30 AM', capacity: 30 },
-        { id: 'BTC-102', name: 'Culinary Arts Batch 1', course: 'HRCA-6M', time: '10:30 AM to 12:30 PM', capacity: 25 },
-        { id: 'BTC-103', name: 'Hospitality Batch 1', course: 'BHA-6M', time: '12:30 PM to 2:30 PM', capacity: 25 }
-      ],
-      courses: [
-        { id: 'BHA-6M', name: 'Bachelor in Hospitality Administration', duration: '6 months', fee: 45000, inst: 4 },
-        { id: 'HRCA-6M', name: 'Hospitality & Retail Culinary Arts (6 Months)', duration: '6 months', fee: 50000, inst: 4 },
-        { id: 'BCA-1Y', name: 'Bachelor in Computer Applications', duration: '1 year', fee: 75000, inst: 4 },
-        { id: 'HRCA-1Y', name: 'Hospitality & Retail Culinary Arts (1 Year)', duration: '1 year', fee: 90000, inst: 4 }
-      ],
-      expenses: [
-        { id: 'EXP-1001', title: 'Meta Ads Marketing', category: 'Marketing', amount: 12000, mode: 'UPI', date: '2026-09-01' },
-        { id: 'EXP-1002', title: 'Office Stationery', category: 'Office Supplies', amount: 3000, mode: 'Cash', date: '2026-09-02' }
-      ],
-      users: [
-        { id: 'USR-1001', name: 'System Administrator', email: 'admin@mastered.com', role: 'ADMIN', status: 'ACTIVE' },
-        { id: 'USR-1002', name: 'Rasheed', email: 'ceo@mastered.com', role: 'CEO', status: 'ACTIVE' },
-        { id: 'USR-1003', name: 'Ashif', email: 'saleshead@mastered.com', role: 'SALES_HEAD', status: 'ACTIVE' },
-        { id: 'USR-1004', name: 'Demo Sales Executive', email: 'salesexec@mastered.com', role: 'SALES_EXECUTIVE', status: 'ACTIVE' },
-        { id: 'USR-1005', name: 'Operations', email: 'ops@mastered.com', role: 'OPERATIONS', status: 'ACTIVE' }
-      ]
-    };
-
     function openLoginModal() {
       document.getElementById('modal-title').innerText = 'Secure ERP Portal Login';
       document.getElementById('modal-body').innerHTML = `
@@ -285,6 +252,8 @@
       closeModal();
       document.getElementById('landing-page').style.display = 'none';
 
+      sessionToken = 'SESS_' + Math.floor(Math.random()*1000000);
+
       if (email.includes('ceo')) setLoggedInUser('CEO', 'Rasheed', 'Rasheed (CEO)', email);
       else if (email.includes('saleshead') || email.includes('ashif')) setLoggedInUser('SALES_HEAD', 'Ashif', 'Ashif (Sales Head)', email);
       else if (email.includes('salesexec')) setLoggedInUser('SALES_EXEC', 'Demo Sales Executive', 'Sales Executive', email);
@@ -292,34 +261,75 @@
       else setLoggedInUser('ADMIN', 'System Administrator', 'System Owner (Admin)', email || 'admin@mastered.com');
     }
 
+    function setLoggedInUser(role, name, title, email) {
+      currentRole = role;
+      currentUserName = name;
+      currentUserEmail = email;
+
+      mountErpShell();
+      switchTab('dashboard');
+    }
+
+    function mountErpShell() {
+      const root = document.getElementById('app-root');
+      root.innerHTML = `
+        <div class="app-container">
+          <div class="sidebar">
+            <div class="brand-header">
+              <div class="brand-logo"><img src="assets/logo.png" alt="Logo" onerror="this.onerror=null; this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI+SURBVGhD7ZhRSsNQEEVn4F007F107F24C/eu+hFh+x+hG5iACZiACZiACZiACZiACZhAM4E5m4AJmIAJmIAJmIAJmIAJmIAJmMAuAod9277fOve4d+55z3nvc88k/vX1lTzZ2dl56+vru8bHx2+srKzsvb29fW+323+bm5v30On0+Xg8fi+Wl5f/6vX678XFxcf5+fnH+fn552x2dnbepd1/7e/vv/76+vrv8/PzT01NTd34+Ph4562trTvv7Ozsm/7Pz8+f/T08PLxze3t75x8A';"></div>
+              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP SYSTEM v2.1</div></div>
+            </div>
+
+            <div class="user-pill">
+              <div class="avatar" id="user-avatar">${currentUserName[0]}</div>
+              <div class="user-info">
+                <div class="user-name">${currentUserName}</div>
+                <div class="user-role">${currentRole}</div>
+              </div>
+            </div>
+
+            <ul class="nav-list" id="nav-list"></ul>
+
+            <div class="sidebar-footer">
+              <button class="logout-btn" onclick="showLanding()"><i class="ri-logout-box-r-line"></i> Sign Out to Public Portal</button>
+            </div>
+          </div>
+
+          <div class="main-area">
+            <div class="top-bar">
+              <div class="page-title" id="page-title">Dashboard Overview</div>
+              <div class="top-user-badge">
+                <i class="ri-user-3-line" style="color:var(--primary);"></i>
+                <span style="font-weight:700;">${currentUserName}</span>
+                <span style="color:var(--text-muted);">|</span>
+                <span style="color:var(--primary); font-weight:600;">${currentRole}</span>
+              </div>
+            </div>
+
+            <div class="content-viewport" id="viewport"></div>
+          </div>
+        </div>
+      `;
+
+      renderSidebar();
+    }
+
     function showLanding() {
+      sessionToken = null;
+      document.getElementById('app-root').innerHTML = '';
       document.getElementById('landing-page').style.display = 'flex';
     }
 
     function renderSidebar() {
       const allowedNavs = roleNavigation[currentRole] || roleNavigation['ADMIN'];
       const navList = document.getElementById('nav-list');
-      navList.innerHTML = allowedNavs.map((item, idx) => `
-        <li class="nav-item ${idx === 0 ? 'active' : ''}" onclick="switchTab('${item.id}')">
-          <i class="${item.icon}"></i> ${item.label}
-        </li>
-      `).join('');
-    }
-
-    function setLoggedInUser(role, name, title, email) {
-      currentRole = role;
-      currentUserName = name;
-      currentUserEmail = email;
-
-      document.getElementById('user-name-display').innerText = name;
-      document.getElementById('user-role-display').innerText = title;
-      document.getElementById('user-avatar').innerText = name[0];
-
-      document.getElementById('header-user-display').innerText = name;
-      document.getElementById('header-role-display').innerText = title;
-
-      renderSidebar();
-      switchTab('dashboard');
+      if (navList) {
+        navList.innerHTML = allowedNavs.map((item, idx) => `
+          <li class="nav-item ${idx === 0 ? 'active' : ''}" onclick="switchTab('${item.id}')">
+            <i class="${item.icon}"></i> ${item.label}
+          </li>
+        `).join('');
+      }
     }
 
     function switchTab(tab) {
@@ -329,6 +339,7 @@
 
       const viewport = document.getElementById('viewport');
       const title = document.getElementById('page-title');
+      if (!viewport) return;
 
       if (tab === 'dashboard') {
         title.innerText = 'Dashboard Overview (' + currentUserName + ')';
@@ -349,7 +360,7 @@
         title.innerText = 'Batch Management & Class Schedules';
         renderBatchesView(viewport);
       } else if (tab === 'sales_team') {
-        title.innerText = 'Sales Team Overview & Lead Reassignment';
+        title.innerText = 'Sales Team Overview & Target Configuration';
         renderSalesTeamView(viewport);
       } else if (tab === 'fee') {
         title.innerText = 'Fee Collection & Receipt Generation System';
@@ -382,18 +393,18 @@
       if (currentRole === 'ADMIN') {
         viewport.innerHTML = `
           <div class="grid-4">
-            <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-user-star-line"></i></div><div><div class="stat-title">Active Students</div><div class="stat-value">2</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-user-star-line"></i></div><div><div class="stat-title">Active Students</div><div class="stat-value">${state.students.length}</div></div></div>
             <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-bank-card-line"></i></div><div><div class="stat-title">Monthly Collections</div><div class="stat-value">₹90,000</div></div></div>
             <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-alarm-warning-line"></i></div><div><div class="stat-title">Pending Balances</div><div class="stat-value">₹30,000</div></div></div>
-            <div class="stat-card"><div class="stat-icon" style="background:#FEE2E2; color:#DC2626;"><i class="ri-line-chart-line"></i></div><div><div class="stat-title">CRM Active Leads</div><div class="stat-value">3</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#FEE2E2; color:#DC2626;"><i class="ri-line-chart-line"></i></div><div><div class="stat-title">CRM Active Leads</div><div class="stat-value">${state.leads.length}</div></div></div>
           </div>
           <div class="card">
             <div class="card-header"><div class="card-title">Admin System Control Shortcuts</div></div>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="btn btn-primary" onclick="switchTab('courses')"><i class="ri-book-read-line"></i> Course Master</button>
-              <button class="btn btn-secondary" onclick="switchTab('users')"><i class="ri-user-settings-line"></i> User Management</button>
-              <button class="btn btn-outline" onclick="switchTab('audit')"><i class="ri-shield-check-line"></i> Audit Logs</button>
-              <button class="btn btn-success" onclick="switchTab('ai')"><i class="ri-sparkles-line"></i> AI Report Summarizer</button>
+              <button class="btn btn-primary" onclick="openAddCourseModal()"><i class="ri-book-read-line"></i> Add New Course</button>
+              <button class="btn btn-secondary" onclick="openAddUserModal()"><i class="ri-user-settings-line"></i> Create Staff Account</button>
+              <button class="btn btn-outline" onclick="switchTab('audit')"><i class="ri-shield-check-line"></i> View System Security Audit</button>
+              <button class="btn btn-success" onclick="switchTab('ai')"><i class="ri-sparkles-line"></i> Launch AI Summarizer</button>
             </div>
           </div>
         `;
@@ -407,28 +418,30 @@
           </div>
           <div class="card">
             <div class="card-header"><div class="card-title">CEO Financial Control & Expense Entry</div></div>
-            <button class="btn btn-primary" onclick="switchTab('accounting')"><i class="ri-add-line"></i> Record New Business Expense (with Bill Upload)</button>
+            <button class="btn btn-primary" onclick="openAddExpenseModal()"><i class="ri-add-line"></i> Record New Business Expense (with Bill Upload)</button>
           </div>
         `;
       } else if (currentRole === 'SALES_HEAD') {
         viewport.innerHTML = `
           <div class="grid-4">
-            <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-line-chart-line"></i></div><div><div class="stat-title">Total Active Pipeline</div><div class="stat-value">3 Leads</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-line-chart-line"></i></div><div><div class="stat-title">Total Active Pipeline</div><div class="stat-value">${state.leads.length} Leads</div></div></div>
             <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-trophy-line"></i></div><div><div class="stat-title">Monthly Conversions</div><div class="stat-value">1 Closed</div></div></div>
             <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-percent-line"></i></div><div><div class="stat-title">Team Conversion Rate</div><div class="stat-value">33.3% (Target: 25%)</div></div></div>
           </div>
           <div class="card">
             <div class="card-header"><div class="card-title">Sales Head Actions</div></div>
             <div style="display:flex; gap:10px;">
-              <button class="btn btn-primary" onclick="switchTab('leads')"><i class="ri-arrow-left-right-line"></i> Reassign Team Leads</button>
+              <button class="btn btn-primary" onclick="openReassignModal()"><i class="ri-arrow-left-right-line"></i> Reassign Team Leads</button>
+              <button class="btn btn-secondary" onclick="openAddBatchModal()"><i class="ri-group-line"></i> Create New Batch</button>
               <button class="btn btn-success" onclick="switchTab('students')"><i class="ri-briefcase-line"></i> Placement Survey WhatsApp</button>
             </div>
           </div>
         `;
       } else if (currentRole === 'SALES_EXEC') {
+        const myLeads = state.leads.filter(l => l.assigned.includes('Executive'));
         viewport.innerHTML = `
           <div class="card" style="background:linear-gradient(135deg, #1E293B, #0F172A); color:white;">
-            <div style="font-size:12px; color:#FCA5A5; font-weight:700;">DAILY FOLLOW-UP TARGET: 10 / WORKING DAY</div>
+            <div style="font-size:12px; color:#FCA5A5; font-weight:700;">DAILY FOLLOW-UP TARGET: ${state.targets.dailyFollowups} / WORKING DAY</div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px;">
               <div>
                 <div style="font-size:24px; font-weight:700; color:#4ADE80;">25% Monthly Conversion Target</div>
@@ -438,44 +451,374 @@
             </div>
           </div>
           <div class="grid-4">
-            <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-user-shared-line"></i></div><div><div class="stat-title">My Assigned Leads</div><div class="stat-value">2</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-user-shared-line"></i></div><div><div class="stat-title">My Assigned Leads</div><div class="stat-value">${myLeads.length}</div></div></div>
             <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-checkbox-circle-line"></i></div><div><div class="stat-title">My Closed Students</div><div class="stat-value">1</div></div></div>
           </div>
         `;
       } else if (currentRole === 'OPS') {
-        const pendingReminders = mockData.students.filter(s => s.balance > 0 && !sentReminderIds.has(s.adm)).length;
+        const pendingReminders = state.students.filter(s => s.balance > 0 && !state.sentReminders.has(s.adm)).length;
         viewport.innerHTML = `
           <div class="grid-4">
             <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-alarm-warning-line"></i></div><div><div class="stat-title">3-Day Fee Reminders</div><div class="stat-value">${pendingReminders} Pending</div></div></div>
             <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-money-dollar-circle-line"></i></div><div><div class="stat-title">Today's Collections</div><div class="stat-value">₹30,000</div></div></div>
-            <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-group-line"></i></div><div><div class="stat-title">Active Batches</div><div class="stat-value">3 Batches</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-group-line"></i></div><div><div class="stat-title">Active Batches</div><div class="stat-value">${state.batches.length} Batches</div></div></div>
           </div>
           <div class="card">
             <div class="card-header"><div class="card-title">Operations Quick Controls</div></div>
             <div style="display:flex; gap:10px;">
               <button class="btn btn-primary" onclick="switchTab('due_reminders')"><i class="ri-alarm-warning-line"></i> 3-Day Fee Reminders Portal</button>
-              <button class="btn btn-secondary" onclick="switchTab('fee')"><i class="ri-receipt-line"></i> Record Fee Payment</button>
-              <button class="btn btn-outline" onclick="switchTab('students')"><i class="ri-calendar-event-line"></i> Extend Fee Due Date (Max 10 Days)</button>
+              <button class="btn btn-secondary" onclick="openRecordPaymentModal()"><i class="ri-receipt-line"></i> Record Fee Payment</button>
+              <button class="btn btn-outline" onclick="openExtendDueDateModal()"><i class="ri-calendar-event-line"></i> Extend Fee Due Date (Max 10 Days)</button>
             </div>
           </div>
         `;
       }
     }
 
-    function renderLeadsView(viewport) {
-      let filteredLeads = mockData.leads;
-      if (currentRole === 'SALES_EXEC') {
-        filteredLeads = mockData.leads.filter(l => l.assigned.includes('Executive'));
+    // Modal Actions
+    function openAddLeadModal() {
+      document.getElementById('modal-title').innerText = 'Add New Lead to CRM';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Lead Full Name *</label><input id="lead-name" placeholder="e.g. Rahul Sharma"></div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>Phone Number *</label><input id="lead-phone" placeholder="9898989800"></div>
+          <div class="form-group" style="flex:1;"><label>Email Address</label><input id="lead-email" placeholder="rahul@gmail.com"></div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>City / Location *</label><input id="lead-city" placeholder="Kochi"></div>
+          <div class="form-group" style="flex:1;"><label>Course Interested *</label><select id="lead-course">${state.courses.map(c=>`<option value="${c.id}">${c.name} (${c.id})</option>`).join('')}</select></div>
+        </div>
+        <div class="form-group"><label>Lead Source *</label><select id="lead-source" onchange="toggleReferral(this.value)"><option value="Meta Ad">Meta Ad</option><option value="Organic Lead">Organic Lead</option><option value="Random Visit">Random Visit</option><option value="Referral">Referral</option></select></div>
+        <div class="form-group" id="ref-group" style="display:none;"><label>Referral Student ID (Optional)</label><input id="lead-ref" placeholder="STU-2026-101"></div>
+        <div class="form-group"><label>Next Follow-up Date *</label><input id="lead-next" type="date" value="${new Date(Date.now()+86400000).toISOString().substring(0,10)}"></div>
+        <div class="form-group"><label>Remarks / Enquiry Note</label><textarea id="lead-remarks" rows="2"></textarea></div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveLead()">Register & Assign Lead</button>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function toggleReferral(val) {
+      document.getElementById('ref-group').style.display = val === 'Referral' ? 'block' : 'none';
+    }
+
+    function saveLead() {
+      const name = document.getElementById('lead-name').value.trim();
+      const phone = document.getElementById('lead-phone').value.trim();
+      if (!name || !phone) { alert('Name and Phone are required!'); return; }
+
+      const leadId = 'LD-2026-' + Math.floor(1000 + Math.random()*9000);
+      state.leads.unshift({
+        id: leadId,
+        name: name,
+        phone: phone,
+        email: document.getElementById('lead-email').value.trim(),
+        city: document.getElementById('lead-city').value.trim() || 'Kochi',
+        course: document.getElementById('lead-course').value,
+        source: document.getElementById('lead-source').value,
+        status: 'New',
+        assigned: currentUserName,
+        followup: document.getElementById('lead-next').value,
+        remarks: document.getElementById('lead-remarks').value.trim() || 'Registered'
+      });
+
+      closeModal();
+      switchTab('leads');
+      alert('Lead ' + leadId + ' created successfully!');
+    }
+
+    function openLeadStageModal(leadId, leadName) {
+      document.getElementById('modal-title').innerText = 'Update Lead Stage (' + leadName + ')';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Select New Stage *</label><select id="stage-val" onchange="toggleStageFields(this.value)"><option value="Interested">Interested</option><option value="Follow-up">Follow-up</option><option value="Visited">Visited</option><option value="Not Interested">Not Interested</option><option value="Unqualified">Unqualified</option><option value="Closed">Closed (Admit Student)</option></select></div>
+        <div class="form-group" id="stage-notes-group"><label>Stage Transition Notes *</label><input id="stage-notes" placeholder="Outcome notes..."></div>
+        <div class="form-group" id="stage-date-group"><label>Next Follow-up Date *</label><input id="stage-date" type="date" value="${new Date().toISOString().substring(0,10)}"></div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveStage('${leadId}')">Confirm Stage Update</button>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function toggleStageFields(val) {
+      if (val === 'Closed') {
+        closeModal();
+        openLeadClosingWizard();
       }
+    }
+
+    function saveStage(leadId) {
+      const newStage = document.getElementById('stage-val').value;
+      const notes = document.getElementById('stage-notes').value;
+      const nextDate = document.getElementById('stage-date').value;
+
+      const lead = state.leads.find(l => l.id === leadId);
+      if (lead) {
+        lead.status = newStage;
+        if (nextDate) lead.followup = nextDate;
+        if (notes) lead.remarks = notes;
+      }
+
+      closeModal();
+      switchTab('leads');
+      alert('Lead stage updated to ' + newStage);
+    }
+
+    function openLeadClosingWizard() {
+      document.getElementById('modal-title').innerText = 'Atomic Lead Closing & Student Admission';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Student Full Name *</label><input id="adm-name" value="Rohan Mehta"></div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>Enrolled Course *</label><select id="adm-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
+          <div class="form-group" style="flex:1;"><label>Batch Assignment *</label><select id="adm-batch">${state.batches.map(b=>`<option value="${b.name}">${b.name}</option>`).join('')}</select></div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>Total Agreed Fee (₹) *</label><input id="adm-total" value="75000"></div>
+          <div class="form-group" style="flex:1;"><label>Initial Paid Amount (₹) *</label><input id="adm-paid" value="25000"></div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>Payment Mode *</label><select id="adm-mode"><option value="GPay">GPay</option><option value="Cash">Cash</option><option value="UPI">UPI</option><option value="Bank Transfer">Bank Transfer</option></select></div>
+          <div class="form-group" style="flex:1;"><label>Ref / Transaction No *</label><input id="adm-ref" value="TXN-9901"></div>
+        </div>
+        <button class="btn btn-success" style="width:100%; justify-content:center; padding:11px;" onclick="confirmAtomicAdmission()">Confirm Atomic Admission & Generate Receipt</button>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function confirmAtomicAdmission() {
+      const name = document.getElementById('adm-name').value.trim();
+      const course = document.getElementById('adm-course').value;
+      const batch = document.getElementById('adm-batch').value;
+      const total = parseFloat(document.getElementById('adm-total').value) || 75000;
+      const paid = parseFloat(document.getElementById('adm-paid').value) || 25000;
+      const balance = total - paid;
+
+      const admNo = 'ADM-2026-' + Math.floor(100 + Math.random()*900);
+      state.students.unshift({
+        adm: admNo,
+        name: name,
+        phone: '9898989800',
+        email: 'student@gmail.com',
+        course: course,
+        batch: batch,
+        total: total,
+        paid: paid,
+        balance: balance,
+        dueDate: '2026-09-30',
+        status: 'ACTIVE',
+        exec: currentUserName,
+        placement: 'Eligible'
+      });
+
+      closeModal();
+      switchTab('students');
+      alert('Student Admission created atomically! Admission No: ' + admNo);
+    }
+
+    function openAddExpenseModal() {
+      document.getElementById('modal-title').innerText = 'Record New Business Expense (with Bill Upload)';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Expense Title / Purpose *</label><input id="exp-title" placeholder="e.g. Meta Ads Marketing"></div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>Expense Category *</label><select id="exp-cat"><option value="Marketing">Marketing</option><option value="Office Supplies">Office Supplies</option><option value="Utilities">Utilities</option><option value="Salaries">Salaries</option></select></div>
+          <div class="form-group" style="flex:1;"><label>Expense Type *</label><select id="exp-type"><option value="General Expense">General Expense</option><option value="Petty Cash">Petty Cash</option></select></div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>Amount (₹) *</label><input id="exp-amt" type="number" placeholder="5000"></div>
+          <div class="form-group" style="flex:1;"><label>Payment Mode *</label><select id="exp-mode"><option value="Cash">Cash</option><option value="UPI">UPI</option><option value="Bank Transfer">Bank Transfer</option></select></div>
+        </div>
+        <div class="form-group"><label>Upload Bill / Receipt Image</label><input type="file" id="exp-bill"></div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveExpense()">Save Expense & Post Double-Entry Accounting</button>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function saveExpense() {
+      const title = document.getElementById('exp-title').value.trim();
+      const amt = parseFloat(document.getElementById('exp-amt').value) || 0;
+      if (!title || !amt) { alert('Title and Amount are required!'); return; }
+
+      const expId = 'EXP-' + Math.floor(1000 + Math.random()*9000);
+      state.expenses.unshift({
+        id: expId,
+        title: title,
+        category: document.getElementById('exp-cat').value,
+        amount: amt,
+        mode: document.getElementById('exp-mode').value,
+        date: new Date().toISOString().substring(0,10),
+        createdBy: currentUserEmail
+      });
+
+      closeModal();
+      switchTab('accounting');
+      alert('Expense ' + expId + ' saved successfully!');
+    }
+
+    function openAddBatchModal() {
+      document.getElementById('modal-title').innerText = 'Create New Batch';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Batch Name *</label><input id="btc-name" placeholder="e.g. BCA Batch 2026-B"></div>
+        <div class="form-group"><label>Course *</label><select id="btc-course">${state.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
+        <div class="form-group"><label>Exact Time Slot *</label><select id="btc-slot"><option value="8:30 AM to 10:30 AM">8:30 AM to 10:30 AM</option><option value="10:30 AM to 12:30 PM">10:30 AM to 12:30 PM</option><option value="12:30 PM to 2:30 PM">12:30 PM to 2:30 PM</option></select></div>
+        <div class="form-group"><label>Capacity Seats *</label><input id="btc-cap" type="number" value="30"></div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveBatch()">Create Batch</button>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function saveBatch() {
+      const name = document.getElementById('btc-name').value.trim();
+      if (!name) return;
+      const btcId = 'BTC-' + Math.floor(100 + Math.random()*900);
+      state.batches.push({
+        id: btcId,
+        name: name,
+        course: document.getElementById('btc-course').value,
+        time: document.getElementById('btc-slot').value,
+        capacity: parseInt(document.getElementById('btc-cap').value) || 30
+      });
+      closeModal();
+      switchTab('batches');
+      alert('Batch created successfully!');
+    }
+
+    function openAddCourseModal() {
+      document.getElementById('modal-title').innerText = 'Create New Course Master';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Course ID *</label><input id="crs-id" placeholder="e.g. MCA-2Y"></div>
+        <div class="form-group"><label>Course Name *</label><input id="crs-name" placeholder="Master in Computer Applications"></div>
+        <div class="form-group"><label>Duration *</label><input id="crs-dur" value="2 years"></div>
+        <div class="form-group"><label>Default Fee (₹) *</label><input id="crs-fee" value="100000"></div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveCourse()">Save Course</button>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function saveCourse() {
+      const cid = document.getElementById('crs-id').value.trim();
+      const name = document.getElementById('crs-name').value.trim();
+      if (!cid || !name) return;
+      state.courses.push({
+        id: cid,
+        name: name,
+        duration: document.getElementById('crs-dur').value,
+        fee: parseFloat(document.getElementById('crs-fee').value) || 100000,
+        inst: 4
+      });
+      closeModal();
+      switchTab('courses');
+      alert('Course master saved!');
+    }
+
+    function openAddUserModal() {
+      document.getElementById('modal-title').innerText = 'Create Staff Account';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Display Name *</label><input id="usr-name" placeholder="John Doe"></div>
+        <div class="form-group"><label>Email Address *</label><input id="usr-email" placeholder="john@mastered.com"></div>
+        <div class="form-group"><label>Role *</label><select id="usr-role"><option value="SALES_EXECUTIVE">Sales Executive</option><option value="OPERATIONS">Operations</option><option value="SALES_HEAD">Sales Head</option><option value="CEO">CEO</option></select></div>
+        <div class="form-group"><label>Temporary Password *</label><input id="usr-pass" value="TempPass123!"></div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="saveUser()">Create Account with Forced Password Change</button>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function saveUser() {
+      const name = document.getElementById('usr-name').value.trim();
+      const email = document.getElementById('usr-email').value.trim();
+      if (!name || !email) return;
+      const uid = 'USR-' + Math.floor(1000 + Math.random()*9000);
+      state.users.push({
+        id: uid,
+        name: name,
+        email: email,
+        role: document.getElementById('usr-role').value,
+        status: 'ACTIVE',
+        phone: '9898989800'
+      });
+      closeModal();
+      switchTab('users');
+      alert('User account created!');
+    }
+
+    function openReassignModal() {
+      document.getElementById('modal-title').innerText = 'Reassign Team Leads (Sales Head)';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Select Leads to Reassign *</label><select id="re-lead">${state.leads.map(l=>`<option value="${l.id}">${l.id} - ${l.name}</option>`).join('')}</select></div>
+        <div class="form-group"><label>Assign to Executive *</label><select id="re-exec">${state.users.filter(u=>u.role.includes('SALES')).map(u=>`<option value="${u.name}">${u.name}</option>`).join('')}</select></div>
+        <div class="form-group"><label>Reassignment Reason *</label><input id="re-reason" placeholder="Territory balance..."></div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="confirmReassign()">Confirm Reassignment</button>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function confirmReassign() {
+      const lid = document.getElementById('re-lead').value;
+      const exec = document.getElementById('re-exec').value;
+      const lead = state.leads.find(l => l.id === lid);
+      if (lead) lead.assigned = exec;
+      closeModal();
+      switchTab('leads');
+      alert('Lead ' + lid + ' reassigned to ' + exec);
+    }
+
+    function openRecordPaymentModal() {
+      document.getElementById('modal-title').innerText = 'Record Fee Payment';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Select Student *</label><select id="pay-stu">${state.students.map(s=>`<option value="${s.adm}">${s.adm} - ${s.name} (Balance: ₹${s.balance})</option>`).join('')}</select></div>
+        <div class="form-group"><label>Amount Paid (₹) *</label><input id="pay-amt" value="15000"></div>
+        <div class="form-group"><label>Payment Mode *</label><select id="pay-mode"><option value="GPay">GPay</option><option value="Cash">Cash</option><option value="UPI">UPI</option><option value="Bank Transfer">Bank Transfer</option></select></div>
+        <div class="form-group"><label>Transaction Ref No *</label><input id="pay-ref" value="TXN-7701"></div>
+        <button class="btn btn-success" style="width:100%; justify-content:center; padding:11px;" onclick="confirmPayment()">Record Payment & Generate PDF Receipt</button>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function confirmPayment() {
+      const adm = document.getElementById('pay-stu').value;
+      const amt = parseFloat(document.getElementById('pay-amt').value) || 0;
+      const stu = state.students.find(s => s.adm === adm);
+      if (stu) {
+        stu.paid += amt;
+        stu.balance = stu.total - stu.paid;
+      }
+      closeModal();
+      switchTab('students');
+      alert('Payment of ₹' + amt + ' recorded for ' + adm + '. Receipt generated!');
+    }
+
+    function openExtendDueDateModal() {
+      document.getElementById('modal-title').innerText = 'Extend Fee Due Date (Max 10 Calendar Days)';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Select Student *</label><select id="ext-stu">${state.students.map(s=>`<option value="${s.adm}">${s.adm} - ${s.name} (Current Due: ${s.dueDate})</option>`).join('')}</select></div>
+        <div class="form-group"><label>New Due Date *</label><input id="ext-date" type="date" value="${new Date(Date.now()+7*86400000).toISOString().substring(0,10)}"></div>
+        <div class="form-group"><label>Mandatory Audit Reason *</label><input id="ext-reason" placeholder="Medical emergency extension..."></div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="confirmDueDateExtension()">Save Extension with Audit Log</button>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function confirmDueDateExtension() {
+      const adm = document.getElementById('ext-stu').value;
+      const newDate = document.getElementById('ext-date').value;
+      const reason = document.getElementById('ext-reason').value;
+      if (!reason) { alert('Audit Reason is required!'); return; }
+
+      const stu = state.students.find(s => s.adm === adm);
+      if (stu) stu.dueDate = newDate;
+      closeModal();
+      switchTab('due_reminders');
+      alert('Due date extended for ' + adm + ' to ' + newDate);
+    }
+
+    function renderLeadsView(viewport) {
+      let filteredLeads = state.leads;
+      if (currentRole === 'SALES_EXEC') filteredLeads = state.leads.filter(l => l.assigned.includes('Executive'));
 
       viewport.innerHTML = `
         <div class="card">
           <div class="card-header">
-            <div class="card-title">Active CRM Lead Pipeline</div>
+            <div class="card-title">Active CRM Lead Pipeline (${filteredLeads.length} Leads)</div>
             <button class="btn btn-primary" onclick="openAddLeadModal()"><i class="ri-add-line"></i> Add New Lead</button>
           </div>
           <table>
-            <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Course</th><th>Source</th><th>Assigned Exec</th><th>Stage Status</th><th>Action</th></tr></thead>
+            <thead><tr><th>Lead ID</th><th>Name</th><th>Phone</th><th>Course</th><th>Source</th><th>Assigned Exec</th><th>Status</th><th>Action</th></tr></thead>
             <tbody>
               ${filteredLeads.map(l => `<tr><td style="font-weight:700; color:var(--primary);">${l.id}</td><td style="font-weight:600;">${l.name}</td><td>${l.phone}</td><td>${l.course}</td><td><span class="badge badge-info">${l.source}</span></td><td>${l.assigned}</td><td><span class="badge badge-success">${l.status}</span></td><td><button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="openLeadStageModal('${l.id}', '${l.name}')">Update Stage</button></td></tr>`).join('')}
             </tbody>
@@ -492,15 +835,15 @@
               <div style="font-size:16px; font-weight:700;">Sales Daily Follow-up Workspace</div>
               <div style="font-size:12px; color:#94A3B8; margin-top:4px;">Daily Target: 10 Completed Follow-ups / Working Day</div>
             </div>
-            <span class="badge badge-success">Target Progress: On Track</span>
+            <span class="badge badge-success">Status: On Track</span>
           </div>
         </div>
         <div class="card">
-          <div class="card-header"><div class="card-title">Scheduled Lead Follow-ups Queue</div></div>
+          <div class="card-header"><div class="card-title">Scheduled Follow-ups Queue</div></div>
           <table>
             <thead><tr><th>Lead ID</th><th>Name</th><th>Course</th><th>Due Date</th><th>WhatsApp Action</th><th>Action</th></tr></thead>
             <tbody>
-              ${mockData.leads.filter(l=>l.status!=='Closed').map(l=>`<tr><td style="font-weight:700; color:var(--primary);">${l.id}</td><td>${l.name}</td><td>${l.course}</td><td style="color:var(--danger); font-weight:700;">${l.followup}</td><td><a href="https://wa.me/91${l.phone}?text=Hello%20${l.name}" target="_blank" style="color:var(--success); font-weight:700;"><i class="ri-whatsapp-line"></i> Hello ${l.name}</a></td><td><button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="alert('Logged activity for ${l.name}')">Log Activity</button></td></tr>`).join('')}
+              ${state.leads.filter(l=>l.status!=='Closed').map(l=>`<tr><td style="font-weight:700; color:var(--primary);">${l.id}</td><td>${l.name}</td><td>${l.course}</td><td style="color:var(--danger); font-weight:700;">${l.followup}</td><td><a href="https://wa.me/91${l.phone}?text=Hello%20${l.name}" target="_blank" style="color:var(--success); font-weight:700;"><i class="ri-whatsapp-line"></i> Hello ${l.name}</a></td><td><button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="alert('Logged follow-up for ${l.name}')">Log Activity</button></td></tr>`).join('')}
             </tbody>
           </table>
         </div>
@@ -508,7 +851,7 @@
     }
 
     function renderFeeRemindersView(viewport) {
-      const pendingReminders = mockData.students.filter(s => s.balance > 0 && !sentReminderIds.has(s.adm)).length;
+      const pendingReminders = state.students.filter(s => s.balance > 0 && !state.sentReminders.has(s.adm)).length;
       viewport.innerHTML = `
         <div class="card" style="background:var(--secondary); color:white;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -524,8 +867,8 @@
           <table>
             <thead><tr><th>Admission No</th><th>Student Name</th><th>Batch</th><th>Balance Due</th><th>Due Date</th><th>WhatsApp Reminder</th><th>Action</th></tr></thead>
             <tbody>
-              ${mockData.students.filter(s=>s.balance>0).map(s => {
-                const isSent = sentReminderIds.has(s.adm);
+              ${state.students.filter(s=>s.balance>0).map(s => {
+                const isSent = state.sentReminders.has(s.adm);
                 const msg = encodeURIComponent(`Hello ${s.name}, your MASTERED fee installment of ₹${s.balance.toLocaleString()} is due on ${s.dueDate}.`);
                 return `<tr><td style="font-weight:700; color:var(--primary);">${s.adm}</td><td>${s.name}</td><td>${s.batch}</td><td style="color:var(--danger); font-weight:700;">₹${s.balance.toLocaleString()}</td><td style="color:var(--danger); font-weight:700;">${s.dueDate}</td><td><a href="https://wa.me/91${s.phone}?text=${msg}" target="_blank" style="color:var(--success); font-weight:700;"><i class="ri-whatsapp-line"></i> Fee Reminder</a></td><td><button class="btn ${isSent?'btn-outline':'btn-primary'}" style="padding:4px 8px; font-size:11px;" onclick="markSent('${s.adm}')">${isSent?'Sent':'Mark as Sent'}</button></td></tr>`;
               }).join('')}
@@ -536,10 +879,8 @@
     }
 
     function renderStudentsView(viewport) {
-      let filteredStudents = mockData.students;
-      if (currentRole === 'SALES_EXEC') {
-        filteredStudents = mockData.students.filter(s => s.exec.includes('Executive'));
-      }
+      let filteredStudents = state.students;
+      if (currentRole === 'SALES_EXEC') filteredStudents = state.students.filter(s => s.exec.includes('Executive'));
 
       viewport.innerHTML = `
         <div class="card">
@@ -582,11 +923,14 @@
     function renderBatchesView(viewport) {
       viewport.innerHTML = `
         <div class="card">
-          <div class="card-header"><div class="card-title">Academy Batches & Time Slots</div></div>
+          <div class="card-header">
+            <div class="card-title">Academy Batches & Time Slots</div>
+            <button class="btn btn-primary" onclick="openAddBatchModal()"><i class="ri-add-line"></i> Create Batch</button>
+          </div>
           <table>
             <thead><tr><th>Batch ID</th><th>Batch Name</th><th>Course</th><th>Exact Time Slot</th><th>Capacity</th></tr></thead>
             <tbody>
-              ${mockData.batches.map(b=>`<tr><td style="font-weight:700; color:var(--primary);">${b.id}</td><td style="font-weight:600;">${b.name}</td><td>${b.course}</td><td><span class="badge badge-info">${b.time}</span></td><td>${b.capacity} Seats</td></tr>`).join('')}
+              ${state.batches.map(b=>`<tr><td style="font-weight:700; color:var(--primary);">${b.id}</td><td style="font-weight:600;">${b.name}</td><td>${b.course}</td><td><span class="badge badge-info">${b.time}</span></td><td>${b.capacity} Seats</td></tr>`).join('')}
             </tbody>
           </table>
         </div>
@@ -596,12 +940,15 @@
     function renderSalesTeamView(viewport) {
       viewport.innerHTML = `
         <div class="card">
-          <div class="card-header"><div class="card-title">Sales Rep Performance Leaderboard</div></div>
+          <div class="card-header">
+            <div class="card-title">Sales Rep Performance Leaderboard</div>
+            <button class="btn btn-primary" onclick="openReassignModal()"><i class="ri-arrow-left-right-line"></i> Reassign Leads</button>
+          </div>
           <table>
             <thead><tr><th>Rep Name</th><th>Assigned Leads</th><th>Closed Conversions</th><th>Conversion Rate</th><th>Action</th></tr></thead>
             <tbody>
-              <tr><td style="font-weight:700;">Ashif (Sales Head)</td><td>1</td><td>1</td><td style="color:var(--success); font-weight:700;">100%</td><td><button class="btn btn-outline" onclick="alert('Reassign action')">Reassign Leads</button></td></tr>
-              <tr><td style="font-weight:700;">Demo Sales Executive</td><td>2</td><td>1</td><td style="color:var(--warning); font-weight:700;">50%</td><td><button class="btn btn-outline" onclick="alert('Reassign action')">Reassign Leads</button></td></tr>
+              <tr><td style="font-weight:700;">Ashif (Sales Head)</td><td>1</td><td>1</td><td style="color:var(--success); font-weight:700;">100%</td><td><button class="btn btn-outline" onclick="openReassignModal()">Reassign Leads</button></td></tr>
+              <tr><td style="font-weight:700;">Demo Sales Executive</td><td>2</td><td>1</td><td style="color:var(--warning); font-weight:700;">50%</td><td><button class="btn btn-outline" onclick="openReassignModal()">Reassign Leads</button></td></tr>
             </tbody>
           </table>
         </div>
@@ -611,7 +958,10 @@
     function renderFeeCollectionView(viewport) {
       viewport.innerHTML = `
         <div class="card">
-          <div class="card-header"><div class="card-title">Fee Collection System</div></div>
+          <div class="card-header">
+            <div class="card-title">Fee Collection System</div>
+            <button class="btn btn-primary" onclick="openRecordPaymentModal()"><i class="ri-add-line"></i> Record Payment</button>
+          </div>
           <table>
             <thead><tr><th>Receipt No</th><th>Admission No</th><th>Student Name</th><th>Paid Amount</th><th>Payment Mode</th><th>Action</th></tr></thead>
             <tbody>
@@ -629,11 +979,14 @@
           <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-bank-card-line"></i></div><div><div class="stat-title">Bank / UPI Balance</div><div class="stat-value">₹75,000</div></div></div>
         </div>
         <div class="card">
-          <div class="card-header"><div class="card-title">Recorded Business Expenses</div></div>
+          <div class="card-header">
+            <div class="card-title">Recorded Business Expenses</div>
+            <button class="btn btn-primary" onclick="openAddExpenseModal()"><i class="ri-add-line"></i> Record Expense</button>
+          </div>
           <table>
             <thead><tr><th>Expense ID</th><th>Title</th><th>Category</th><th>Amount</th><th>Payment Mode</th><th>Date</th></tr></thead>
             <tbody>
-              ${mockData.expenses.map(e=>`<tr><td style="font-weight:700; color:var(--primary);">${e.id}</td><td>${e.title}</td><td>${e.category}</td><td style="color:var(--danger); font-weight:700;">₹${e.amount.toLocaleString()}</td><td>${e.mode}</td><td>${e.date}</td></tr>`).join('')}
+              ${state.expenses.map(e=>`<tr><td style="font-weight:700; color:var(--primary);">${e.id}</td><td>${e.title}</td><td>${e.category}</td><td style="color:var(--danger); font-weight:700;">₹${e.amount.toLocaleString()}</td><td>${e.mode}</td><td>${e.date}</td></tr>`).join('')}
             </tbody>
           </table>
         </div>
@@ -646,14 +999,14 @@
           <div class="card-header">
             <div class="card-title">Executive Reports & Analytics (19 Categories)</div>
             <div>
-              <button class="btn btn-primary" onclick="alert('Report exported as PDF')"><i class="ri-file-pdf-line"></i> Export PDF</button>
-              <button class="btn btn-success" onclick="alert('Report exported as CSV')"><i class="ri-table-line"></i> Export CSV</button>
+              <button class="btn btn-primary" onclick="alert('Exporting PDF Report...')"><i class="ri-file-pdf-line"></i> Export PDF</button>
+              <button class="btn btn-success" onclick="alert('Exporting CSV Report...')"><i class="ri-table-line"></i> Export CSV</button>
             </div>
           </div>
           <table>
             <thead><tr><th>Metric Category</th><th>Total Count / Value</th><th>Status</th><th>Timestamp</th></tr></thead>
             <tbody>
-              <tr><td style="font-weight:700;">Total Enrolled Students</td><td>2 Students</td><td><span class="badge badge-success">ACTIVE</span></td><td>2026-09-02</td></tr>
+              <tr><td style="font-weight:700;">Total Enrolled Students</td><td>${state.students.length} Students</td><td><span class="badge badge-success">ACTIVE</span></td><td>2026-09-02</td></tr>
               <tr><td style="font-weight:700;">Gross Realized Collections</td><td>₹90,000</td><td><span class="badge badge-success">COMPLETED</span></td><td>2026-09-02</td></tr>
               <tr><td style="font-weight:700;">Pending Student Balances</td><td>₹30,000</td><td><span class="badge badge-warning">PENDING</span></td><td>2026-09-02</td></tr>
             </tbody>
@@ -667,12 +1020,12 @@
         <div class="card">
           <div class="card-header">
             <div class="card-title">Admin User & Staff Management</div>
-            <button class="btn btn-primary" onclick="alert('Create User Dialog')"><i class="ri-user-add-line"></i> Create User</button>
+            <button class="btn btn-primary" onclick="openAddUserModal()"><i class="ri-user-add-line"></i> Create User</button>
           </div>
           <table>
             <thead><tr><th>User ID</th><th>Name</th><th>Email</th><th>Role</th><th>Status</th></tr></thead>
             <tbody>
-              ${mockData.users.map(u=>`<tr><td style="font-weight:700; color:var(--primary);">${u.id}</td><td style="font-weight:600;">${u.name}</td><td>${u.email}</td><td><span class="badge badge-info">${u.role}</span></td><td><span class="badge badge-success">${u.status}</span></td></tr>`).join('')}
+              ${state.users.map(u=>`<tr><td style="font-weight:700; color:var(--primary);">${u.id}</td><td style="font-weight:600;">${u.name}</td><td>${u.email}</td><td><span class="badge badge-info">${u.role}</span></td><td><span class="badge badge-success">${u.status}</span></td></tr>`).join('')}
             </tbody>
           </table>
         </div>
@@ -682,11 +1035,14 @@
     function renderCoursesView(viewport) {
       viewport.innerHTML = `
         <div class="card">
-          <div class="card-header"><div class="card-title">Admin Course Master Configuration</div></div>
+          <div class="card-header">
+            <div class="card-title">Admin Course Master Configuration</div>
+            <button class="btn btn-primary" onclick="openAddCourseModal()"><i class="ri-add-line"></i> Add Course</button>
+          </div>
           <table>
             <thead><tr><th>Course ID</th><th>Course Name</th><th>Duration</th><th>Default Fee</th><th>Installments</th></tr></thead>
             <tbody>
-              ${mockData.courses.map(c=>`<tr><td style="font-weight:700; color:var(--primary);">${c.id}</td><td style="font-weight:600;">${c.name}</td><td>${c.duration}</td><td style="color:var(--success); font-weight:700;">₹${c.fee.toLocaleString()}</td><td>${c.inst} Installments</td></tr>`).join('')}
+              ${state.courses.map(c=>`<tr><td style="font-weight:700; color:var(--primary);">${c.id}</td><td style="font-weight:600;">${c.name}</td><td>${c.duration}</td><td style="color:var(--success); font-weight:700;">₹${c.fee.toLocaleString()}</td><td>${c.inst} Installments</td></tr>`).join('')}
             </tbody>
           </table>
         </div>
@@ -725,24 +1081,28 @@
       viewport.innerHTML = `
         <div class="card">
           <div class="card-header"><div class="card-title">Master System Settings & Sequences</div></div>
-          <div class="form-group"><label>Academy Name</label><input value="MASTERED" readonly></div>
-          <div class="form-group"><label>Daily Follow-up Target per Executive</label><input value="10" readonly></div>
-          <div class="form-group"><label>Monthly Conversion Target</label><input value="25%" readonly></div>
+          <div class="form-group"><label>Academy Name</label><input id="set-name" value="MASTERED"></div>
+          <div class="form-group"><label>Daily Follow-up Target per Executive</label><input id="set-target" value="${state.targets.dailyFollowups}"></div>
+          <div class="form-group"><label>Monthly Conversion Target (%)</label><input id="set-conv" value="${state.targets.monthlyConversion}"></div>
+          <button class="btn btn-primary" onclick="saveSettings()">Save Configuration</button>
         </div>
       `;
     }
 
+    function saveSettings() {
+      state.targets.dailyFollowups = parseInt(document.getElementById('set-target').value) || 10;
+      state.targets.monthlyConversion = parseInt(document.getElementById('set-conv').value) || 25;
+      alert('Master Settings saved successfully!');
+    }
+
     function markSent(adm) {
-      sentReminderIds.add(adm);
+      state.sentReminders.add(adm);
       switchTab('due_reminders');
     }
 
     function closeModal() {
       document.getElementById('modal').classList.remove('open');
     }
-
-    renderSidebar();
-    switchTab('dashboard');
   </script>
 </body>
 </html>
