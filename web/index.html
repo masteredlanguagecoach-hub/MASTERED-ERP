@@ -158,6 +158,23 @@
     let isDemoAccount = false;
     let sessionToken = null;
 
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyGgVKXlTALRo9WMIPVpEXd7d6es9hhCG6XnTbZw_i1cx29yZQM_ulY-C8rbX8pL2zvdQ/exec';
+
+    async function syncWithAppsScript(action, payload = {}) {
+      try {
+        if (!APPS_SCRIPT_URL) return;
+        payload.sessionToken = sessionToken;
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: action, payload: payload, sessionToken: sessionToken })
+        });
+      } catch (err) {
+        console.warn('Apps Script sync warning:', err);
+      }
+    }
+
     // ERP State Collections — WITH DUAL LOCALSTORAGE & BROADCASTCHANNEL PERSISTENCE
     const state = {
       courses: [
