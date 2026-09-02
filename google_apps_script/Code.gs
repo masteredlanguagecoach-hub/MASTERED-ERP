@@ -134,6 +134,10 @@ function responseJSON(data) {
 // ==========================================
 
 function setupDatabase(ss) {
+  if (!ss || typeof ss.getSheetByName !== 'function') {
+    ss = SpreadsheetApp.getActiveSpreadsheet();
+  }
+
   var sheets = [
     'SETTINGS', 'USERS', 'SESSIONS', 'COURSES', 'BATCHES', 'LEADS', 
     'LEAD_FOLLOWUPS', 'STUDENTS', 'STUDENT_STATUS_HISTORY', 'PAYMENTS', 
@@ -152,6 +156,10 @@ function setupDatabase(ss) {
 }
 
 function seedInitialUsers(ss) {
+  if (!ss || typeof ss.getSheetByName !== 'function') {
+    ss = SpreadsheetApp.getActiveSpreadsheet();
+  }
+
   var userSheet = ss.getSheetByName('USERS');
   if (userSheet.getLastRow() <= 1) {
     userSheet.appendRow(['User ID', 'Name', 'Email', 'Password Hash', 'Role', 'Phone', 'Status', 'Must Change Password', 'Is Demo Account', 'Created At']);
@@ -166,6 +174,10 @@ function seedInitialUsers(ss) {
 }
 
 function seedInitialCourses(ss) {
+  if (!ss || typeof ss.getSheetByName !== 'function') {
+    ss = SpreadsheetApp.getActiveSpreadsheet();
+  }
+
   var cSheet = ss.getSheetByName('COURSES');
   if (cSheet.getLastRow() <= 1) {
     cSheet.appendRow(['Course ID', 'Course Name', 'Duration', 'Default Total Fee', 'Default Installment Count', 'Status', 'Created At']);
