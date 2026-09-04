@@ -6,13 +6,13 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>MASTERED ERP v8.0 - Production Modular System</title>
+  <title>MASTERED ERP v8.1 - Native Production System</title>
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MASTERED ERP">
-  <link rel="apple-touch-icon" href="assets/logo.png?v=8.0">
-  <link rel="icon" type="image/png" href="assets/logo.png?v=8.0">
+  <link rel="apple-touch-icon" href="assets/logo.png?v=8.1">
+  <link rel="icon" type="image/png" href="assets/logo.png?v=8.1">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -154,17 +154,17 @@
   <div class="landing-container" id="landing-page">
     <div class="landing-header">
       <div style="display:flex; align-items:center; gap:10px;">
-        <img src="assets/logo.png?v=8.0" height="32" alt="Logo">
+        <img src="assets/logo.png?v=8.1" height="32" alt="Logo">
         <div>
           <div style="font-weight:700; font-size:15px;">MASTERED</div>
-          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v8.0</div>
+          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v8.1 (NATIVE WEB)</div>
         </div>
       </div>
       <button class="btn btn-primary" onclick="openLoginModal()"><i class="ri-lock-line"></i> Sign In</button>
     </div>
 
     <div class="landing-hero">
-      <span style="background:rgba(220,38,38,0.2); border:1px solid rgba(220,38,38,0.4); padding:4px 12px; border-radius:20px; font-size:10.5px; font-weight:700;">MASTERED ACADEMY SYSTEM</span>
+      <span style="background:rgba(220,38,38,0.2); border:1px solid rgba(220,38,38,0.4); padding:4px 12px; border-radius:20px; font-size:10.5px; font-weight:700;">NATIVE WEB EDITION v8.1</span>
       <h1 style="font-size:26px; font-weight:700; margin-top:16px;">Academy Operations, CRM & Fee Collections</h1>
       <p style="color:#94A3B8; font-size:13px; margin-top:10px;">Unified portal for admissions, course ledgers, staff duties, and financial accounting.</p>
       <div style="margin-top:24px;">
@@ -205,8 +205,8 @@
       driveRead: 'NOT TESTED',
       driveWrite: 'NOT TESTED',
       responseTime: 'N/A',
-      apiVersion: '8.0.0',
-      databaseSchemaVersion: 'v8.0-33-SHEETS',
+      apiVersion: '8.1.0',
+      databaseSchemaVersion: 'v8.1-33-SHEETS',
       lastTested: null
     };
 
@@ -240,7 +240,7 @@
         { id: 'USR-1007', name: 'HR Manager', email: 'hr@mastered.com', role: 'HR', status: 'ACTIVE', isDemo: false }
       ],
       audit: [
-        { id: 'LOG-1001', timestamp: new Date().toISOString(), userName: 'System Administrator', action: 'SYSTEM_BOOT', module: 'CORE', details: 'MASTERED ERP v8.0 system booted successfully' }
+        { id: 'LOG-1001', timestamp: new Date().toISOString(), userName: 'System Administrator', action: 'SYSTEM_BOOT', module: 'CORE', details: 'MASTERED ERP v8.1 Native Web system booted successfully' }
       ],
       importHistory: []
     };
@@ -402,8 +402,8 @@
         <div class="app-container">
           <div class="sidebar">
             <div class="brand-header">
-              <div class="brand-logo"><img src="assets/logo.png?v=8.0" alt="Logo"></div>
-              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v8.0</div></div>
+              <div class="brand-logo"><img src="assets/logo.png?v=8.1" alt="Logo"></div>
+              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v8.1</div></div>
             </div>
 
             <div class="user-pill">
@@ -491,13 +491,11 @@
       else if (tab === 'import_history') { title.innerText = 'My Lead Import History'; renderImportHistoryView(viewport); }
     }
 
-    // EMPIRICAL REAL BACKEND HEALTH CHECK TEST
     function executeEmpiricalHealthCheck() {
       const startTime = Date.now();
       healthMetrics.tested = true;
       healthMetrics.lastTested = new Date().toLocaleTimeString();
 
-      // Execute fetch to Apps Script API
       fetch(APPS_SCRIPT_URL + '?action=testConnectionsAdmin&sessionToken=HEALTH_TEST')
         .then(res => res.json())
         .then(data => {
@@ -535,7 +533,6 @@
       `;
     }
 
-    // STAFF DUTIES VIEW
     function renderDutiesView(viewport) {
       const myDuties = currentRole === 'STAFF' ? state.duties.filter(d => d.staffId === 'USR-1006') : state.duties;
 
@@ -606,9 +603,7 @@
         hrVerified: false
       });
 
-      saveStateToStorage();
-      closeModal();
-      switchTab('duties');
+      saveStateToStorage(); closeModal(); switchTab('duties');
     }
 
     function openVerifyDutyModal(dutyId, staffName) {
@@ -627,13 +622,8 @@
     function confirmDutyVerification(dutyId) {
       const dec = document.getElementById('ver-dec').value;
       const duty = state.duties.find(d => d.dutyId === dutyId);
-      if (duty) {
-        duty.status = dec;
-        duty.hrVerified = true;
-      }
-      saveStateToStorage();
-      closeModal();
-      switchTab('duties');
+      if (duty) { duty.status = dec; duty.hrVerified = true; }
+      saveStateToStorage(); closeModal(); switchTab('duties');
     }
 
     function renderStaffDashboard(viewport) {
@@ -645,7 +635,6 @@
       `;
     }
 
-    // STRICT SALES EXECUTIVE DASHBOARD (NO EXPENSES!)
     function renderSalesExecDashboard(viewport) {
       const myLeads = state.leads.filter(l => l.assigned === currentUserName);
       const myStudents = state.students.filter(s => s.exec === currentUserName || s.status === 'ACTIVE');
@@ -661,7 +650,6 @@
       `;
     }
 
-    // EXECUTIVE OVERVIEW DASHBOARD
     function renderMainExecutiveOverview(viewport) {
       const grossRev = state.students.reduce((acc, s) => acc + (s.paid || 0), 0);
       const pendingBal = state.students.reduce((acc, s) => acc + (s.balance || 0), 0);
