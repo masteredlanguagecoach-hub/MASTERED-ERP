@@ -1,17 +1,17 @@
 /**
- * MASTERED ERP v8.0 — Action Router (Router.gs)
+ * MASTERED ERP v9.0 — Router (Router.gs)
+ * Action routing and role permission enforcement across all 12 roles
  */
 
 var Router = {
   routeAction: function(action, sessionToken, requestId, payload) {
     var timestamp = new Date().toISOString();
 
-    // Public / Unauthenticated actions
     if (action === 'healthCheck') {
       return {
         success: true,
-        message: 'MASTERED ERP v8.0 Backend API operational',
-        data: { apiVersion: '8.0.0', status: 'HEALTHY' },
+        message: 'MASTERED ERP v9.0 Backend API operational',
+        data: { apiVersion: '9.0.0', status: 'HEALTHY' },
         requestId: requestId,
         timestamp: timestamp
       };
@@ -21,7 +21,6 @@ var Router = {
       return AuthService.login(payload.email, payload.password, requestId);
     }
 
-    // Authenticated Actions Validation
     var session = AuthService.validateSession(sessionToken);
     if (!session.valid) {
       return {
@@ -35,65 +34,44 @@ var Router = {
 
     var user = session.user;
 
-    // Action Routing Map
     switch (action) {
       case 'testConnectionsAdmin':
-        if (user.role !== 'ADMIN') return Router.unauthorized(requestId);
+        if (['ADMIN', 'FOUNDER', 'COE'].indexOf(user.role) === -1) return Router.unauthorized(requestId);
         return SheetRepository.testConnectionsAdmin(requestId);
 
-      case 'getLeads':
-        return LeadService.getLeads(user, payload, requestId);
+      case 'getKpiDefinitions':
+        return KpiEngine.getDefinitions(user, payload, requestId);
 
-      case 'createLead':
-        return LeadService.createLead(user, payload, requestId);
+      case 'submitKpiEvidence':
+        return KpiEngine.submitEvidence(user, payload, requestId);
 
-      case 'updateLeadStage':
-        return LeadService.updateStage(user, payload, requestId);
+      case 'auditKpi':
+        if (['GROWTH_OFFICER', 'ADMIN', 'FOUNDER'].indexOf(user.role) === -1) return Router.unauthorized(requestId);
+        return KpiEngine.auditKpi(user, payload, requestId);
 
-      case 'logFollowup':
-        return LeadService.logFollowup(user, payload, requestId);
+      case 'approveKpiAudit':
+        if (['FOUNDER', 'ADMIN'].indexOf(user.role) === -1) return Router.unauthorized(requestId);
+        return KpiEngine.approveAndLockAudit(user, payload, requestId);
 
-      case 'importLeadsExcel':
-        return LeadService.importLeadsExcel(user, payload, requestId);
+      case 'getPlacements':
+        return PlacementService.getPlacements(user, payload, requestId);
 
-      case 'convertLeadToStudent':
-        return StudentService.convertLead(user, payload, requestId);
-
-      case 'getStudents':
-        return StudentService.getStudents(user, payload, requestId);
-
-      case 'getFeeInstallments':
-        return FeeService.getInstallments(user, payload, requestId);
-
-      case 'recordPayment':
-        if (['ADMIN', 'OPERATIONS'].indexOf(user.role) === -1) return Router.unauthorized(requestId);
-        return FeeService.recordPayment(user, payload, requestId);
-
-      case 'extendInstallmentDue':
-        if (['ADMIN', 'OPERATIONS'].indexOf(user.role) === -1) return Router.unauthorized(requestId);
-        return FeeService.extendDue(user, payload, requestId);
-
-      case 'getExpenses':
-        if (['SALES_EXECUTIVE', 'STAFF'].indexOf(user.role) !== -1) return Router.unauthorized(requestId);
-        return ExpenseService.getExpenses(user, payload, requestId);
-
-      case 'recordExpense':
-        if (['SALES_EXECUTIVE'].indexOf(user.role) !== -1) return Router.unauthorized(requestId);
-        return ExpenseService.recordExpense(user, payload, requestId);
+      case 'recordPlacement':
+        if (['SALES_HEAD', 'ADMIN', 'FOUNDER'].indexOf(user.role) === -1) return Router.unauthorized(requestId);
+        return PlacementService.recordPlacement(user, payload, requestId);
 
       case 'submitStaffDuty':
-        if (['STAFF', 'ADMIN', 'HR'].indexOf(user.role) === -1) return Router.unauthorized(requestId);
         return DutyService.submitDuty(user, payload, requestId);
 
       case 'getStaffDuties':
         return DutyService.getDuties(user, payload, requestId);
 
       case 'verifyStaffDuty':
-        if (['HR', 'ADMIN'].indexOf(user.role) === -1) return Router.unauthorized(requestId);
+        if (['HR', 'ADMIN', 'FOUNDER'].indexOf(user.role) === -1) return Router.unauthorized(requestId);
         return DutyService.verifyDuty(user, payload, requestId);
 
       case 'setupDatabase':
-        if (user.role !== 'ADMIN') return Router.unauthorized(requestId);
+        if (['ADMIN', 'FOUNDER'].indexOf(user.role) === -1) return Router.unauthorized(requestId);
         return Setup.provisionDatabase(requestId);
 
       default:

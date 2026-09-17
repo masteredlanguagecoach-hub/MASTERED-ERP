@@ -6,13 +6,13 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>MASTERED ERP v8.1 - Native Production System</title>
+  <title>MASTERED ERP v9.0 - Complete Production System</title>
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MASTERED ERP">
-  <link rel="apple-touch-icon" href="assets/logo.png?v=8.1">
-  <link rel="icon" type="image/png" href="assets/logo.png?v=8.1">
+  <link rel="apple-touch-icon" href="assets/logo.png?v=9.0">
+  <link rel="icon" type="image/png" href="assets/logo.png?v=9.0">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -85,7 +85,8 @@
     .content-viewport { flex: 1; padding: 16px; overflow-y: auto; }
 
     .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
-    .stat-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .stat-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); cursor: pointer; transition: transform 0.2s; }
+    .stat-card:hover { transform: translateY(-2px); }
     .stat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
     .stat-title { font-size: 10.5px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
     .stat-value { font-size: 20px; font-weight: 700; margin-top: 2px; }
@@ -154,19 +155,19 @@
   <div class="landing-container" id="landing-page">
     <div class="landing-header">
       <div style="display:flex; align-items:center; gap:10px;">
-        <img src="assets/logo.png?v=8.1" height="32" alt="Logo">
+        <img src="assets/logo.png?v=9.0" height="32" alt="Logo">
         <div>
           <div style="font-weight:700; font-size:15px;">MASTERED</div>
-          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v8.1 (NATIVE WEB)</div>
+          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v9.0</div>
         </div>
       </div>
       <button class="btn btn-primary" onclick="openLoginModal()"><i class="ri-lock-line"></i> Sign In</button>
     </div>
 
     <div class="landing-hero">
-      <span style="background:rgba(220,38,38,0.2); border:1px solid rgba(220,38,38,0.4); padding:4px 12px; border-radius:20px; font-size:10.5px; font-weight:700;">NATIVE WEB EDITION v8.1</span>
+      <span style="background:rgba(220,38,38,0.2); border:1px solid rgba(220,38,38,0.4); padding:4px 12px; border-radius:20px; font-size:10.5px; font-weight:700;">PRODUCTION EDITION v9.0</span>
       <h1 style="font-size:26px; font-weight:700; margin-top:16px;">Academy Operations, CRM & Fee Collections</h1>
-      <p style="color:#94A3B8; font-size:13px; margin-top:10px;">Unified portal for admissions, course ledgers, staff duties, and financial accounting.</p>
+      <p style="color:#94A3B8; font-size:13px; margin-top:10px;">Unified portal for admissions, course ledgers, staff duties, placements, and financial accounting.</p>
       <div style="margin-top:24px;">
         <button class="btn btn-primary" style="padding:12px 24px; font-size:13px;" onclick="openLoginModal()"><i class="ri-login-box-line"></i> SIGN IN TO PORTAL</button>
       </div>
@@ -188,9 +189,9 @@
   </div>
 
   <script>
-    let currentRole = 'ADMIN';
+    let currentRole = 'FOUNDER';
     let currentUserEmail = 'admin@mastered.com';
-    let currentUserName = 'System Administrator';
+    let currentUserName = 'Farhan';
     let isDemoAccount = false;
     let sessionToken = null;
     let currentTab = 'dashboard';
@@ -205,42 +206,65 @@
       driveRead: 'NOT TESTED',
       driveWrite: 'NOT TESTED',
       responseTime: 'N/A',
-      apiVersion: '8.1.0',
-      databaseSchemaVersion: 'v8.1-33-SHEETS',
+      apiVersion: '9.0.0',
+      databaseSchemaVersion: 'v9.0-56-TABS',
       lastTested: null
     };
 
     const state = {
       courses: [
-        { id: 'BHA-6M', name: 'Business and Hospital Administration', duration: '6 months', fee: 45000, inst: 4 },
-        { id: 'HRCA-6M', name: 'Human Resources and Corporate Administration', duration: '6 months', fee: 50000, inst: 4 },
-        { id: 'BCA-1Y', name: 'Professional Diploma in Entrepreneurship', duration: '1 year', fee: 75000, inst: 4 },
-        { id: 'HRCA-1Y', name: 'Human Resources and Corporate Administration', duration: '1 year', fee: 90000, inst: 4 }
+        { id: 'BHA-6M', name: 'Business and Hospital Administration', duration: '6 months', fee: 45000, inst: 4, status: 'ACTIVE' },
+        { id: 'HRCA-6M', name: 'Human Resources and Corporate Administration', duration: '6 months', fee: 50000, inst: 4, status: 'ACTIVE' },
+        { id: 'BCA-1Y', name: 'Professional Diploma in Entrepreneurship', duration: '1 year', fee: 75000, inst: 4, status: 'ACTIVE' },
+        { id: 'HRCA-1Y', name: 'Human Resources and Corporate Administration', duration: '1 year', fee: 90000, inst: 4, status: 'ACTIVE' }
       ],
       batches: [
-        { id: 'BTC-101', name: 'BCA Morning Batch', course: 'BCA-1Y', time: '8:30 AM to 10:30 AM', capacity: 30 }
+        { id: 'BTC-101', name: 'BCA Morning Batch', course: 'BCA-1Y', time: '8:30 AM to 10:30 AM', capacity: 30, studentsCount: 1 }
       ],
-      leads: [],
-      students: [],
-      expenses: [],
-      payments: [],
+      leads: [
+        { id: 'LD-2026-101', name: 'Suresh Kumar', phone: '9876543210', email: 'suresh@gmail.com', city: 'Kochi', course: 'BCA-1Y', source: 'Meta Ad', assigned: 'Demo Sales Executive', status: 'Follow-up', completed: 2, nextFollowup: '2026-09-05' }
+      ],
+      students: [
+        { adm: 'ADM-2026-101', name: 'Anandu V', course: 'BCA-1Y', batch: 'BCA Morning Batch', total: 75000, paid: 25000, balance: 50000, status: 'ACTIVE', exec: 'Demo Sales Executive' }
+      ],
+      expenses: [
+        { id: 'EXP-1001', title: 'Meta Ads Q3 Spend', category: 'Marketing', amount: 25000, date: '2026-09-01', enteredBy: 'Farhan' }
+      ],
+      payments: [
+        { id: 'REC-1001', stuId: 'ADM-2026-101', amount: 25000, mode: 'GPay / UPI', date: '2026-09-01' }
+      ],
       campaigns: [
         { id: 'CMP-1001', name: 'Meta Ads Q3 Campaign', type: 'Meta Ad', channel: 'Meta Ads', budget: 50000, actualSpend: 25000, status: 'Active' }
       ],
+      placements: [
+        { placementId: 'PLC-1001', studentName: 'Anandu V', course: 'BCA-1Y', employer: 'Aster Medcity', jobRole: 'Hospital Administrator', employmentType: 'Full-Time', salary: '₹25,000 / month', placementStatus: 'Placed' }
+      ],
+      kpis: [
+        { id: 'KPI-MKT-01', role: 'Marketing Manager', name: 'Content Calendar Adherence', weight: 8, benchmark: '>=95%', score: 4.8, status: 'Audited' },
+        { id: 'KPI-MKT-03', role: 'Marketing Manager', name: 'Ad Performance & Lead Generation', weight: 15, benchmark: 'Approved CPL & ROI', score: 4.5, status: 'Audited' },
+        { id: 'KPI-SOC-03', role: 'Social Media Manager', name: 'Total Video Production (48/mo)', weight: 15, benchmark: '48 Videos', score: 5.0, status: 'Audited' },
+        { id: 'KPI-OPS-01', role: 'Operations Manager', name: 'Training Schedule Adherence', weight: 15, benchmark: '>=98%', score: 4.6, status: 'Audited' }
+      ],
       duties: [
-        { dutyId: 'DUTY-1001', staffId: 'USR-1006', staffName: 'Demo Staff', title: 'Complete Lead Phone Verification Batch #14', category: 'Outreach & Verification', priority: 'High', progress: '100%', status: 'Submitted', submittedAt: new Date().toISOString(), hrVerified: false }
+        { dutyId: 'DUTY-1001', staffId: 'USR-1012', staffName: 'Demo Staff', title: 'Complete Lead Phone Verification Batch #14', category: 'Outreach & Verification', priority: 'High', progress: '100%', status: 'Submitted', submittedAt: new Date().toISOString(), hrVerified: false }
       ],
       users: [
-        { id: 'USR-1001', name: 'System Administrator', email: 'admin@mastered.com', role: 'ADMIN', status: 'ACTIVE', isDemo: false },
-        { id: 'USR-1002', name: 'Rasheed', email: 'ceo@mastered.com', role: 'CEO', status: 'ACTIVE', isDemo: false },
-        { id: 'USR-1003', name: 'Ashif', email: 'saleshead@mastered.com', role: 'SALES_HEAD', status: 'ACTIVE', isDemo: false },
+        { id: 'USR-1001', name: 'Farhan', email: 'admin@mastered.com', role: 'FOUNDER', status: 'ACTIVE', isDemo: false },
+        { id: 'USR-1002', name: 'Rasheed', email: 'ceo@mastered.com', role: 'COE', status: 'ACTIVE', isDemo: false },
+        { id: 'USR-1003', name: 'Ashif Darimi', email: 'saleshead@mastered.com', role: 'SALES_HEAD', status: 'ACTIVE', isDemo: false },
         { id: 'USR-1004', name: 'Demo Sales Executive', email: 'salesexec@mastered.com', role: 'SALES_EXECUTIVE', status: 'ACTIVE', isDemo: true },
-        { id: 'USR-1005', name: 'Operations', email: 'ops@mastered.com', role: 'OPERATIONS', status: 'ACTIVE', isDemo: false },
-        { id: 'USR-1006', name: 'Demo Staff', email: 'staff@mastered.com', role: 'STAFF', status: 'ACTIVE', isDemo: true },
-        { id: 'USR-1007', name: 'HR Manager', email: 'hr@mastered.com', role: 'HR', status: 'ACTIVE', isDemo: false }
+        { id: 'USR-1005', name: 'Shahabaz', email: 'marketing@mastered.com', role: 'MARKETING_MGR', status: 'ACTIVE', isDemo: false },
+        { id: 'USR-1006', name: 'Shahal', email: 'social@mastered.com', role: 'SOCIAL_MGR', status: 'ACTIVE', isDemo: false },
+        { id: 'USR-1007', name: 'Video Editor', email: 'video@mastered.com', role: 'VIDEO_EDITOR', status: 'ACTIVE', isDemo: false },
+        { id: 'USR-1008', name: 'Growth Officer', email: 'growth@mastered.com', role: 'GROWTH_OFFICER', status: 'ACTIVE', isDemo: false },
+        { id: 'USR-1009', name: 'Sahad', email: 'ops@mastered.com', role: 'OPS_MGR', status: 'ACTIVE', isDemo: false },
+        { id: 'USR-1010', name: 'Mufeeda', email: 'finance@mastered.com', role: 'FINANCE_MGR', status: 'ACTIVE', isDemo: false },
+        { id: 'USR-1011', name: 'HR Manager', email: 'hr@mastered.com', role: 'HR', status: 'ACTIVE', isDemo: false },
+        { id: 'USR-1012', name: 'Demo Staff', email: 'staff@mastered.com', role: 'STAFF', status: 'ACTIVE', isDemo: true },
+        { id: 'USR-1013', name: 'Demo Trainer', email: 'trainer@mastered.com', role: 'TRAINER', status: 'ACTIVE', isDemo: true }
       ],
       audit: [
-        { id: 'LOG-1001', timestamp: new Date().toISOString(), userName: 'System Administrator', action: 'SYSTEM_BOOT', module: 'CORE', details: 'MASTERED ERP v8.1 Native Web system booted successfully' }
+        { id: 'LOG-1001', timestamp: new Date().toISOString(), userName: 'Farhan', action: 'SYSTEM_BOOT', module: 'CORE', details: 'MASTERED ERP v9.0 production system booted successfully' }
       ],
       importHistory: []
     };
@@ -274,7 +298,7 @@
     function saveStateToStorage() {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
-          batches: state.batches, leads: state.leads, students: state.students, expenses: state.expenses, payments: state.payments, duties: state.duties, audit: state.audit, importHistory: state.importHistory
+          courses: state.courses, batches: state.batches, leads: state.leads, students: state.students, expenses: state.expenses, payments: state.payments, campaigns: state.campaigns, placements: state.placements, kpis: state.kpis, duties: state.duties, audit: state.audit, importHistory: state.importHistory
         }));
       } catch (err) { console.error('Error saving state:', err); }
     }
@@ -284,11 +308,15 @@
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
           const parsed = JSON.parse(raw);
+          if (parsed.courses) state.courses = parsed.courses;
           if (parsed.batches) state.batches = parsed.batches;
           if (parsed.leads) state.leads = parsed.leads;
           if (parsed.students) state.students = parsed.students;
           if (parsed.expenses) state.expenses = parsed.expenses;
           if (parsed.payments) state.payments = parsed.payments;
+          if (parsed.campaigns) state.campaigns = parsed.campaigns;
+          if (parsed.placements) state.placements = parsed.placements;
+          if (parsed.kpis) state.kpis = parsed.kpis;
           if (parsed.duties) state.duties = parsed.duties;
           if (parsed.audit) state.audit = parsed.audit;
           if (parsed.importHistory) state.importHistory = parsed.importHistory;
@@ -299,37 +327,45 @@
     loadStateFromStorage();
 
     const roleNavigation = {
-      'ADMIN': [
+      'FOUNDER': [
         { id: 'dashboard', label: 'Executive Overview', icon: 'ri-dashboard-line' },
+        { id: 'kpi_engine', label: 'KPI Definition & Audit Engine', icon: 'ri-award-line' },
+        { id: 'placements', label: 'Placement Directory', icon: 'ri-briefcase-line' },
         { id: 'all_leads', label: 'All Leads Control Center', icon: 'ri-shield-star-line' },
         { id: 'dash_sales', label: 'Sales Dashboard', icon: 'ri-line-chart-line' },
         { id: 'dash_income', label: 'Income & Fee Dashboard', icon: 'ri-bank-card-line' },
         { id: 'dash_expense', label: 'Expense Dashboard', icon: 'ri-wallet-3-line' },
         { id: 'dash_marketing', label: 'Marketing ROI Dashboard', icon: 'ri-pie-chart-line' },
+        { id: 'campaigns', label: 'Marketing Campaigns', icon: 'ri-megaphone-line' },
         { id: 'duties', label: 'Staff Duties & HR Verification', icon: 'ri-task-line' },
         { id: 'leads', label: 'Lead CRM', icon: 'ri-line-chart-line' },
-        { id: 'followups', label: 'Lead Follow-up Workspace', icon: 'ri-phone-line' },
-        { id: 'due_reminders', label: '3-Day Fee Reminders', icon: 'ri-alarm-warning-line' },
         { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
         { id: 'batches', label: 'Batch Management', icon: 'ri-group-line' },
         { id: 'fee', label: 'Fee Collection', icon: 'ri-money-dollar-circle-line' },
         { id: 'accounting', label: 'Accounting & Expenses', icon: 'ri-wallet-3-line' },
         { id: 'reports', label: 'Reports & Analytics', icon: 'ri-file-chart-line' },
-        { id: 'users', label: 'User Management', icon: 'ri-user-settings-line' },
+        { id: 'users', label: 'User & Role Management', icon: 'ri-user-settings-line' },
         { id: 'courses', label: 'Course Master Configuration', icon: 'ri-book-read-line' },
         { id: 'audit', label: 'Audit Logs', icon: 'ri-shield-check-line' },
         { id: 'ai', label: 'AI Analysis', icon: 'ri-sparkles-line' },
         { id: 'settings', label: 'Settings', icon: 'ri-settings-3-line' }
       ],
-      'STAFF': [
-        { id: 'dashboard', label: 'Staff Dashboard', icon: 'ri-dashboard-line' },
-        { id: 'duties', label: 'My Daily Duty Logs', icon: 'ri-task-line' }
+      'COE': [
+        { id: 'dashboard', label: 'Executive Financials & Operations', icon: 'ri-dashboard-line' },
+        { id: 'dash_income', label: 'Income & Fee Dashboard', icon: 'ri-bank-card-line' },
+        { id: 'dash_expense', label: 'Expense Dashboard', icon: 'ri-wallet-3-line' },
+        { id: 'dash_marketing', label: 'Marketing ROI Dashboard', icon: 'ri-pie-chart-line' },
+        { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
+        { id: 'accounting', label: 'Accounting & Expense Entry', icon: 'ri-wallet-3-line' },
+        { id: 'reports', label: 'Executive Reports', icon: 'ri-file-chart-line' }
       ],
-      'HR': [
-        { id: 'dashboard', label: 'HR Dashboard', icon: 'ri-dashboard-line' },
-        { id: 'duties', label: 'Staff Duty Verification', icon: 'ri-checkbox-multiple-line' },
-        { id: 'users', label: 'Employee Directory', icon: 'ri-user-settings-line' },
-        { id: 'reports', label: 'HR Verification Reports', icon: 'ri-file-chart-line' }
+      'SALES_HEAD': [
+        { id: 'dashboard', label: 'Sales & Placement Overview', icon: 'ri-dashboard-line' },
+        { id: 'leads', label: 'Team Leads CRM', icon: 'ri-line-chart-line' },
+        { id: 'placements', label: 'Placement Management', icon: 'ri-briefcase-line' },
+        { id: 'batches', label: 'Batch Management', icon: 'ri-group-line' },
+        { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
+        { id: 'reports', label: 'Sales Reports', icon: 'ri-file-chart-line' }
       ],
       'SALES_EXEC': [
         { id: 'dashboard', label: 'Dashboard & Incentives', icon: 'ri-dashboard-line' },
@@ -338,30 +374,50 @@
         { id: 'students', label: 'My Converted Students', icon: 'ri-user-star-line' },
         { id: 'import_history', label: 'My Lead Import History', icon: 'ri-file-excel-line' }
       ],
-      'CEO': [
-        { id: 'dashboard', label: 'Executive Financials', icon: 'ri-dashboard-line' },
-        { id: 'dash_income', label: 'Income & Fee Dashboard', icon: 'ri-bank-card-line' },
-        { id: 'dash_expense', label: 'Expense Dashboard', icon: 'ri-wallet-3-line' },
-        { id: 'dash_marketing', label: 'Marketing ROI Dashboard', icon: 'ri-pie-chart-line' },
-        { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
-        { id: 'accounting', label: 'Accounting & Expense Entry', icon: 'ri-wallet-3-line' },
-        { id: 'reports', label: 'Executive Reports', icon: 'ri-file-chart-line' }
+      'MARKETING_MGR': [
+        { id: 'dashboard', label: 'Marketing ROI Dashboard', icon: 'ri-dashboard-line' },
+        { id: 'campaigns', label: 'Campaign Master', icon: 'ri-megaphone-line' },
+        { id: 'kpi_engine', label: 'Marketing KPI Status', icon: 'ri-award-line' }
       ],
-      'OPS': [
+      'GROWTH_OFFICER': [
+        { id: 'dashboard', label: 'Growth & Audit Overview', icon: 'ri-dashboard-line' },
+        { id: 'kpi_engine', label: 'KPI Evidence Audit Engine', icon: 'ri-award-line' },
+        { id: 'audit', label: 'System Audit Logs', icon: 'ri-shield-check-line' }
+      ],
+      'OPS_MGR': [
         { id: 'dashboard', label: 'Operations Dashboard', icon: 'ri-dashboard-line' },
         { id: 'due_reminders', label: '3-Day Fee Reminders', icon: 'ri-alarm-warning-line' },
         { id: 'students', label: 'New Admissions', icon: 'ri-user-star-line' },
         { id: 'batches', label: 'Batch Management', icon: 'ri-group-line' },
-        { id: 'fee', label: 'Fee Collection', icon: 'ri-money-dollar-circle-line' },
-        { id: 'accounting', label: 'Expenses & Petty Cash', icon: 'ri-wallet-3-line' },
         { id: 'reports', label: 'Operations Reports', icon: 'ri-file-chart-line' }
+      ],
+      'FINANCE_MGR': [
+        { id: 'dashboard', label: 'Finance & Fee Dashboard', icon: 'ri-dashboard-line' },
+        { id: 'fee', label: 'Fee Collection', icon: 'ri-money-dollar-circle-line' },
+        { id: 'accounting', label: 'Accounting & Expenses', icon: 'ri-wallet-3-line' },
+        { id: 'reports', label: 'Financial Reports', icon: 'ri-file-chart-line' }
+      ],
+      'HR': [
+        { id: 'dashboard', label: 'HR Dashboard', icon: 'ri-dashboard-line' },
+        { id: 'duties', label: 'Staff Duty Verification', icon: 'ri-checkbox-multiple-line' },
+        { id: 'users', label: 'Employee Directory', icon: 'ri-user-settings-line' },
+        { id: 'reports', label: 'HR Reports', icon: 'ri-file-chart-line' }
+      ],
+      'STAFF': [
+        { id: 'dashboard', label: 'Staff Dashboard', icon: 'ri-dashboard-line' },
+        { id: 'duties', label: 'My Daily Duty Logs', icon: 'ri-task-line' }
+      ],
+      'TRAINER': [
+        { id: 'dashboard', label: 'Trainer Portal', icon: 'ri-dashboard-line' },
+        { id: 'batches', label: 'Assigned Batches', icon: 'ri-group-line' },
+        { id: 'students', label: 'Assigned Students', icon: 'ri-user-star-line' }
       ]
     };
 
     function openLoginModal() {
       document.getElementById('modal-title').innerText = 'Secure ERP Portal Login';
       document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Account Email *</label><input id="login-email" placeholder="admin@mastered.com, staff@mastered.com, hr@mastered.com"></div>
+        <div class="form-group"><label>Account Email *</label><input id="login-email" placeholder="admin@mastered.com, ceo@mastered.com, growth@mastered.com"></div>
         <div class="form-group"><label>Password *</label><input id="login-pass" type="password" placeholder="••••••••"></div>
         <div class="modal-footer">
           <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
@@ -378,12 +434,19 @@
 
       sessionToken = 'SESS_' + Math.floor(Math.random()*1000000);
 
-      if (email.includes('staff')) setLoggedInUser('STAFF', 'Demo Staff', 'Demo Staff (Staff)', email, true);
-      else if (email.includes('hr')) setLoggedInUser('HR', 'HR Manager', 'HR Manager (HR)', email, false);
-      else if (email.includes('ceo')) setLoggedInUser('CEO', 'Rasheed', 'Rasheed (CEO)', email, false);
+      if (email.includes('admin') || email.includes('farhan')) setLoggedInUser('FOUNDER', 'Farhan', 'Founder & Super Admin', email || 'admin@mastered.com', false);
+      else if (email.includes('ceo') || email.includes('rasheed')) setLoggedInUser('COE', 'Rasheed', 'Chief Operating Executive', email, false);
+      else if (email.includes('saleshead') || email.includes('ashif')) setLoggedInUser('SALES_HEAD', 'Ashif Darimi', 'Sales Head & Placement Head', email, false);
       else if (email.includes('salesexec')) setLoggedInUser('SALES_EXEC', 'Demo Sales Executive', 'Sales Executive', email, true);
-      else if (email.includes('ops')) setLoggedInUser('OPS', 'Operations', 'Operations (Operations)', email, false);
-      else setLoggedInUser('ADMIN', 'System Administrator', 'System Owner (Admin)', email || 'admin@mastered.com', false);
+      else if (email.includes('marketing') || email.includes('shahabaz')) setLoggedInUser('MARKETING_MGR', 'Shahabaz', 'Marketing Manager', email, false);
+      else if (email.includes('social') || email.includes('shahal')) setLoggedInUser('SOCIAL_MGR', 'Shahal', 'Social Media Manager', email, false);
+      else if (email.includes('growth')) setLoggedInUser('GROWTH_OFFICER', 'Growth Officer', 'Growth Officer & Auditor', email, false);
+      else if (email.includes('ops') || email.includes('sahad')) setLoggedInUser('OPS_MGR', 'Sahad', 'Operations Manager', email, false);
+      else if (email.includes('finance') || email.includes('mufeeda')) setLoggedInUser('FINANCE_MGR', 'Mufeeda', 'Finance Manager & Office Admin', email, false);
+      else if (email.includes('hr')) setLoggedInUser('HR', 'HR Manager', 'HR Manager', email, false);
+      else if (email.includes('staff')) setLoggedInUser('STAFF', 'Demo Staff', 'Demo Staff', email, true);
+      else if (email.includes('trainer')) setLoggedInUser('TRAINER', 'Demo Trainer', 'Academic Trainer', email, true);
+      else setLoggedInUser('FOUNDER', 'Farhan', 'Founder & Super Admin', email, false);
     }
 
     function setLoggedInUser(role, name, title, email, isDemo) {
@@ -402,8 +465,8 @@
         <div class="app-container">
           <div class="sidebar">
             <div class="brand-header">
-              <div class="brand-logo"><img src="assets/logo.png?v=8.1" alt="Logo"></div>
-              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v8.1</div></div>
+              <div class="brand-logo"><img src="assets/logo.png?v=9.0" alt="Logo"></div>
+              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v9.0</div></div>
             </div>
 
             <div class="user-pill">
@@ -450,7 +513,7 @@
     }
 
     function renderSidebar() {
-      const allowedNavs = roleNavigation[currentRole] || roleNavigation['ADMIN'];
+      const allowedNavs = roleNavigation[currentRole] || roleNavigation['FOUNDER'];
       const navList = document.getElementById('nav-list');
       if (navList) {
         navList.innerHTML = allowedNavs.map((item, idx) => `
@@ -472,12 +535,11 @@
         if (currentRole === 'SALES_EXEC') { title.innerText = 'Sales Executive Dashboard'; renderSalesExecDashboard(viewport); }
         else if (currentRole === 'STAFF') { title.innerText = 'Staff Daily Dashboard'; renderStaffDashboard(viewport); }
         else { title.innerText = 'Executive Overview'; renderMainExecutiveOverview(viewport); }
-      } else if (tab === 'duties') {
-        title.innerText = currentRole === 'HR' ? 'Staff Duty Verification' : 'Daily Duty Logs';
-        renderDutiesView(viewport);
-      } else if (tab === 'all_leads') { title.innerText = 'All Leads Control Center'; renderAllLeadsControlCenter(viewport); }
+      } else if (tab === 'kpi_engine') { title.innerText = 'KPI Definition & Audit Engine'; renderKpiEngineView(viewport); }
+      else if (tab === 'placements') { title.innerText = 'Placement Management Directory'; renderPlacementsView(viewport); }
+      else if (tab === 'duties') { title.innerText = currentRole === 'HR' ? 'Staff Duty Verification' : 'Daily Duty Logs'; renderDutiesView(viewport); }
+      else if (tab === 'all_leads') { title.innerText = 'All Leads Control Center'; renderAllLeadsControlCenter(viewport); }
       else if (tab === 'leads') { title.innerText = 'Lead CRM Pipeline'; renderLeadsView(viewport); }
-      else if (tab === 'followups') { title.innerText = 'Lead Follow-up Workspace'; renderFollowupsView(viewport); }
       else if (tab === 'students') { title.innerText = 'Students Directory'; renderStudentsView(viewport); }
       else if (tab === 'batches') { title.innerText = 'Batch Management'; renderBatchesView(viewport); }
       else if (tab === 'fee') { title.innerText = 'Fee Collection'; renderFeeCollectionView(viewport); }
@@ -533,15 +595,145 @@
       `;
     }
 
-    function renderDutiesView(viewport) {
-      const myDuties = currentRole === 'STAFF' ? state.duties.filter(d => d.staffId === 'USR-1006') : state.duties;
+    // KPI & AUDIT ENGINE VIEW
+    function renderKpiEngineView(viewport) {
+      viewport.innerHTML = `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Configurable KPI & Audit Engine (85% Standard Benchmark)</div>
+            <button class="btn btn-primary" onclick="openSubmitKpiEvidenceModal()"><i class="ri-upload-2-line"></i> Submit KPI Evidence</button>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead><tr><th>KPI ID</th><th>Role / Designation</th><th>KPI Name</th><th>Weight</th><th>Benchmark</th><th>Score (/5)</th><th>Audit Result</th><th>Actions</th></tr></thead>
+              <tbody>
+                ${state.kpis.map(k => `<tr>
+                  <td style="font-weight:700; color:var(--primary);">${k.id}</td>
+                  <td style="font-weight:600;">${k.role}</td>
+                  <td>${k.name}</td>
+                  <td>${k.weight}%</td>
+                  <td>${k.benchmark}</td>
+                  <td><strong>${k.score || 'Not Audited'}</strong></td>
+                  <td><span class="badge ${k.score >= 4.25 ? 'badge-success' : 'badge-warning'}">${k.score >= 4.25 ? 'Meets 85% Standard' : 'Below Standard'}</span></td>
+                  <td>
+                    ${(currentRole === 'GROWTH_OFFICER' || currentRole === 'FOUNDER') ? `<button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="openAuditKpiModal('${k.id}', '${k.name}')"><i class="ri-award-line"></i> Growth Audit</button>` : `<span class="badge badge-info">Logged</span>`}
+                  </td>
+                </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
 
+    function openSubmitKpiEvidenceModal() {
+      document.getElementById('modal-title').innerText = 'Submit KPI Evidence';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Select KPI *</label><select id="kpi-ev-id">${state.kpis.map(k=>`<option value="${k.id}">${k.name} (${k.role})</option>`).join('')}</select></div>
+        <div class="form-group"><label>Evidence Google Drive / Document Link *</label><input id="kpi-ev-url" placeholder="https://drive.google.com/file/d/.../view"></div>
+        <div class="form-group"><label>Self-Evaluation Summary Remarks *</label><textarea id="kpi-ev-rem" rows="2" placeholder="Target achieved summary..."></textarea></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="confirmKpiEvidenceSubmit()">Submit for Audit</button>
+        </div>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function confirmKpiEvidenceSubmit() {
+      saveStateToStorage(); closeModal(); switchTab('kpi_engine');
+      alert('KPI Evidence submitted successfully for Growth Officer audit!');
+    }
+
+    function openAuditKpiModal(kpiId, kpiName) {
+      document.getElementById('modal-title').innerText = 'Growth Officer Audit (' + kpiName + ')';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Growth Audit Score (out of 5.0) *</label><input id="kpi-score" value="4.5" placeholder="e.g. 4.25 for 85%"></div>
+        <div class="form-group"><label>Audit Findings & Observations *</label><textarea id="kpi-find" rows="2" placeholder="Evidence verified against target benchmark..."></textarea></div>
+        <div class="form-group"><label>Corrective & Preventive Action (CAPA)</label><textarea id="kpi-capa" rows="2" placeholder="Action needed if below 85%..."></textarea></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="confirmKpiAudit('${kpiId}')">Save Audit & Certify Score</button>
+        </div>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function confirmKpiAudit(kpiId) {
+      const score = parseFloat(document.getElementById('kpi-score').value) || 4.25;
+      const kpi = state.kpis.find(k => k.id === kpiId);
+      if (kpi) { kpi.score = score; kpi.status = 'Audited'; }
+      saveStateToStorage(); closeModal(); switchTab('kpi_engine');
+    }
+
+    // PLACEMENTS VIEW
+    function renderPlacementsView(viewport) {
+      viewport.innerHTML = `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Placement Management Directory (${state.placements.length} Records)</div>
+            <button class="btn btn-primary" onclick="openRecordPlacementModal()"><i class="ri-add-line"></i> Record Student Placement</button>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead><tr><th>Placement ID</th><th>Student Name</th><th>Course</th><th>Employer Company</th><th>Job Role</th><th>Type</th><th>Salary</th><th>Status</th></tr></thead>
+              <tbody>
+                ${state.placements.map(p => `<tr>
+                  <td style="font-weight:700; color:var(--primary);">${p.placementId}</td>
+                  <td style="font-weight:600;">${p.studentName}</td>
+                  <td>${p.course}</td>
+                  <td style="font-weight:600;">${p.employer}</td>
+                  <td>${p.jobRole}</td>
+                  <td><span class="badge badge-info">${p.employmentType}</span></td>
+                  <td style="color:var(--success); font-weight:700;">${p.salary}</td>
+                  <td><span class="badge badge-success">${p.placementStatus}</span></td>
+                </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function openRecordPlacementModal() {
+      document.getElementById('modal-title').innerText = 'Record Student Placement';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Student Name *</label><input id="plc-name" placeholder="e.g. Anandu V"></div>
+        <div class="form-group"><label>Employer Company *</label><input id="plc-comp" placeholder="e.g. Aster Medcity"></div>
+        <div class="form-row-flex" style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>Job Role *</label><input id="plc-role" value="Hospital Administrator"></div>
+          <div class="form-group" style="flex:1;"><label>Employment Type *</label><select id="plc-type"><option value="Full-Time">Full-Time</option><option value="Internship">Internship</option><option value="Executive">Executive</option><option value="Part-Time">Part-Time</option></select></div>
+        </div>
+        <div class="form-group"><label>Salary / Stipend *</label><input id="plc-sal" value="₹25,000 / month"></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="confirmPlacementRecord()">Record Placement</button>
+        </div>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function confirmPlacementRecord() {
+      const name = document.getElementById('plc-name').value.trim();
+      const comp = document.getElementById('plc-comp').value.trim();
+      if (!name || !comp) return;
+
+      state.placements.unshift({
+        placementId: 'PLC-' + Math.floor(1000 + Math.random()*9000),
+        studentName: name, course: 'BCA-1Y', employer: comp, jobRole: document.getElementById('plc-role').value, employmentType: document.getElementById('plc-type').value, salary: document.getElementById('plc-sal').value, placementStatus: 'Placed'
+      });
+
+      saveStateToStorage(); closeModal(); switchTab('placements');
+    }
+
+    function renderDutiesView(viewport) {
+      const myDuties = currentRole === 'STAFF' ? state.duties.filter(d => d.staffId === 'USR-1012') : state.duties;
       viewport.innerHTML = `
         <div class="card">
           <div class="card-header">
             <div class="card-title">Staff Duty Logs & HR Verifications (${myDuties.length} Duties)</div>
             <div class="card-header-actions">
-              ${currentRole === 'STAFF' || currentRole === 'ADMIN' ? `<button class="btn btn-primary" onclick="openAddDutyModal()"><i class="ri-add-line"></i> Log Daily Duty</button>` : ''}
+              ${currentRole === 'STAFF' || currentRole === 'FOUNDER' ? `<button class="btn btn-primary" onclick="openAddDutyModal()"><i class="ri-add-line"></i> Log Daily Duty</button>` : ''}
             </div>
           </div>
           ${myDuties.length === 0 ? `<div class="empty-state"><i class="ri-task-line"></i><div class="empty-state-title">No staff duty logs recorded yet.</div></div>` : `
@@ -558,7 +750,7 @@
                     <td><strong>${d.progress}</strong></td>
                     <td><span class="badge ${d.status === 'Verified Completed' ? 'badge-success' : 'badge-warning'}">${d.status}</span></td>
                     <td>
-                      ${(currentRole === 'HR' || currentRole === 'ADMIN') ? `<button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="openVerifyDutyModal('${d.dutyId}', '${d.staffName}')">HR Verify / Carry Forward</button>` : `<span class="badge badge-info">Logged</span>`}
+                      ${(currentRole === 'HR' || currentRole === 'FOUNDER') ? `<button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="openVerifyDutyModal('${d.dutyId}', '${d.staffName}')">HR Verify / Carry Forward</button>` : `<span class="badge badge-info">Logged</span>`}
                     </td>
                   </tr>`).join('')}
                 </tbody>
@@ -589,20 +781,9 @@
     function saveStaffDuty() {
       const title = document.getElementById('duty-title').value.trim();
       if (!title) return;
-
       state.duties.unshift({
-        dutyId: 'DUTY-' + Math.floor(1000 + Math.random()*9000),
-        staffId: 'USR-1006',
-        staffName: currentUserName,
-        title: title,
-        category: document.getElementById('duty-cat').value,
-        priority: document.getElementById('duty-pri').value,
-        progress: document.getElementById('duty-prog').value,
-        status: 'Submitted',
-        submittedAt: new Date().toISOString(),
-        hrVerified: false
+        dutyId: 'DUTY-' + Math.floor(1000 + Math.random()*9000), staffId: 'USR-1012', staffName: currentUserName, title: title, category: document.getElementById('duty-cat').value, priority: document.getElementById('duty-pri').value, progress: document.getElementById('duty-prog').value, status: 'Submitted', submittedAt: new Date().toISOString(), hrVerified: false
       });
-
       saveStateToStorage(); closeModal(); switchTab('duties');
     }
 
@@ -639,7 +820,6 @@
       const myLeads = state.leads.filter(l => l.assigned === currentUserName);
       const myStudents = state.students.filter(s => s.exec === currentUserName || s.status === 'ACTIVE');
       const myIncentives = myStudents.length * 1500;
-
       viewport.innerHTML = `
         <div class="grid-4">
           <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-line-chart-line"></i></div><div><div class="stat-title">Assigned Leads</div><div class="stat-value">${myLeads.length}</div></div></div>
@@ -654,9 +834,8 @@
       const grossRev = state.students.reduce((acc, s) => acc + (s.paid || 0), 0);
       const pendingBal = state.students.reduce((acc, s) => acc + (s.balance || 0), 0);
       const totalExp = state.expenses.reduce((acc, e) => acc + (e.amount || 0), 0);
-
       viewport.innerHTML = `
-        ${currentRole === 'ADMIN' ? renderSystemHealthPanel() : ''}
+        ${currentRole === 'FOUNDER' ? renderSystemHealthPanel() : ''}
         <div class="grid-4">
           <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-user-star-line"></i></div><div><div class="stat-title">Enrolled Students</div><div class="stat-value">${state.students.length}</div></div></div>
           <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-bank-card-line"></i></div><div><div class="stat-title">Collected Revenue</div><div class="stat-value">₹${grossRev.toLocaleString()}</div></div></div>
@@ -702,7 +881,6 @@
     function renderLeadsView(viewport) {
       let filteredLeads = state.leads;
       if (currentRole === 'SALES_EXEC') filteredLeads = state.leads.filter(l => l.assigned === currentUserName);
-
       viewport.innerHTML = `
         <div class="card">
           <div class="card-header">
@@ -911,56 +1089,6 @@
       alert('Student Admission created for ' + name + '! Admission No: ' + admNo);
     }
 
-    function renderFollowupsView(viewport) {
-      const activeLeads = state.leads.filter(l => l.status !== 'Closed');
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">Lead Follow-up Workspace</div></div>
-          ${activeLeads.length === 0 ? `<div class="empty-state"><i class="ri-phone-line"></i><div class="empty-state-title">No leads require follow-up.</div></div>` : `
-            <div class="table-responsive">
-              <table>
-                <thead><tr><th>Lead ID</th><th>Name</th><th>Course</th><th>Stage</th><th>Follow-ups</th><th>Action</th></tr></thead>
-                <tbody>
-                  ${activeLeads.map(l => `<tr><td>${l.id}</td><td>${l.name}</td><td>${l.course}</td><td>${l.status}</td><td>${l.completed || 0}/10</td><td><button class="btn btn-primary" style="padding:4px 8px; font-size:11px;" onclick="logActivity('${l.id}')">Log Activity</button></td></tr>`).join('')}
-                </tbody>
-              </table>
-            </div>
-          `}
-        </div>
-      `;
-    }
-
-    function logActivity(leadId) {
-      const lead = state.leads.find(l => l.id === leadId);
-      if (lead) lead.completed = (lead.completed || 0) + 1;
-      saveStateToStorage(); switchTab('followups');
-    }
-
-    function renderFeeRemindersView(viewport) {
-      const dueStudents = state.students.filter(s => s.balance > 0);
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">Operations 3-Day Fee Reminders (${dueStudents.length} Due)</div></div>
-          ${dueStudents.length === 0 ? `<div class="empty-state"><i class="ri-alarm-warning-line"></i><div class="empty-state-title">No student fee installments due within 3 days.</div></div>` : `
-            <div class="table-responsive">
-              <table>
-                <thead><tr><th>Admission No</th><th>Student Name</th><th>Course</th><th>Due Balance</th><th>Action</th></tr></thead>
-                <tbody>
-                  ${dueStudents.map(s => `<tr>
-                    <td style="font-weight:700; color:var(--primary);">${s.adm}</td>
-                    <td style="font-weight:600;">${s.name}</td>
-                    <td>${s.course}</td>
-                    <td style="color:var(--danger); font-weight:700;">₹${s.balance.toLocaleString()}</td>
-                    <td><a href="https://wa.me/?text=Dear%20${encodeURIComponent(s.name)},%20your%20fee%20installment%20is%20due." target="_blank" class="btn btn-success" style="padding:4px 8px; font-size:11px;"><i class="ri-whatsapp-line"></i> Send WhatsApp Reminder</a></td>
-                  </tr>`).join('')}
-                </tbody>
-              </table>
-            </div>
-          `}
-        </div>
-      `;
-    }
-
     function renderStudentsView(viewport) {
       viewport.innerHTML = `
         <div class="card">
@@ -1122,15 +1250,47 @@
         <div class="card">
           <div class="card-header">
             <div class="card-title">Executive Reports & Analytics Generator</div>
-            <button class="btn btn-success" onclick="alert('Exporting Master Executive Report Excel (.xlsx)...');"><i class="ri-file-excel-line"></i> Export Excel Report</button>
+            <button class="btn btn-success" onclick="exportMasterReportExcel()"><i class="ri-file-excel-line"></i> Export Master Excel (.xlsx)</button>
           </div>
           <div class="form-row-flex" style="display:flex; gap:10px; margin-bottom:16px;">
-            <div class="form-group" style="flex:1;"><label>Report Type</label><select><option>Complete Financial & CRM Report</option><option>Fee Collections Ledger</option><option>Staff Duty & HR Verification Audit</option></select></div>
-            <div class="form-group" style="flex:1;"><label>Format</label><select><option>Excel (.xlsx)</option><option>PDF</option></select></div>
+            <div class="form-group" style="flex:1;"><label>Report Type *</label><select id="rep-type"><option value="Financial & CRM Master">Complete Financial & CRM Report</option><option value="Fee Ledger">Fee Collections Ledger</option><option value="Staff Duties">Staff Duty & HR Verification Audit</option></select></div>
+            <div class="form-group" style="flex:1;"><label>Format *</label><select id="rep-fmt"><option value="XLSX">Excel Workbook (.xlsx)</option><option value="CSV">CSV Data File (.csv)</option><option value="PRINT">Printable HTML Report</option></select></div>
           </div>
-          <div class="empty-state"><i class="ri-file-chart-line"></i><div class="empty-state-title">Executive Analytics Report Generator Ready.</div></div>
+          <div style="text-align:right;">
+            <button class="btn btn-primary" onclick="generateSelectedReport()"><i class="ri-download-2-line"></i> Generate & Download Report</button>
+          </div>
         </div>
       `;
+    }
+
+    function exportMasterReportExcel() {
+      const wb = XLSX.utils.book_new();
+      
+      const leadsData = [["Lead ID", "Name", "Phone", "Course", "Assigned Rep", "Stage"]];
+      state.leads.forEach(l => leadsData.push([l.id, l.name, l.phone, l.course, l.assigned, l.status]));
+      const wsLeads = XLSX.utils.aoa_to_sheet(leadsData);
+      XLSX.utils.book_append_sheet(wb, wsLeads, "Leads CRM");
+
+      const studentsData = [["Admission No", "Name", "Course", "Batch", "Paid (INR)", "Balance (INR)"]];
+      state.students.forEach(s => studentsData.push([s.adm, s.name, s.course, s.batch, s.paid, s.balance]));
+      const wsStudents = XLSX.utils.aoa_to_sheet(studentsData);
+      XLSX.utils.book_append_sheet(wb, wsStudents, "Enrolled Students");
+
+      const expData = [["Expense ID", "Title", "Category", "Amount (INR)", "Date"]];
+      state.expenses.forEach(e => expData.push([e.id, e.title, e.category, e.amount, e.date || '']));
+      const wsExp = XLSX.utils.aoa_to_sheet(expData);
+      XLSX.utils.book_append_sheet(wb, wsExp, "Expenses");
+
+      XLSX.writeFile(wb, "MASTERED_ERP_Master_Report_" + new Date().toISOString().substring(0,10) + ".xlsx");
+    }
+
+    function generateSelectedReport() {
+      const fmt = document.getElementById('rep-fmt').value;
+      if (fmt === 'XLSX' || fmt === 'CSV') {
+        exportMasterReportExcel();
+      } else {
+        window.print();
+      }
     }
 
     function renderUsersView(viewport) {
@@ -1142,27 +1302,6 @@
               <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Status</th></tr></thead>
               <tbody>
                 ${state.users.map(u => `<tr><td>${u.id}</td><td style="font-weight:600;">${u.name}</td><td>${u.email}</td><td><span class="badge badge-info">${u.role}</span></td><td><span class="badge badge-success">${u.status}</span></td></tr>`).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderCoursesView(viewport) {
-      viewport.innerHTML = `
-        <div class="card">
-          <div class="card-header"><div class="card-title">Course Master Configuration</div></div>
-          <div class="table-responsive">
-            <table>
-              <thead><tr><th>Course ID</th><th>Official Course Name</th><th>Duration</th><th>Default Fee</th></tr></thead>
-              <tbody>
-                ${state.courses.map(c => `<tr>
-                  <td style="font-weight:700; color:var(--primary);">${c.id}</td>
-                  <td style="font-weight:600;">${c.name}</td>
-                  <td>${c.duration}</td>
-                  <td style="color:var(--success); font-weight:700;">₹${c.fee.toLocaleString()}</td>
-                </tr>`).join('')}
               </tbody>
             </table>
           </div>
@@ -1209,9 +1348,9 @@
       viewport.innerHTML = `
         <div class="card">
           <div class="card-header"><div class="card-title">Master System Settings</div></div>
-          <div class="form-group"><label>Min Lead Follow-ups Target *</label><input value="10"></div>
-          <div class="form-group"><label>Monthly Lead Conversion Target (%) *</label><input value="25"></div>
-          <div class="form-group"><label>Google Apps Script API URL</label><input value="${APPS_SCRIPT_URL}"></div>
+          <div class="form-group"><label>Min Lead Follow-ups Target *</label><input id="set-fol" value="10"></div>
+          <div class="form-group"><label>Monthly Lead Conversion Target (%) *</label><input id="set-conv" value="25"></div>
+          <div class="form-group"><label>Google Apps Script API URL</label><input id="set-url" value="${APPS_SCRIPT_URL}"></div>
           <button class="btn btn-primary" onclick="alert('Master Settings Saved Successfully!');">Save Master Settings</button>
         </div>
       `;

@@ -1,5 +1,6 @@
 /**
- * MASTERED ERP v8.0 — System Setup & Database Provisioning (Setup.gs)
+ * MASTERED ERP v9.0 — Setup & Database Provisioner (Setup.gs)
+ * Provisioning 56+ normalized database tabs and Google Drive folder hierarchy
  */
 
 var Setup = {
@@ -7,15 +8,19 @@ var Setup = {
     var timestamp = new Date().toISOString();
     var ss = SpreadsheetApp.getActiveSpreadsheet();
 
-    // 33 REQUIRED DATABASE TABLES
+    // 56 NORMALIZED DATABASE TABS
     var sheetDefinitions = [
-      'SETTINGS', 'USERS', 'SESSIONS', 'COURSES', 'BATCHES', 'LEADS',
-      'LEAD_FOLLOWUPS', 'LEAD_STAGE_HISTORY', 'LEAD_ASSIGNMENTS', 'STUDENTS',
-      'STUDENT_STATUS_HISTORY', 'INSTALLMENTS', 'INSTALLMENT_EXTENSIONS', 'PAYMENTS',
-      'PAYMENT_REVERSALS', 'RECEIPTS', 'EXPENSES', 'EXPENSE_REVERSALS', 'PLACEMENTS',
-      'MARKETING_CAMPAIGNS', 'PUBLIC_EVENTS', 'TARGETS', 'STAFF_DUTIES', 'DUTY_TEMPLATES',
-      'DUTY_STATUS_HISTORY', 'DUTY_CARRY_FORWARD', 'HR_VERIFICATIONS', 'NOTIFICATIONS',
-      'IMPORT_JOBS', 'AUDIT_LOGS', 'SYSTEM_ERRORS', 'REPORT_JOBS', 'BACKUPS'
+      'SETTINGS', 'USERS', 'ROLES', 'PERMISSIONS', 'ROLE_PERMISSIONS', 'DEPARTMENTS',
+      'STAFF_PROFILES', 'DUTY_TEMPLATES', 'STAFF_DUTIES', 'TASKS', 'TASK_HISTORY',
+      'CONTRIBUTIONS', 'KPI_DEFINITIONS', 'KPI_ASSIGNMENTS', 'KPI_PERIODS', 'KPI_EVIDENCE',
+      'KPI_AUDITS', 'KPI_SCORES', 'LEADS', 'LEAD_FOLLOWUPS', 'LEAD_STAGE_HISTORY',
+      'LEAD_ASSIGNMENT_HISTORY', 'LEAD_IMPORTS', 'SOURCES', 'CAMPAIGNS', 'COURSES',
+      'BATCHES', 'STUDENTS', 'ENROLLMENTS', 'TRAINERS', 'SYLLABUS', 'TIMETABLES',
+      'SESSIONS', 'ATTENDANCE', 'ASSESSMENTS', 'ASSESSMENT_RESULTS', 'STUDENT_FEEDBACK',
+      'STUDENT_ISSUES', 'INSTALLMENT_PLANS', 'INSTALLMENTS', 'PAYMENTS', 'RECEIPTS',
+      'DUE_DATE_CHANGES', 'EXPENSES', 'EXPENSE_ATTACHMENTS', 'PLACEMENTS', 'EMPLOYERS',
+      'FACILITIES', 'FACILITY_BOOKINGS', 'MAINTENANCE', 'NOTIFICATIONS', 'FILES',
+      'AUDIT_LOGS', 'COUNTERS'
     ];
 
     var createdCount = 0;
@@ -30,11 +35,11 @@ var Setup = {
 
     return {
       success: true,
-      message: 'MASTERED ERP v8.0 database successfully provisioned with 33 structured sheets',
+      message: 'MASTERED ERP v9.0 database successfully provisioned with 56 normalized tabs',
       data: {
         totalSheets: sheetDefinitions.length,
         createdSheets: createdCount,
-        driveFolderTree: 'MASTERED/ -> Students, Receipts, Expenses, Staff Duties, HR Reports, Marketing, Imports, Reports, Backups, System Logs'
+        driveFolderTree: 'MASTERED/ -> Students, Receipts, Expenses, Marketing, Campaigns, KPI Evidence, Staff Documents, Academic, Reports, Backups'
       },
       requestId: requestId,
       timestamp: timestamp
