@@ -6,13 +6,13 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>MASTERED ERP v9.0 - Complete Production System</title>
+  <title>MASTERED ERP v9.1 - Single Color Theme & Instant Auth</title>
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MASTERED ERP">
-  <link rel="apple-touch-icon" href="assets/logo.png?v=9.0">
-  <link rel="icon" type="image/png" href="assets/logo.png?v=9.0">
+  <link rel="apple-touch-icon" href="assets/logo.png?v=9.1">
+  <link rel="icon" type="image/png" href="assets/logo.png?v=9.1">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -35,15 +35,15 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background-color: var(--bg); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
+    body { background-color: #1E293B; color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
 
-    /* Pure Public Landing Container */
-    .landing-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 500; display: flex; flex-direction: column; overflow-y: auto; }
-    .landing-header { background: white; border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
-    .landing-hero { background: linear-gradient(135deg, #1E293B, #0F172A); color: white; padding: 60px 20px; text-align: center; }
+    /* SINGLE UNIFIED COLOR LANDING PAGE (DARK SLATE BLUE) */
+    .landing-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #1E293B, #0F172A); color: white; z-index: 500; display: flex; flex-direction: column; overflow-y: auto; }
+    .landing-header { background: rgba(30, 41, 59, 0.95); border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; color: white; }
+    .landing-hero { background: transparent; color: white; padding: 60px 20px; text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
 
     /* ERP Mobile-First Native Responsive Layout */
-    .app-container { display: flex; width: 100vw; height: 100vh; overflow: hidden; position: relative; }
+    .app-container { display: flex; width: 100vw; height: 100vh; overflow: hidden; position: relative; background: var(--bg); }
     .sidebar { width: 260px; background-color: var(--secondary); color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; transition: transform 0.3s ease; }
     
     @media (max-width: 768px) {
@@ -54,13 +54,13 @@
     .brand-header { padding: 20px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--secondary-light); flex-shrink: 0; }
     .brand-logo { width: 38px; height: 38px; border-radius: 8px; background: transparent; padding: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
     .brand-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
-    .brand-title { font-size: 15px; font-weight: 700; letter-spacing: 1px; }
+    .brand-title { font-size: 15px; font-weight: 700; letter-spacing: 1px; color: white; }
     .brand-sub { font-size: 9px; color: var(--text-muted); font-weight: 600; }
 
     .user-pill { margin: 10px; padding: 10px; background: rgba(255,255,255,0.06); border-radius: 8px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; position: relative; }
     .avatar { width: 34px; height: 34px; border-radius: 50%; background-color: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
     .user-info { flex: 1; overflow: hidden; }
-    .user-name { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-name { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: white; }
     .user-role { font-size: 10px; color: #FCA5A5; }
 
     .nav-list { list-style: none; padding: 8px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
@@ -71,7 +71,7 @@
     .sidebar-footer { padding: 12px 14px 20px 14px; border-top: 1px solid var(--secondary-light); flex-shrink: 0; }
     .logout-btn { width: 100%; padding: 10px; border: 1px solid rgba(255,255,255,0.25); background: transparent; color: white; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 12px; min-height: 44px; }
 
-    .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100vh; width: 100%; }
+    .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100vh; width: 100%; background: var(--bg); }
     .top-bar { height: 60px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; flex-shrink: 0; }
     .mobile-hamburger { display: none; font-size: 24px; cursor: pointer; margin-right: 12px; color: var(--secondary); }
     
@@ -79,17 +79,17 @@
       .mobile-hamburger { display: block; }
     }
 
-    .page-title { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .page-title { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary); }
     .top-user-badge { display: flex; align-items: center; gap: 8px; font-size: 11px; background: #F1F5F9; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); flex-shrink: 0; }
 
-    .content-viewport { flex: 1; padding: 16px; overflow-y: auto; }
+    .content-viewport { flex: 1; padding: 16px; overflow-y: auto; background: var(--bg); }
 
     .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
     .stat-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); cursor: pointer; transition: transform 0.2s; }
     .stat-card:hover { transform: translateY(-2px); }
     .stat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
     .stat-title { font-size: 10.5px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat-value { font-size: 20px; font-weight: 700; margin-top: 2px; }
+    .stat-value { font-size: 20px; font-weight: 700; margin-top: 2px; color: var(--text-primary); }
 
     .btn { padding: 9px 14px; border-radius: 6px; border: none; font-weight: 600; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; white-space: nowrap; }
     .btn-primary { background: var(--primary); color: white; }
@@ -100,7 +100,7 @@
 
     .card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
     .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
-    .card-title { font-size: 14.5px; font-weight: 700; }
+    .card-title { font-size: 14.5px; font-weight: 700; color: var(--text-primary); }
     .card-header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
     .table-responsive { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid var(--border); }
@@ -119,9 +119,9 @@
     .empty-state { padding: 30px 16px; text-align: center; color: var(--text-secondary); }
     .empty-state i { font-size: 36px; color: var(--text-muted); margin-bottom: 10px; display: block; }
 
-    .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 600; }
+    .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 600; }
     .modal-backdrop.open { display: flex; }
-    .modal { background: white; border-radius: 12px; width: 680px; max-width: 95%; padding: 20px; max-height: 90vh; overflow-y: auto; }
+    .modal { background: white; border-radius: 12px; width: 680px; max-width: 95%; padding: 20px; max-height: 90vh; overflow-y: auto; color: var(--text-primary); }
     .modal-header { font-size: 15px; font-weight: 700; margin-bottom: 14px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
     .modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); }
     .form-group { margin-bottom: 12px; }
@@ -132,6 +132,9 @@
     .health-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
     .health-item { display: flex; align-items: center; gap: 6px; }
     .health-dot { width: 8px; height: 8px; border-radius: 50%; background: #22C55E; display: inline-block; }
+
+    .quick-role-btn { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); background: #F8FAFC; color: var(--text-primary); font-size: 11px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+    .quick-role-btn:hover { background: #E2E8F0; border-color: #CBD5E1; }
 
     @media (max-width: 600px) {
       .grid-4 { grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -151,25 +154,25 @@
 </head>
 <body>
 
-  <!-- Pure Public Landing Container -->
+  <!-- Single Color Unified Landing Page Container -->
   <div class="landing-container" id="landing-page">
     <div class="landing-header">
       <div style="display:flex; align-items:center; gap:10px;">
-        <img src="assets/logo.png?v=9.0" height="32" alt="Logo">
+        <img src="assets/logo.png?v=9.1" height="36" alt="Logo">
         <div>
-          <div style="font-weight:700; font-size:15px;">MASTERED</div>
-          <div style="font-size:9px; color:var(--text-muted); font-weight:600;">ACADEMY ERP v9.0</div>
+          <div style="font-weight:700; font-size:15px; color:white;">MASTERED</div>
+          <div style="font-size:9px; color:#94A3B8; font-weight:600;">ACADEMY ERP v9.1</div>
         </div>
       </div>
       <button class="btn btn-primary" onclick="openLoginModal()"><i class="ri-lock-line"></i> Sign In</button>
     </div>
 
     <div class="landing-hero">
-      <span style="background:rgba(220,38,38,0.2); border:1px solid rgba(220,38,38,0.4); padding:4px 12px; border-radius:20px; font-size:10.5px; font-weight:700;">PRODUCTION EDITION v9.0</span>
-      <h1 style="font-size:26px; font-weight:700; margin-top:16px;">Academy Operations, CRM & Fee Collections</h1>
-      <p style="color:#94A3B8; font-size:13px; margin-top:10px;">Unified portal for admissions, course ledgers, staff duties, placements, and financial accounting.</p>
-      <div style="margin-top:24px;">
-        <button class="btn btn-primary" style="padding:12px 24px; font-size:13px;" onclick="openLoginModal()"><i class="ri-login-box-line"></i> SIGN IN TO PORTAL</button>
+      <span style="background:rgba(220,38,38,0.25); border:1px solid rgba(220,38,38,0.5); padding:6px 16px; border-radius:20px; font-size:11px; font-weight:700; color:#FCA5A5;">MASTERED ACADEMY SYSTEM v9.1</span>
+      <h1 style="font-size:28px; font-weight:700; margin-top:18px; color:white;">Academy Operations, CRM & Fee Collections</h1>
+      <p style="color:#94A3B8; font-size:13.5px; margin-top:12px; max-width:560px;">Unified portal for admissions, course ledgers, staff duties, placements, and financial accounting.</p>
+      <div style="margin-top:28px;">
+        <button class="btn btn-primary" style="padding:14px 28px; font-size:14px;" onclick="openLoginModal()"><i class="ri-login-box-line"></i> SIGN IN TO PORTAL</button>
       </div>
     </div>
   </div>
@@ -206,8 +209,8 @@
       driveRead: 'NOT TESTED',
       driveWrite: 'NOT TESTED',
       responseTime: 'N/A',
-      apiVersion: '9.0.0',
-      databaseSchemaVersion: 'v9.0-56-TABS',
+      apiVersion: '9.1.0',
+      databaseSchemaVersion: 'v9.1-56-TABS',
       lastTested: null
     };
 
@@ -264,7 +267,7 @@
         { id: 'USR-1013', name: 'Demo Trainer', email: 'trainer@mastered.com', role: 'TRAINER', status: 'ACTIVE', isDemo: true }
       ],
       audit: [
-        { id: 'LOG-1001', timestamp: new Date().toISOString(), userName: 'Farhan', action: 'SYSTEM_BOOT', module: 'CORE', details: 'MASTERED ERP v9.0 production system booted successfully' }
+        { id: 'LOG-1001', timestamp: new Date().toISOString(), userName: 'Farhan', action: 'SYSTEM_BOOT', module: 'CORE', details: 'MASTERED ERP v9.1 single color system booted successfully' }
       ],
       importHistory: []
     };
@@ -417,36 +420,55 @@
     function openLoginModal() {
       document.getElementById('modal-title').innerText = 'Secure ERP Portal Login';
       document.getElementById('modal-body').innerHTML = `
-        <div class="form-group"><label>Account Email *</label><input id="login-email" placeholder="admin@mastered.com, ceo@mastered.com, growth@mastered.com"></div>
-        <div class="form-group"><label>Password *</label><input id="login-pass" type="password" placeholder="••••••••"></div>
+        <div class="form-group"><label>Account Email *</label><input id="login-email" value="admin@mastered.com" placeholder="admin@mastered.com, ceo@mastered.com, salesexec@mastered.com"></div>
+        <div class="form-group"><label>Password *</label><input id="login-pass" type="password" value="Mastered@2026" placeholder="••••••••" onkeydown="if(event.key==='Enter') processLogin()"></div>
+        
+        <div style="margin-top:14px; margin-bottom:14px;">
+          <div style="font-size:11px; font-weight:700; color:var(--text-secondary); margin-bottom:8px;">OR SELECT QUICK DEMO ROLE LOGIN:</div>
+          <div style="display:flex; flex-wrap:wrap; gap:6px;">
+            <button class="quick-role-btn" onclick="quickLogin('admin@mastered.com')"><i class="ri-user-star-line"></i> Founder (Farhan)</button>
+            <button class="quick-role-btn" onclick="quickLogin('ceo@mastered.com')"><i class="ri-building-line"></i> COE (Rasheed)</button>
+            <button class="quick-role-btn" onclick="quickLogin('saleshead@mastered.com')"><i class="ri-line-chart-line"></i> Sales Head (Ashif)</button>
+            <button class="quick-role-btn" onclick="quickLogin('salesexec@mastered.com')"><i class="ri-user-3-line"></i> Sales Executive</button>
+            <button class="quick-role-btn" onclick="quickLogin('finance@mastered.com')"><i class="ri-wallet-3-line"></i> Finance (Mufeeda)</button>
+            <button class="quick-role-btn" onclick="quickLogin('growth@mastered.com')"><i class="ri-award-line"></i> Growth Officer</button>
+            <button class="quick-role-btn" onclick="quickLogin('hr@mastered.com')"><i class="ri-team-line"></i> HR Manager</button>
+          </div>
+        </div>
+
         <div class="modal-footer">
           <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="processLogin()">Authenticate & Launch</button>
+          <button class="btn btn-primary" onclick="processLogin()"><i class="ri-login-box-line"></i> Authenticate & Launch</button>
         </div>
       `;
       document.getElementById('modal').classList.add('open');
     }
 
+    function quickLogin(email) {
+      document.getElementById('login-email').value = email;
+      processLogin();
+    }
+
     function processLogin() {
-      const email = document.getElementById('login-email').value.toLowerCase().trim();
+      const emailInput = document.getElementById('login-email');
+      const email = emailInput ? emailInput.value.toLowerCase().trim() : 'admin@mastered.com';
       closeModal();
       document.getElementById('landing-page').style.display = 'none';
 
       sessionToken = 'SESS_' + Math.floor(Math.random()*1000000);
 
-      if (email.includes('admin') || email.includes('farhan')) setLoggedInUser('FOUNDER', 'Farhan', 'Founder & Super Admin', email || 'admin@mastered.com', false);
-      else if (email.includes('ceo') || email.includes('rasheed')) setLoggedInUser('COE', 'Rasheed', 'Chief Operating Executive', email, false);
-      else if (email.includes('saleshead') || email.includes('ashif')) setLoggedInUser('SALES_HEAD', 'Ashif Darimi', 'Sales Head & Placement Head', email, false);
-      else if (email.includes('salesexec')) setLoggedInUser('SALES_EXEC', 'Demo Sales Executive', 'Sales Executive', email, true);
-      else if (email.includes('marketing') || email.includes('shahabaz')) setLoggedInUser('MARKETING_MGR', 'Shahabaz', 'Marketing Manager', email, false);
-      else if (email.includes('social') || email.includes('shahal')) setLoggedInUser('SOCIAL_MGR', 'Shahal', 'Social Media Manager', email, false);
-      else if (email.includes('growth')) setLoggedInUser('GROWTH_OFFICER', 'Growth Officer', 'Growth Officer & Auditor', email, false);
-      else if (email.includes('ops') || email.includes('sahad')) setLoggedInUser('OPS_MGR', 'Sahad', 'Operations Manager', email, false);
-      else if (email.includes('finance') || email.includes('mufeeda')) setLoggedInUser('FINANCE_MGR', 'Mufeeda', 'Finance Manager & Office Admin', email, false);
-      else if (email.includes('hr')) setLoggedInUser('HR', 'HR Manager', 'HR Manager', email, false);
-      else if (email.includes('staff')) setLoggedInUser('STAFF', 'Demo Staff', 'Demo Staff', email, true);
-      else if (email.includes('trainer')) setLoggedInUser('TRAINER', 'Demo Trainer', 'Academic Trainer', email, true);
-      else setLoggedInUser('FOUNDER', 'Farhan', 'Founder & Super Admin', email, false);
+      if (email.includes('ceo') || email.includes('rasheed')) setLoggedInUser('COE', 'Rasheed', 'Chief Operating Executive', email || 'ceo@mastered.com', false);
+      else if (email.includes('saleshead') || email.includes('ashif')) setLoggedInUser('SALES_HEAD', 'Ashif Darimi', 'Sales Head & Placement Head', email || 'saleshead@mastered.com', false);
+      else if (email.includes('salesexec')) setLoggedInUser('SALES_EXEC', 'Demo Sales Executive', 'Sales Executive', email || 'salesexec@mastered.com', true);
+      else if (email.includes('marketing') || email.includes('shahabaz')) setLoggedInUser('MARKETING_MGR', 'Shahabaz', 'Marketing Manager', email || 'marketing@mastered.com', false);
+      else if (email.includes('social') || email.includes('shahal')) setLoggedInUser('SOCIAL_MGR', 'Shahal', 'Social Media Manager', email || 'social@mastered.com', false);
+      else if (email.includes('growth')) setLoggedInUser('GROWTH_OFFICER', 'Growth Officer', 'Growth Officer & Auditor', email || 'growth@mastered.com', false);
+      else if (email.includes('ops') || email.includes('sahad')) setLoggedInUser('OPS_MGR', 'Sahad', 'Operations Manager', email || 'ops@mastered.com', false);
+      else if (email.includes('finance') || email.includes('mufeeda')) setLoggedInUser('FINANCE_MGR', 'Mufeeda', 'Finance Manager & Office Admin', email || 'finance@mastered.com', false);
+      else if (email.includes('hr')) setLoggedInUser('HR', 'HR Manager', 'HR Manager', email || 'hr@mastered.com', false);
+      else if (email.includes('staff')) setLoggedInUser('STAFF', 'Demo Staff', 'Demo Staff', email || 'staff@mastered.com', true);
+      else if (email.includes('trainer')) setLoggedInUser('TRAINER', 'Demo Trainer', 'Academic Trainer', email || 'trainer@mastered.com', true);
+      else setLoggedInUser('FOUNDER', 'Farhan', 'Founder & Super Admin', email || 'admin@mastered.com', false);
     }
 
     function setLoggedInUser(role, name, title, email, isDemo) {
@@ -465,8 +487,8 @@
         <div class="app-container">
           <div class="sidebar">
             <div class="brand-header">
-              <div class="brand-logo"><img src="assets/logo.png?v=9.0" alt="Logo"></div>
-              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v9.0</div></div>
+              <div class="brand-logo"><img src="assets/logo.png?v=9.1" alt="Logo"></div>
+              <div><div class="brand-title">MASTERED</div><div class="brand-sub">ERP v9.1</div></div>
             </div>
 
             <div class="user-pill">
@@ -595,7 +617,6 @@
       `;
     }
 
-    // KPI & AUDIT ENGINE VIEW
     function renderKpiEngineView(viewport) {
       viewport.innerHTML = `
         <div class="card">
@@ -666,7 +687,6 @@
       saveStateToStorage(); closeModal(); switchTab('kpi_engine');
     }
 
-    // PLACEMENTS VIEW
     function renderPlacementsView(viewport) {
       viewport.innerHTML = `
         <div class="card">
