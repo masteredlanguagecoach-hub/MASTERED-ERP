@@ -357,7 +357,6 @@
         { id: 'dashboard', label: 'Executive Financials & Operations', icon: 'ri-dashboard-line' },
         { id: 'dash_income', label: 'Income & Fee Dashboard', icon: 'ri-bank-card-line' },
         { id: 'dash_expense', label: 'Expense Dashboard', icon: 'ri-wallet-3-line' },
-        { id: 'dash_marketing', label: 'Marketing ROI Dashboard', icon: 'ri-pie-chart-line' },
         { id: 'students', label: 'Students Directory', icon: 'ri-user-star-line' },
         { id: 'accounting', label: 'Accounting & Expense Entry', icon: 'ri-wallet-3-line' },
         { id: 'reports', label: 'Executive Reports', icon: 'ri-file-chart-line' }
@@ -548,7 +547,7 @@
 
     function switchTab(tab) {
       currentTab = tab; saveSessionToStorage();
-      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      renderSidebar();
       const viewport = document.getElementById('viewport');
       const title = document.getElementById('page-title');
       if (!viewport) return;
@@ -557,15 +556,20 @@
         if (currentRole === 'SALES_EXEC') { title.innerText = 'Sales Executive Dashboard'; renderSalesExecDashboard(viewport); }
         else if (currentRole === 'STAFF') { title.innerText = 'Staff Daily Dashboard'; renderStaffDashboard(viewport); }
         else { title.innerText = 'Executive Overview'; renderMainExecutiveOverview(viewport); }
-      } else if (tab === 'kpi_engine') { title.innerText = 'KPI Definition & Audit Engine'; renderKpiEngineView(viewport); }
+      } 
+      else if (tab === 'dash_income' || tab === 'fee') { title.innerText = 'Income & Fee Collection Dashboard'; renderFeeCollectionView(viewport); }
+      else if (tab === 'dash_expense' || tab === 'accounting') { title.innerText = 'Accounting & Expense Dashboard'; renderAccountingView(viewport); }
+      else if (tab === 'dash_sales') { title.innerText = 'Sales Dashboard & Performance'; renderLeadsView(viewport); }
+      else if (tab === 'dash_marketing' || tab === 'campaigns') { title.innerText = 'Marketing ROI & Campaigns'; renderMarketingView(viewport); }
+      else if (tab === 'due_reminders') { title.innerText = '3-Day Fee Reminders & Collections'; renderFeeCollectionView(viewport); }
+      else if (tab === 'followups') { title.innerText = 'Lead Follow-up Workspace'; renderLeadsView(viewport); }
+      else if (tab === 'kpi_engine') { title.innerText = 'KPI Definition & Audit Engine'; renderKpiEngineView(viewport); }
       else if (tab === 'placements') { title.innerText = 'Placement Management Directory'; renderPlacementsView(viewport); }
       else if (tab === 'duties') { title.innerText = currentRole === 'HR' ? 'Staff Duty Verification' : 'Daily Duty Logs'; renderDutiesView(viewport); }
       else if (tab === 'all_leads') { title.innerText = 'All Leads Control Center'; renderAllLeadsControlCenter(viewport); }
       else if (tab === 'leads') { title.innerText = 'Lead CRM Pipeline'; renderLeadsView(viewport); }
       else if (tab === 'students') { title.innerText = 'Students Directory'; renderStudentsView(viewport); }
       else if (tab === 'batches') { title.innerText = 'Batch Management'; renderBatchesView(viewport); }
-      else if (tab === 'fee') { title.innerText = 'Fee Collection'; renderFeeCollectionView(viewport); }
-      else if (tab === 'accounting') { title.innerText = 'Accounting & Expenses'; renderAccountingView(viewport); }
       else if (tab === 'reports') { title.innerText = 'Reports & Analytics'; renderReportsView(viewport); }
       else if (tab === 'users') { title.innerText = 'User Management'; renderUsersView(viewport); }
       else if (tab === 'courses') { title.innerText = 'Course Master Configuration'; renderCoursesView(viewport); }
@@ -1404,6 +1408,116 @@
           `}
         </div>
       `;
+    }
+
+    function renderCoursesView(viewport) {
+      viewport.innerHTML = `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Course Master Configuration (${state.courses.length} Courses)</div>
+            <button class="btn btn-primary" onclick="openAddCourseModal()"><i class="ri-add-line"></i> Add New Course</button>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead><tr><th>Course Code</th><th>Course Name</th><th>Duration</th><th>Fee (₹)</th><th>Installments</th><th>Status</th></tr></thead>
+              <tbody>
+                ${state.courses.map(c => `<tr>
+                  <td style="font-weight:700; color:var(--primary);">${c.id}</td>
+                  <td style="font-weight:600;">${c.name}</td>
+                  <td>${c.duration}</td>
+                  <td style="color:var(--success); font-weight:700;">₹${(c.fee || 0).toLocaleString()}</td>
+                  <td>${c.inst || 4} Installments</td>
+                  <td><span class="badge badge-success">${c.status || 'ACTIVE'}</span></td>
+                </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function openAddCourseModal() {
+      document.getElementById('modal-title').innerText = 'Add New Course Master';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Course Code *</label><input id="crs-id" placeholder="e.g. BBA-1Y"></div>
+        <div class="form-group"><label>Course Name *</label><input id="crs-name" placeholder="e.g. Bachelor of Business Administration"></div>
+        <div class="form-row-flex" style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>Duration *</label><input id="crs-dur" value="1 year"></div>
+          <div class="form-group" style="flex:1;"><label>Fee (₹) *</label><input id="crs-fee" value="65000"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveCourse()">Save Course</button>
+        </div>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function saveCourse() {
+      const code = document.getElementById('crs-id').value.trim().toUpperCase();
+      const name = document.getElementById('crs-name').value.trim();
+      const fee = parseFloat(document.getElementById('crs-fee').value) || 0;
+      if (!code || !name) return;
+      state.courses.push({ id: code, name: name, duration: document.getElementById('crs-dur').value, fee: fee, inst: 4, status: 'ACTIVE' });
+      saveStateToStorage(); closeModal(); switchTab('courses');
+    }
+
+    function renderMarketingView(viewport) {
+      const totalBudget = state.campaigns.reduce((acc, c) => acc + (c.budget || 0), 0);
+      const totalSpend = state.campaigns.reduce((acc, c) => acc + (c.actualSpend || 0), 0);
+      viewport.innerHTML = `
+        <div class="grid-4" style="margin-bottom:16px;">
+          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-megaphone-line"></i></div><div><div class="stat-title">Active Campaigns</div><div class="stat-value">${state.campaigns.length}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7; color:#D97706;"><i class="ri-wallet-3-line"></i></div><div><div class="stat-title">Allocated Budget</div><div class="stat-value">₹${totalBudget.toLocaleString()}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7; color:#16A34A;"><i class="ri-money-dollar-circle-line"></i></div><div><div class="stat-title">Actual Spend</div><div class="stat-value">₹${totalSpend.toLocaleString()}</div></div></div>
+          <div class="stat-card"><div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="ri-pie-chart-line"></i></div><div><div class="stat-title">Target ROI</div><div class="stat-value">3.8x</div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Marketing ROI & Campaign Master</div>
+            <button class="btn btn-primary" onclick="openAddCampaignModal()"><i class="ri-add-line"></i> Create Campaign</button>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead><tr><th>Campaign ID</th><th>Campaign Name</th><th>Channel</th><th>Budget</th><th>Actual Spend</th><th>Status</th></tr></thead>
+              <tbody>
+                ${state.campaigns.map(c => `<tr>
+                  <td style="font-weight:700; color:var(--primary);">${c.id}</td>
+                  <td style="font-weight:600;">${c.name}</td>
+                  <td><span class="badge badge-info">${c.channel || c.type}</span></td>
+                  <td style="font-weight:600;">₹${(c.budget || 0).toLocaleString()}</td>
+                  <td style="color:var(--success); font-weight:700;">₹${(c.actualSpend || 0).toLocaleString()}</td>
+                  <td><span class="badge badge-success">${c.status || 'Active'}</span></td>
+                </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function openAddCampaignModal() {
+      document.getElementById('modal-title').innerText = 'Create Marketing Campaign';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="form-group"><label>Campaign Name *</label><input id="cmp-name" placeholder="e.g. Meta Ads Q4 Campaign"></div>
+        <div class="form-row-flex" style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>Marketing Channel *</label><select id="cmp-chan"><option value="Meta Ads">Meta Ads</option><option value="Google Ads">Google Ads</option><option value="Offline Event">Offline Event</option><option value="Referral Program">Referral Program</option></select></div>
+          <div class="form-group" style="flex:1;"><label>Budget (₹) *</label><input id="cmp-bud" value="50000"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveCampaign()">Save Campaign</button>
+        </div>
+      `;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function saveCampaign() {
+      const name = document.getElementById('cmp-name').value.trim();
+      const budget = parseFloat(document.getElementById('cmp-bud').value) || 0;
+      if (!name) return;
+      state.campaigns.unshift({ id: 'CMP-' + Math.floor(1000 + Math.random()*9000), name: name, channel: document.getElementById('cmp-chan').value, budget: budget, actualSpend: Math.floor(budget*0.5), status: 'Active' });
+      saveStateToStorage(); closeModal(); switchTab('dash_marketing');
     }
 
     function downloadSampleExcel() {
